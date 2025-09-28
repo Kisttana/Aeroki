@@ -89,3 +89,75 @@ void lex_line(const char *line) {
 
 Token *peek() { return &tokens[tok_pos]; }
 Token *next() { return &tokens[tok_pos++]; }
+
+// ==== AST ====
+typedef enum { NODE_NUM, NODE_VAR, NODE_BINOP } NodeType;
+
+typedef struct Node {
+    NodeType type;
+    int value;
+    char varname[32];
+    char op;
+    struct Node *left, *right;
+} Node;
+
+Node *make_num(int v) {
+    Node *n = malloc(sizeof(Node));
+    n->type = NODE_NUM; n->value = v;
+    n->left = n->right = NULL;
+    return n;
+}
+Node *make_var(const char *name) {
+    Node *n = malloc(sizeof(Node));
+    n->type = NODE_VAR; strcpy(n->varname, name);
+    n->left = n->right = NULL;
+    return n;
+}
+Node *make_binop(char op, Node *l, Node *r) {
+    Node *n = malloc(sizeof(Node));
+    n->type = NODE_BINOP; n->op = op;
+    n->left = l; n->right = r;
+    return n;
+}
+
+// ==== Parser (recursive descent) ====
+// Grammar:
+// expr   = term (('+'|'-') term)*
+// term   = factor (('*'|'/') factor)*
+// factor = NUM | ID
+
+Node *parse_expr();
+
+Node *parse_factor() {
+    Token *t = peek();
+    if (t->type == TOK_NUM) {
+        next();
+        return make_num(atoi(t->text));
+    } else if (t->type == TOK_ID) {
+        next();
+        return make_var(t->text);
+    }
+    return make_num(0);
+}
+
+Node *parse_term() {
+    Node *node = parse_factor();
+    while (peek()->type == TOK_MUL || peek()->type == TOK_DIV) {
+        char op = peek()->text[0];
+        next();
+        node = make_binop(op, node, parse_factor());
+    }
+    return node;
+}
+
+Node *parse_expr() {
+    Node *node = parse_term();
+    while (peek()->type == TOK_PLUS || peek()->type == TOK_MINUS) {
+        char op = peek()->text[0];
+        next();
+        node = make_binop(op, node, parse_term());
+    }
+    return node;
+}
+
+// ==== Interpreter ====
