@@ -255,4 +255,4 @@ void __Ark_Shell() {
         ltrim(line);
         if (strcmp(line, "ออก") == 0) break;
         if (line[0] == '\0') continue;
-        lex_line
+        lex_line(line);
