@@ -13,24 +13,31 @@ Variable variables[MAX_VARIABLES];
 int var_count = 0;
 
 int get_variable(const char *name) {
-    for (int i = 0; i < var_count; i++) {
-        if (strcmp(variables[i].name, name) == 0)
+    for (int i = 0; i < var_count; ++i) {
+        if (strcmp(variables[i].name, name) == 0) {
             return variables[i].value;
+        }
     }
     fprintf(stderr, "Variable not found: %s\n", name);
-    return 0;
+    exit(1);
 }
 
 void set_variable(const char *name, int value) {
-    for (int i = 0; i < var_count; i++) {
+    for (int i = 0; i < var_count; ++i) {
         if (strcmp(variables[i].name, name) == 0) {
             variables[i].value = value;
             return;
         }
     }
-    strcpy(variables[var_count].name, name);
-    variables[var_count].value = value;
-    var_count++;
+
+    if (var_count < MAX_VARIABLES) {
+        strcpy(variables[var_count].name, name);
+        variables[var_count].value = value;
+        var_count++;
+    } else {
+        fprintf(stderr, "Too many variables.\n");
+        exit(1);
+    }
 }
 
 // ==== Lexer ====
@@ -61,6 +68,8 @@ void lex_line(const char *line) {
             tokens[tok_count++] = (Token){TOK_GIVE, "ให้"}; p += 6;
         } else if (strncmp(p, "หา", 6) == 0) {
             tokens[tok_count++] = (Token){TOK_FIND, "หา"}; p += 6;
+        } else if (strncmp(p, "รับค่า", 12) == 0) {
+            tokens[tok_count++] = (Token){TOK_INPUT, "รับค่า"}; p += 12;
         } else if (*p == '=') {
             tokens[tok_count++] = (Token){TOK_ASSIGN, "="}; p++;
         } else if (*p == '+') {
@@ -124,10 +133,6 @@ Node *make_binop(char op, Node *l, Node *r) {
 }
 
 // ==== Parser (recursive descent) ====
-// Grammar:
-// expr   = term (('+'|'-') term)*
-// term   = factor (('*'|'/') factor)*
-// factor = NUM | ID
 
 Node *parse_expr();
 
@@ -152,7 +157,6 @@ Node *parse_term() {
     }
     return node;
 }
-
 Node *parse_expr() {
     Node *node = parse_term();
     while (peek()->type == TOK_PLUS || peek()->type == TOK_MINUS) {
@@ -189,32 +193,66 @@ void interpret_tokens() {
             Node *expr = parse_expr();
             int val = eval(expr);
             set_variable(tokens[1].text, val);
+            return;
         }
     } else if (tokens[0].type == TOK_FIND) {
         tok_pos = 1;
         Node *expr = parse_expr();
         printf("%d\n", eval(expr));
+        return;
     } else if (tokens[0].type == TOK_INPUT) {
         if (tokens[1].type == TOK_ID) {
             int val;
             printf("กรอกค่า %s: ", tokens[1].text);
-            scanf("%d", &val);
-            set_variable(tokens[1].text, val);
+            fflush(stdout);
+            if (scanf("%d", &val) == 1) {
+                set_variable(tokens[1].text, val);
+            } else {
+                printf("Invalid input.\n");
+                int c; while ((c = getchar()) != '\n' && c != EOF);
+            }
+            return;
         }
+    }
+    printf("Unknown or invalid command.\n");
+}
+
+// ==== Helpers ====
+
+static void ltrim(char *str) {
+    int index = 0;
+    while (str[index] == ' ' || str[index] == '\t') index++;
+    if (index > 0) {
+        int i = 0;
+        while (str[index]) str[i++] = str[index++];
+        str[i] = '\0';
     }
 }
 
-// ==== Shell ====
+// ==== File Interpreter ====
+
+void __Ark_Interpreted(FILE *__src_file) {
+    char line[256];
+    while (fgets(line, sizeof(line), __src_file)) {
+        line[strcspn(line, "\n")] = '\0';
+        ltrim(line);
+        if (line[0] == '\0') continue;
+        lex_line(line);
+        interpret_tokens();
+    }
+}
+
+// ==== Shell Interpreter ====
 
 void __Ark_Shell() {
     char line[256];
     printf("Aeroki Shell Mode (type 'ออก' to exit)\n");
     while (1) {
         printf(">>> ");
+        fflush(stdout);
         if (!fgets(line, sizeof(line), stdin)) break;
-        line[strcspn(line, "\n")] = 0;
+        line[strcspn(line, "\n")] = '\0';
+        ltrim(line);
         if (strcmp(line, "ออก") == 0) break;
-        lex_line(line);
-        interpret_tokens();
-    }
-}
+        if (line[0] == '\0') continue;
+        lex_line
