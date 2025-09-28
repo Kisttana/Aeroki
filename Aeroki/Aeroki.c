@@ -1,6 +1,7 @@
 #include "Aeroki.h"
 
 #define MAX_VARIABLES 100
+#define MAX_CMDS 256
 
 // ==== Variable ====
 
@@ -43,7 +44,7 @@ void set_variable(const char *name, int value) {
 // ==== Lexer ====
 
 typedef enum {
-    TOK_GIVE, TOK_FIND, TOK_INPUT,
+    TOK_GIVE, TOK_FIND, TOK_INPUT, TOK_RESULT,
     TOK_ID, TOK_NUM,
     TOK_ASSIGN, TOK_PLUS, TOK_MINUS, TOK_MUL, TOK_DIV,
     TOK_EOF
@@ -70,6 +71,8 @@ void lex_line(const char *line) {
             tokens[tok_count++] = (Token){TOK_FIND, "หา"}; p += strlen("หา");
         } else if (strncmp(p, "รับค่า", strlen("รับค่า")) == 0) {
             tokens[tok_count++] = (Token){TOK_INPUT, "รับค่า"}; p += strlen("รับค่า");
+        } else if (strncmp(p, "ผล", strlen("ผล")) == 0) {
+            tokens[tok_count++] = (Token){TOK_RESULT, "ผล"}; p += strlen("ผล");
         } else if (*p == '=') {
             tokens[tok_count++] = (Token){TOK_ASSIGN, "="}; p++;
         } else if (*p == '+') {
@@ -184,37 +187,49 @@ int eval(Node *n) {
     return 0;
 }
 
-// ==== Command Interpreter ====
+// ==== Command Buffer ====
 
-void interpret_tokens() {
-    if (tokens[0].type == TOK_GIVE) {
-        if (tokens[1].type == TOK_ID && tokens[2].type == TOK_ASSIGN) {
-            tok_pos = 3;
-            Node *expr = parse_expr();
-            int val = eval(expr);
-            set_variable(tokens[1].text, val);
-            return;
-        }
-    } else if (tokens[0].type == TOK_FIND) {
-        tok_pos = 1;
-        Node *expr = parse_expr();
-        printf("%d\n", eval(expr));
-        return;
-    } else if (tokens[0].type == TOK_INPUT) {
-        if (tokens[1].type == TOK_ID) {
-            int val;
-            printf("กรอกค่า %s: ", tokens[1].text);
-            fflush(stdout);
-            if (scanf("%d", &val) == 1) {
-                set_variable(tokens[1].text, val);
-            } else {
-                printf("Invalid input.\n");
-                int c; while ((c = getchar()) != '\n' && c != EOF);
-            }
-            return;
-        }
+char *cmd_buffer[MAX_CMDS];
+int cmd_count = 0;
+
+void add_command(const char *line) {
+    if (cmd_count < MAX_CMDS) {
+        cmd_buffer[cmd_count] = strdup(line);
+        cmd_count++;
     }
-    printf("Unknown or invalid command.\n");
+}
+
+void run_all_commands() {
+    for (int i = 0; i < cmd_count; i++) {
+        lex_line(cmd_buffer[i]);
+        // run the command
+        if (tokens[0].type == TOK_GIVE) {
+            if (tokens[1].type == TOK_ID && tokens[2].type == TOK_ASSIGN) {
+                tok_pos = 3;
+                Node *expr = parse_expr();
+                int val = eval(expr);
+                set_variable(tokens[1].text, val);
+            }
+        } else if (tokens[0].type == TOK_FIND) {
+            tok_pos = 1;
+            Node *expr = parse_expr();
+            printf("%d\n", eval(expr));
+        } else if (tokens[0].type == TOK_INPUT) {
+            if (tokens[1].type == TOK_ID) {
+                int val;
+                printf("กรอกค่า %s: ", tokens[1].text);
+                fflush(stdout);
+                if (scanf("%d", &val) == 1) {
+                    set_variable(tokens[1].text, val);
+                } else {
+                    printf("Invalid input.\n");
+                    int c; while ((c = getchar()) != '\n' && c != EOF);
+                }
+            }
+        }
+        free(cmd_buffer[i]);
+    }
+    cmd_count = 0;
 }
 
 // ==== Helpers ====
@@ -226,19 +241,6 @@ static void ltrim(char *str) {
         int i = 0;
         while (str[index]) str[i++] = str[index++];
         str[i] = '\0';
-    }
-}
-
-// ==== File Interpreter ====
-
-void __Ark_Interpreted(FILE *__src_file) {
-    char line[256];
-    while (fgets(line, sizeof(line), __src_file)) {
-        line[strcspn(line, "\n")] = '\0';
-        ltrim(line);
-        if (line[0] == '\0') continue;
-        lex_line(line);
-        interpret_tokens();
     }
 }
 
@@ -255,7 +257,12 @@ void __Ark_Shell() {
         ltrim(line);
         if (strcmp(line, "ออก") == 0) break;
         if (line[0] == '\0') continue;
+
         lex_line(line);
-        interpret_tokens();
+        if (tokens[0].type == TOK_RESULT) {
+            run_all_commands();
+        } else {
+            add_command(line);
+        }
     }
 }
