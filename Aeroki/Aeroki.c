@@ -256,5 +256,6 @@ void __Ark_Shell() {
         if (strcmp(line, "ออก") == 0) break;
         if (line[0] == '\0') continue;
         lex_line(line);
+        interpret_tokens();
     }
 }
