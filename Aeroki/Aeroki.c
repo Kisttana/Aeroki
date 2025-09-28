@@ -3,6 +3,7 @@
 #define MAX_VARIABLES 100
 
 // ==== Variable ====
+
 typedef struct {
     char name[32];
     int value;
@@ -33,6 +34,7 @@ void set_variable(const char *name, int value) {
 }
 
 // ==== Lexer ====
+
 typedef enum {
     TOK_GIVE, TOK_FIND, TOK_INPUT,
     TOK_ID, TOK_NUM,
@@ -91,6 +93,7 @@ Token *peek() { return &tokens[tok_pos]; }
 Token *next() { return &tokens[tok_pos++]; }
 
 // ==== AST ====
+
 typedef enum { NODE_NUM, NODE_VAR, NODE_BINOP } NodeType;
 
 typedef struct Node {
@@ -161,3 +164,57 @@ Node *parse_expr() {
 }
 
 // ==== Interpreter ====
+
+int eval(Node *n) {
+    if (n->type == NODE_NUM) return n->value;
+    if (n->type == NODE_VAR) return get_variable(n->varname);
+    if (n->type == NODE_BINOP) {
+        int l = eval(n->left), r = eval(n->right);
+        switch (n->op) {
+            case '+': return l + r;
+            case '-': return l - r;
+            case '*': return l * r;
+            case '/': return r ? l / r : 0;
+        }
+    }
+    return 0;
+}
+
+// ==== Command Interpreter ====
+
+void interpret_tokens() {
+    if (tokens[0].type == TOK_GIVE) {
+        if (tokens[1].type == TOK_ID && tokens[2].type == TOK_ASSIGN) {
+            tok_pos = 3;
+            Node *expr = parse_expr();
+            int val = eval(expr);
+            set_variable(tokens[1].text, val);
+        }
+    } else if (tokens[0].type == TOK_FIND) {
+        tok_pos = 1;
+        Node *expr = parse_expr();
+        printf("%d\n", eval(expr));
+    } else if (tokens[0].type == TOK_INPUT) {
+        if (tokens[1].type == TOK_ID) {
+            int val;
+            printf("กรอกค่า %s: ", tokens[1].text);
+            scanf("%d", &val);
+            set_variable(tokens[1].text, val);
+        }
+    }
+}
+
+// ==== Shell ====
+
+void __Ark_Shell() {
+    char line[256];
+    printf("Aeroki Shell Mode (type 'ออก' to exit)\n");
+    while (1) {
+        printf(">>> ");
+        if (!fgets(line, sizeof(line), stdin)) break;
+        line[strcspn(line, "\n")] = 0;
+        if (strcmp(line, "ออก") == 0) break;
+        lex_line(line);
+        interpret_tokens();
+    }
+}
