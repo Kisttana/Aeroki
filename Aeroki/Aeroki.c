@@ -64,12 +64,12 @@ void lex_line(const char *line) {
     while (*p) {
         if (isspace(*p)) { p++; continue; }
 
-        if (strncmp(p, "ให้", 6) == 0) {
-            tokens[tok_count++] = (Token){TOK_GIVE, "ให้"}; p += 6;
-        } else if (strncmp(p, "หา", 6) == 0) {
-            tokens[tok_count++] = (Token){TOK_FIND, "หา"}; p += 6;
-        } else if (strncmp(p, "รับค่า", 12) == 0) {
-            tokens[tok_count++] = (Token){TOK_INPUT, "รับค่า"}; p += 12;
+        if (strncmp(p, "ให้", strlen("ให้")) == 0) {
+            tokens[tok_count++] = (Token){TOK_GIVE, "ให้"}; p += strlen("ให้");
+        } else if (strncmp(p, "หา", strlen("หา")) == 0) {
+            tokens[tok_count++] = (Token){TOK_FIND, "หา"}; p += strlen("หา");
+        } else if (strncmp(p, "รับค่า", strlen("รับค่า")) == 0) {
+            tokens[tok_count++] = (Token){TOK_INPUT, "รับค่า"}; p += strlen("รับค่า");
         } else if (*p == '=') {
             tokens[tok_count++] = (Token){TOK_ASSIGN, "="}; p++;
         } else if (*p == '+') {
@@ -187,27 +187,18 @@ int eval(Node *n) {
 // ==== Command Interpreter ====
 
 void interpret_tokens() {
-    // DEBUG: Print all tokens parsed
-    printf("Tokens: ");
-    for (int i = 0; i < tok_count; i++) {
-        printf("(%d, '%s') ", tokens[i].type, tokens[i].text);
-    }
-    printf("\n");
-
     if (tokens[0].type == TOK_GIVE) {
         if (tokens[1].type == TOK_ID && tokens[2].type == TOK_ASSIGN) {
             tok_pos = 3;
             Node *expr = parse_expr();
             int val = eval(expr);
-            printf("Setting variable '%s' = %d\n", tokens[1].text, val); // DEBUG
             set_variable(tokens[1].text, val);
             return;
         }
     } else if (tokens[0].type == TOK_FIND) {
         tok_pos = 1;
         Node *expr = parse_expr();
-        int val = eval(expr);
-        printf("%d\n", val);
+        printf("%d\n", eval(expr));
         return;
     } else if (tokens[0].type == TOK_INPUT) {
         if (tokens[1].type == TOK_ID) {
