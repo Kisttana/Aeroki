@@ -27,16 +27,22 @@ ARKTokenType determine_token_type(const char* lexeme){
     if (strcmp(lexeme, ">=") == 0) return TOKEN_GTE;
     if (strcmp(lexeme, ";") == 0) return TOKEN_SEMICOLON;
     if (strcmp(lexeme, ",") == 0) return TOKEN_COMMA;
-    if (strcmp(lexeme, "(") == 0) return TOKEN_LPAREN;
+	if (strcmp(lexeme, ".") == 0) return TOKEN_DOT;
+	if (strcmp(lexeme, "(") == 0) return TOKEN_LPAREN;
     if (strcmp(lexeme, ")") == 0) return TOKEN_RPAREN;
     if (strcmp(lexeme, "{") == 0) return TOKEN_LBRACE;
     if (strcmp(lexeme, "}") == 0) return TOKEN_RBRACE;
-
+    if (strcmp(lexeme, "#") == 0) return TOKEN_SHAPE; 
+    size_t idx = 0 ;
+    int isNumToken = 1;
+    ARKTokenType RETURN_TOKEN = TOKEN_IDENTIFIER;
+    while(lexeme[idx] != '\0'){
+        if( !isdigit(lexeme[idx++]) )
+            isNumToken = 0;  
+    }
+    if(isNumToken) RETURN_TOKEN = TOKEN_NUMBER;
     // Default to identifier or number
-    return TOKEN_IDENTIFIER;
-}
-int isToken(int ch){
-	return (int)(isalpha(ch) || ch == '_');
+    return RETURN_TOKEN;
 }
 
 ARKToken generate_token(const char * _s,size_t *cursor, int (*_Classifier)(int)){
@@ -60,7 +66,7 @@ ARKToken generate_token(const char * _s,size_t *cursor, int (*_Classifier)(int))
 
 ARKTokenList* scanLexer(ARKLexer *lex) {
 	printf("Lexeme : \n%s\n", lex->lexeme);
-    ARKTokenList *ret = init_TokenList(1000);
+    ARKTokenList *ret = init_TokenList(1);
     char current;
 
     ARKToken token;
@@ -69,19 +75,51 @@ ARKTokenList* scanLexer(ARKLexer *lex) {
             lex->cursor++;
             lex->begin = lex->cursor;
             continue;
-        }
+		}
 
 		int (*Classifier)(int) = NULL;	
         if (isdigit(current))  Classifier = isdigit;
         else if (isIdentifier(current)) Classifier = isIdentifier;
-        else if (ispunct(current)) Classifier = ispunct;
+		else if(current == '\"'){
+            size_t idx = 0;
+            while(lex->lexeme[lex->cursor] != '\0'){
+                
+                token._Value[idx++] = lex->lexeme[lex->cursor++];
+                printf("copy : %c\n" , token._Value[idx-1]);
+                if(lex->lexeme[lex->cursor] == '\"'){
+                    token._Value[idx] = '\"';
+                    token._Value[++idx] = '\0';
+                    break;
+                }
+            }
+            lex->cursor++;
+            token._Type =  (token._Value[0] == '\"') 
+                        && (token._Value[idx-1] == '\"') ? 
+                        TOKEN_STRING : TOKEN_UNKNOWN;
+                
+            
+        }
+        else if (ispunct(current) 
+				|| current == '+'
+				|| current == '-'
+				|| current == '/'
+				|| current == '*'
+				|| current == '.'
+		){
+				token._Value[0] = current;
+				token._Value[1] ='\0';
+				token._Type = determine_token_type(token._Value);
+				lex->cursor++;
+		}
         else {
             fprintf(stderr, "Unrecognized character: '%c'\n", current);
             lex->cursor++;
             continue;
         }
 			
-        token = generate_token(lex->lexeme, &lex->cursor, Classifier);
+        
+		if(Classifier != NULL)
+				token = generate_token(lex->lexeme, &lex->cursor, Classifier);
         g_array_append_val(ret, token);
         lex->begin = lex->cursor;
     }

@@ -2,7 +2,7 @@
 #define __PRINT_TOKENTYPE__
 
 
-
+#define TOKEN_COUNT 29
 const char * TOKEN_TYPE[] = {
 	"TOKEN_UNKNOWN",
     "TOKEN_IDENTIFIER",
@@ -31,11 +31,12 @@ const char * TOKEN_TYPE[] = {
     "TOKEN_GTE",
     "TOKEN_SEMICOLON",
     "TOKEN_COMMA",
+	"TOKEN_DOT",
     "TOKEN_LPAREN",
     "TOKEN_RPAREN",
     "TOKEN_LBRACE",
     "TOKEN_RBRACE",
-
+    "TOKEN_SHAPE",
     "TOKEN_EOF"
  
 };
@@ -43,7 +44,7 @@ const char * TOKEN_TYPE[] = {
 
 #ifndef TYPEOF
 #define TYPEOF
-#define typeof(__TOKEN) (((__TOKEN) <= 27 && (__TOKEN) >= 0)?(TOKEN_TYPE[__TOKEN]):(TOKEN_TYPE[0])) 
+#define typeof(__TOKEN) (((__TOKEN) <= TOKEN_COUNT && (__TOKEN) >= 0)?(TOKEN_TYPE[__TOKEN]):(TOKEN_TYPE[0])) 
 #endif
 
 

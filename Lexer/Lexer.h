@@ -9,7 +9,6 @@ extern "C"{
 #endif
 
 // === tools ===
-#include <regex.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -46,11 +45,12 @@ typedef enum {
     TOKEN_GTE,
     TOKEN_SEMICOLON,
     TOKEN_COMMA,
-    TOKEN_LPAREN,
+	TOKEN_DOT,
+	TOKEN_LPAREN,
     TOKEN_RPAREN,
     TOKEN_LBRACE,
     TOKEN_RBRACE,
-
+    TOKEN_SHAPE,
     TOKEN_EOF
 } ARKTokenType;
 
