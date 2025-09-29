@@ -1,14 +1,14 @@
-#include "Handlefile.h"
+#include "handlefile.h"
 #include "print_error.h"
 
 char *read_file2string(const char * filepath){
 	FILE* fp = fopen(filepath, "r");
-	if(!fp) {
-		ARKprint_error(errno);
-		exit(errno);
+	if(fp == NULL) {
+		printf("\nRead file error \n");	
+		exit(1);
 	}
 
-	fseek(f,r 0, SEEK_END);
+	fseek(fp,0, SEEK_END);
     size_t _len = ftell(fp);
     rewind(fp);
 
@@ -19,7 +19,11 @@ char *read_file2string(const char * filepath){
     }
 
     fread(buffer, 1, _len, fp);
-    buffer[_len] = '\0'; // Null-terminate for convenience
+	
+	if(!buffer) {
+		perror("fread\n");
+	}
+	buffer[_len] = '\0'; // Null-terminate for convenience
 
     fclose(fp);
     return buffer;

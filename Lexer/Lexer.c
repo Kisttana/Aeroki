@@ -1,5 +1,9 @@
 #include "Lexer.h"
 
+int isIdentifier(int _c){
+		return (int) (isalnum(_c) || _c == '_');
+}
+
 ARKTokenType determine_token_type(const char* lexeme){
     // Keywords
     if (strcmp(lexeme, "if") == 0) return TOKEN_IF;
@@ -35,52 +39,56 @@ int isToken(int ch){
 	return (int)(isalpha(ch) || ch == '_');
 }
 
-ARKToken generate_token(const char * _s,size_t begin, int (*analyzer)(int)){
+ARKToken generate_token(const char * _s,size_t *cursor, int (*_Classifier)(int)){
+		if(_Classifier == NULL) {
+				fprintf(stderr,"Could't reconize Classicfier\n");
+				exit(1);
+		}
 		size_t idx = 0;
 		ARKToken token;
-		while (_s[begin] != '\0' && analyzer(_s[begin])) {
-    		token._Value[idx++] = _s[begin++];
+		while (_s[*cursor] != '\0' && _Classifier(_s[*cursor])) {
+    		token._Value[idx++] = _s[(*cursor)++];
     		if (idx >= MAX_LEN - 1) {
         		fprintf(stderr, "Token too long\n");
         		exit(1);
     		}
 		}
 		token._Value[idx] = '\0';
-		token._type = determine_token_type(token._Value);
+		token._Type = determine_token_type(token._Value);
 		return token;
 }
 
 ARKTokenList* scanLexer(ARKLexer *lex) {
-    ARKTokenList *ret = init_TokenList(64);
+	printf("Lexeme : \n%s\n", lex->lexeme);
+    ARKTokenList *ret = init_TokenList(1000);
     char current;
 
+    ARKToken token;
     while ((current = lex->lexeme[lex->cursor]) != '\0') {
-        if (isspace(current)) {
+        if (isspace(current) || current == '\n') {
             lex->cursor++;
             lex->begin = lex->cursor;
             continue;
         }
 
-        ARKToken token;
-
-        if (isdigit(current)) {
-            token = generate_token(lex->lexeme, lex->cursor, isdigit);
-        } else if (isalpha(current) || current == '_') {
-            token = generate_token(lex->lexeme, lex->cursor, isToken);
-        } else if (ispunct(current)) {
-            token = generate_token(lex->lexeme, lex->cursor, ispunct);
-        } else {
+		int (*Classifier)(int) = NULL;	
+        if (isdigit(current))  Classifier = isdigit;
+        else if (isIdentifier(current)) Classifier = isIdentifier;
+        else if (ispunct(current)) Classifier = ispunct;
+        else {
             fprintf(stderr, "Unrecognized character: '%c'\n", current);
             lex->cursor++;
             continue;
         }
-
+			
+        token = generate_token(lex->lexeme, &lex->cursor, Classifier);
         g_array_append_val(ret, token);
-        lex->cursor += strlen(token._Value);
         lex->begin = lex->cursor;
     }
 
     return ret;
 }
 
-
+ARKLexer init_lexer(char * _s){
+	return (ARKLexer){_s,0,0};
+}

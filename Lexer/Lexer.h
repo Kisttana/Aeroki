@@ -69,9 +69,11 @@ typedef struct __LEXER{
 		size_t begin;
 		size_t cursor;
 }ARKLexer;
+
+int isIdentifier(int _c);
 ARKTokenType determine_token_type(const char* lexeme);
-ARKTokenList* Laxer(const char * _s);
-ARKToken generate_token(const char * _s,size_t begin, int (*analyzer)(int));
+ARKTokenList* scanLexer(ARKLexer *lex);
+ARKToken generate_token(const char * _s,size_t *cursor, int (*_Classifier)(int));
 ARKLexer init_lexer(char * _s);
 
 #ifdef __cplusplus

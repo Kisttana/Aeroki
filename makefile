@@ -1,55 +1,44 @@
-# === Configuration ===
-CC      := gcc-15
-CXX     := g++-15
+# === CONFIGURATION ===
+CC      := gcc
+CFLAGS  := -Wall -Wextra -O2 -g $(shell pkg-config --cflags glib-2.0)
+LDFLAGS := $(shell pkg-config --libs glib-2.0)
 
-CCSTD   := -std=c23
-CXXSTD   := -std=c++26
+SRC_DIRS := Aeroki Lexer Parser libs/tools
+OBJ_DIR  := build
+BIN_DIR  := bin
+TARGET   := $(BIN_DIR)/ark
 
-OPTIMIZE:= -O2
-WALL    := -Wall -Wextra 
-
-CFLAGS  := $(CCSTD) $(WALL) $(OPTIMIZE) 
-CXXFLAGS:=  $(CXXSTD) $(WALL) $(OPTIMIZE) 
-
-LDFLAGS := 
-
-SRC_DIR := Aeroki
-BUILD_DIR := build
-BIN_DIR := bin
-
-TARGET := $(BIN_DIR)/ark
-
-C_SRCS := $(wildcard $(SRC_DIR)/*.c)
-CPP_SRCS := $(wildcard $(SRC_DIR)/*.cpp)
-OBJS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(C_SRCS)) \
-        $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(CPP_SRCS))
-
+# === FILE COLLECTION ===
+SRCS := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c))
+OBJS := $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRCS))
 DEPS := $(OBJS:.o=.d)
 
-# === Rules ===
-.PHONY: all clean
+# === RULES ===
+.PHONY: all clean rebuild install run
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	@mkdir -p $(BIN_DIR)
-	@mkdir -p $(BUILD_DIR)
-	$(CXX) $^ -o $@ $(LDFLAGS)
+	$(CC) $^ -o $@ $(LDFLAGS)
 
-# C source
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(BUILD_DIR)
+# Compile .c to .o with auto dep generation
+$(OBJ_DIR)/%.o: %.c
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
-
-# C++ source
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@mkdir -p $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -MMD -c $< -o $@
 
 -include $(DEPS)
 
 clean:
-	rm -rf $(BUILD_DIR) $(BIN_DIR)
+	rm -rf $(OBJ_DIR) $(BIN_DIR)
 
-setup:
-	
+rebuild: clean all
+
+install:
+	@echo "Installing to /usr/local/bin/ark"
+	sudo cp $(TARGET) /usr/local/bin/ark
+
+run: all
+	./$(TARGET)
+
+
