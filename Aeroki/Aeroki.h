@@ -9,7 +9,12 @@
 #include <ctype.h>
 #include <stdbool.h>
 
-void __Ark_Shell();
-void __Ark_Interpreted(FILE *__src_file);
+
+// == Include Aeroki Library ===
+#include "../Lexer/Lexer.h"
+#include "../Parser/Parser.h"
+#include "../libs/tools/print_error.h"
+#include "../libs/tools/Handlefile.h"
+
 
 #endif
