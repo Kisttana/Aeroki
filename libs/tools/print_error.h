@@ -13,10 +13,13 @@
 
 
 #define ARKprint_Error(ARK_ERROR_CODE) 						\
-	 printf("ark : \033[0;31m");   		\
+	printf("ark : \033[0;31m");   		\
      printf("fatal error :\033[0;m %s\n", strerror(ARK_ERROR_CODE));     \
      printf("compilation terminated.\n");
-				
+
+void logError(const char * LogMessage);
+
+
 void ARKsuggestion();
 void ARKhelp(const char* help_option);
 void ARKusage();

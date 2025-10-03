@@ -60,10 +60,8 @@ typedef struct __TOKEN{
 }ARKToken;
 
 typedef GArray ARKTokenList;
-
-#define getTkidx(__src, __type , __idx) g_array_index(__src , __type , __idx);
 #define init_TokenList(__size) g_array_sized_new(FALSE, FALSE, sizeof (ARKToken), __size)
-#define TokenList_resize(__size) g_array_set_size(FALSE, __size)
+
 typedef struct __LEXER{
 	   	char * lexeme;
 		size_t begin;

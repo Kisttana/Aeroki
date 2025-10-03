@@ -15,3 +15,10 @@ void ARKhelp(const char* help_option){
 		}
 		
 }
+
+
+void logError(const char *LogMessage){
+	fprintf(stderr , 
+			" \033[0;31m Error\033[0;m : %s", 
+			LogMessage);
+}

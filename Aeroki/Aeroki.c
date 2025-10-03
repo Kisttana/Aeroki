@@ -2,10 +2,7 @@
 int main(int argc, char *argv[]){
 	if(argc < 2) 
 		ARKsuggestion();	
-	
-	
-	
-	
+		
 	printf("run :%s\n", argv[0]);
 	printf("Compiling file : %s\n", argv[1]);	
 	
