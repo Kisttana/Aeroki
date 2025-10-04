@@ -4,10 +4,14 @@
     This make a managing Rountine to handle
     Token after generate from Lexer.
 */
+static size_t CurIdxToken = 0; 
 static ARKToken CurTok;
 static ARKTokenList *arrToken = NULL;
 
-#define initRoutine(LIST_OF_TOKEN) arrToken = LIST_OF_TOKEN
+// will be an alternative way for optimization.
+//static GHashTable BinopPrecedence; 
+
+void initRoutine(ARKTokenList *tokens) {arrToken = tokens;}
 
 static int getTokenPrec(const char * op){
     char *precedence[] = {"-" , "+", "*" , "/" , "**"};
@@ -18,7 +22,7 @@ static int getTokenPrec(const char * op){
 }
 
 
-static void getNextToken(){
+static ARKTokenType getNextToken(){
     static size_t CurIdxToken = 0;
     if(!arrToken){
         logError("arrToken haven't been initialized");
@@ -43,58 +47,55 @@ static void getNextToken(){
                         CurIdxToken++);
                         // => get Current index before 
                         // increasing it.
+    return CurTok._Type;
 }
 
 AST *newASTNode(ASTNodeType _type, ...){
-    AST *tmpnode = (AST*) malloc(sizeof(tmpnode));
-    tmpnode->_Type = _type;
+    // Reserve Memory
+    AST *newnode = (AST*) malloc(sizeof(AST));
+    newnode->_Type = _type; // Set type of AST node
+    
     va_list args;
     va_start(args, _type);
-    if(   _type == AST_ADD
-        ||_type == AST_MINUS
-        ||_type == AST_MUL
-        ||_type == AST_DIV
-    ){
-        tmpnode->Binary.left = va_arg(args, AST* ); 
-        strcpy(tmpnode->Binary.op, va_arg(args, char* )); 
-        tmpnode->Binary.right = va_arg(args, AST* );
-        return tmpnode;
-    }
+   
+    strcpy(newnode->Binary.op, va_arg(args, char* )); 
+    newnode->Binary.left = va_arg(args, AST* ); 
+    newnode->Binary.right = va_arg(args, AST* );
 
-    
     switch(_type){
-        case TOKEN_IDENTIFIER:
-            tmpnode->Variable_name = va_arg(args,char*);
+        case AST_PROTOTYPE:
+                // Set function name
+            newnode->Function.proto->fnName = va_arg(
+                                                    args,
+                                                    char*);
+                
+                // Set function's arguments;
+            newnode->Function.proto->Args =  va_arg(
+                                                    args,
+                                                    GArray*);
             break;
-         
+        case AST_BINARY:
+            strcpy(newnode->Binary.op, va_arg(args, char* )); 
+            newnode->Binary.left = va_arg(args, AST* ); 
+            newnode->Binary.right = va_arg(args, AST* );
         default :
+            logError("Couldn't recognize the type");
+            exit(-1);
             break;
     }
-    return tmpnode;
+    
+    return newnode;
 }
 
 
-// A function create Abstruct Syntax Tree,
-// (Parser).
-/*
-static int GetTokPrecedence() {
-  if (!isascii(CurTok))
-    return -1;
 
-  // Make sure it's a declared binop.
-  //int TokPrec = BinOpPrecedence[CurTok];
-  if (TokPrec <= 0) return -1;
-  return TokPrec;
-}
-*/
 
 /*
     "pasre()" function's duty is handle parsing 
     and Creaing Abstruct Syntax Tree.
 */
-AST* Parse(ARKTokenList * arrToken){
-    initRoutine(arrToken);
-    
+AST* Parse(){
+  
     while(1){
         // Parsing the token.
         switch (CurTok._Type)
@@ -108,7 +109,7 @@ AST* Parse(ARKTokenList * arrToken){
             case TOKEN_LBRACE: // check if '{' 
                 break;
             case TOKEN_NUMBER :
-                parseExpr();
+                ParseNumber();
                 break;
             case TOKEN_EOF:
                 // ........
@@ -120,19 +121,99 @@ AST* Parse(ARKTokenList * arrToken){
     }
     //return Created_AST;
 }
+AST *ParseExpression() {
+  auto LHS = Parse();
+  if (!LHS)
+    return NULL;
 
-AST *ParseIdentifier(){
-    getNextToken();
-    if(strcmp(CurTok._Value, "("))
-        return 
+  return ParseBinOpRHS(0, LHS);
+}
+AST *ParseBinOpRHS(int ExprPrec, AST *LHS) {
+  // If this is a binop, find its precedence.
+  while (true) {
+    int TokPrec = GetTokPrecedence();
+
+    // If this is a binop that binds at least as tightly as the current binop,
+    // consume it, otherwise we are done.
+    if (TokPrec < ExprPrec)
+      return LHS;
+
+    // Okay, we know this is a binop.
+    char *BinOp = CurTok._Value;
+    getNextToken(); // eat binop
+
+    // Parse the primary expression after the binary operator.
+    AST *RHS = Parse();
+    if (!RHS)
+      return NULL;
+
+    // If BinOp binds less tightly with RHS than the operator after RHS, let
+    // the pending operator take RHS as its LHS.
+    int NextPrec = GetTokPrecedence();
+    if (TokPrec < NextPrec) {
+      RHS = ParseBinOpRHS(TokPrec + 1, RHS);
+      if (!RHS)
+        return NULL;
+    }
+
+    // Merge LHS/RHS.
+    LHS =
+        newASTNode(AST_BINARY, BinOp, LHS, RHS);
+  }
 }
 
+
+AST *ParseIdentifier(){
+    // Keep Identifier
+    const char *IdentifierStr = CurTok._Value;
+    
+    
+    getNextToken(); // eat Identifier 
+    
+    // check if it's literally Variable
+    if(!strcmp(IdentifierStr, "("))
+        return newASTNode(AST_IDENTIFIER, CurTok._Value);
+    
+    getNextToken();// eat '('
+
+    //if it's calling function 
+    AST *Arg;
+    GArray *Args = g_array_new(false, false, sizeof(AST*));
+    if (strcmp(CurTok._Value, ")") != 0) {
+        while (true) {
+            if ( Arg = ParseExpression())
+                g_array_append_val(Args, Arg);
+            else
+                return NULL;
+
+            if (!strcmp(CurTok._Value, ")"))  {
+                getNextToken();
+                break;
+            }
+
+            if (!strcmp(CurTok._Value, ",")){
+                LogError("Expected ')' or ',' in argument list");
+                exit(-1);
+            }
+        
+            getNextToken();
+        }   
+    }
+    return newASTNode(AST_CALL, IdentifierStr, Args); 
+}
+AST *ParseNumber(){
+    AST* NumberNode = newASTNode(AST_NUMBER, strtold(CurTok._Value));
+    getNextToken();
+    return NumberNode;
+}
 
 
 AST *parseParen(){
     getNextToken(); // 
 
     AST * LHS = ParseExpr();
+    if(!LHS)
+        return NULL;
     if(!LHS) {
         logError("In ParseParen Memory error.");
         exit(-1);
@@ -144,7 +225,30 @@ AST *parseParen(){
     return LHS;
 }
 
-int main(){
 
+
+AST *ParsePrototype() {
+  if (CurTok._Type != TOKEN_IDENTIFIER)
+    return LogErrorP("Expected function name in prototype");
+
+  char *FnName = CurTok._Value;
+  getNextToken();
+
+  if (strcmp(CurTok._Value, "("))
+    return LogErrorP("Expected '(' in prototype");
+
+  // Read the list of argument names.
+  GArray *ArgsName = g_array_new(false, false , sizeof(char*));
+  while (getNextToken() == TOKEN_IDENTIFIER) 
+        g_array_append_val(ArgsName, CurTok._Value);
+
+  if (strcmp(CurTok._Value, ")"))
+    return LogErrorP("Expected ')' in prototype");
+
+  // success.
+  getNextToken();  // eat ')'.
+
+  return newASTNode(AST_PROTOTYPE , FnName, ArgsName);
 }
+
 

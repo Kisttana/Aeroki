@@ -79,7 +79,7 @@ ARKTokenList* scanLexer(ARKLexer *lex) {
 
 		int (*Classifier)(int) = NULL;	
         if (isdigit(current))  Classifier = isdigit;
-        else if (isIdentifier(current)) Classifier = isIdentifier;
+        else if (isalpha(current) || current == '_') Classifier = isIdentifier;
 		else if(current == '\"'){
             size_t idx = 0;
             while(lex->lexeme[lex->cursor] != '\0'){

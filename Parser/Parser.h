@@ -3,6 +3,7 @@
 
 #include <stdlib.h> // Memory Management malloc() , free() .
 #include <stdarg.h> // Variadic functions.
+#include <stdbool.h> // true and false
 #include "../libs/tools/print_error.h"
 /* 
     -For showing Log.
@@ -34,18 +35,11 @@
 */
 
 typedef enum{
-    AST_VAR,
+    AST_IDENTIFIER,
+    AST_NUMBER,
     AST_BLOCK, // Function block
-    AST_ADD, // Operater Plus => "+"
-    AST_MINUS, // Operator Minus => "-"
-    AST_MUL, // Operater Multiply => "*"
-    AST_POW, // Operater Power =>  o"**"
-    AST_BIT_NOT, // Operater Bitwise Not => "~"
-    AST_BIT_AND, //Operater Bitwise AND => "&"
-    AST_BIT_OR, //Operater Bitwise AND => "|"
-    AST_BIT_SHIFTL ,// Operater  => "<<" (shift Left)
-    AST_BIT_SHIFTR , // OPerater => ">>" (shift Right)
-
+    AST_BINARY,
+    AST_PROTOTYPE, // Function declearation 
     AST_CALL // Function Call => F(arg1 , arg2, ...) 
 }ASTNodeType;
 
@@ -54,23 +48,39 @@ typedef struct {
     struct ASTNode *left;
     char op[3];
     struct ASTNode *right;
-} ASTBinaryNode;
+} ASTBinary;
 
 
-typedef struct ASTNode {
+typedef struct Prototype {
+    GArray *Args;
+    char *fnName;
+}ASTFuncPrototype;
+
+typedef struct Function{
+    ASTFuncPrototype *proto;
+    AST *body;
+}ASTFunc;
+
+typedef struct CallFunc{
+    char *Callee;
+    GArray *Args;
+}ASTCall;
+
+typedef struct AbstractSyntaxTree{
     ASTNodeType _Type;
     union {
         long double _Number;
         char *Variable_name;
-        ASTBinaryNode Binary; 
+        ASTBinary Binary; 
+        ASTFunc Function;
     };
 } AST;
 
 
 AST *newASTNode(ASTNodeType _type, ...);
-AST *Parse(ARKTokenList *TokList);
-AST *ParseIdentifierExpr();
+AST *Parse();
+AST *ParseIdentifier();
 AST *ParseNumber();
 AST *ParseParen();
-AST *ParseExpr
+AST *ParseExpression();
 #endif // PARSER_H
