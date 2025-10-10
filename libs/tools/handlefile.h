@@ -4,6 +4,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-char* read_file2string(const char * filepath);
+char* load_file(const char * filepath);
 
 #endif

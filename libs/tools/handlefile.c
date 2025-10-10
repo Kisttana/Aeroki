@@ -1,7 +1,7 @@
 #include "handlefile.h"
 #include "print_error.h"
 
-char *read_file2string(const char * filepath){
+char *load_file(const char * filepath){
 	FILE* fp = fopen(filepath, "r");
 	if(fp == NULL) {
 		printf("\nRead file error \n");	

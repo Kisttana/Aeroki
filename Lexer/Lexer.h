@@ -18,45 +18,52 @@ extern "C"{
 #include <glib-2.0/glib.h>
 
 typedef enum {
-    TOKEN_UNKNOWN = 0,
-    TOKEN_IDENTIFIER,
-    TOKEN_NUMBER,
-    TOKEN_STRING,
+     TOKEN_UNKNOWN = 0,
+     TOKEN_IDENTIFIER,
+     TOKEN_NUMBER,
+     TOKEN_STRING,
+     TOKEN_TRUE,
+     TOKEN_FALSE,
+     // Keywords
+     TOKEN_IF,
+     TOKEN_ELSE,
+     TOKEN_RETURN,
+     TOKEN_LET,
+     TOKEN_WHILE,
+     TOKEN_FOR,
+     TOKEN_DEF,
+     // Operators and punctuation
+     TOKEN_PLUS,
+     TOKEN_MINUS,
+     TOKEN_STAR,
+     TOKEN_SLASH,
+     TOKEN_BANG,
+     TOKEN_EQUAL,
+     TOKEN_EQUAL_EQUAL,
+     TOKEN_NOT_EQUAL,
+     TOKEN_LT,
+     TOKEN_LTE,
+     TOKEN_GT,
+     TOKEN_GTE,
+     TOKEN_SEMICOLON,
+     TOKEN_COMMA,
+     TOKEN_DOT,
+     TOKEN_LPAREN,
+     TOKEN_RPAREN,
 
-    // Keywords
-    TOKEN_IF,
-    TOKEN_ELSE,
-    TOKEN_RETURN,
-    TOKEN_LET,
-    TOKEN_WHILE,
-    TOKEN_FOR,
+     TOKEN_LBRACE,
+     TOKEN_RBRACE,
+     TOKEN_SHAPE,
+     
 
-    // Operators and punctuation
-    TOKEN_PLUS,
-    TOKEN_MINUS,
-    TOKEN_STAR,
-    TOKEN_SLASH,
-    TOKEN_EQUAL,
-    TOKEN_EQUAL_EQUAL,
-    TOKEN_NOT_EQUAL,
-    TOKEN_LT,
-    TOKEN_LTE,
-    TOKEN_GT,
-    TOKEN_GTE,
-    TOKEN_SEMICOLON,
-    TOKEN_COMMA,
-	TOKEN_DOT,
-	TOKEN_LPAREN,
-    TOKEN_RPAREN,
-    TOKEN_LBRACE,
-    TOKEN_RBRACE,
-    TOKEN_SHAPE,
-    TOKEN_EOF
+     TOKEN_EOF,
+     TOKEN_NON_OF_TOKEN
+
 } ARKTokenType;
 
 typedef struct __TOKEN{
-	ARKTokenType _Type;
-	char _Value[MAX_LEN];
+     ARKTokenType _Type;
+     char _Value[MAX_LEN];
 }ARKToken;
 
 typedef GArray ARKTokenList;
@@ -64,10 +71,10 @@ typedef GArray ARKTokenList;
 #define getTkidx(__src, __type , __idx) g_array_index(__src , __type , __idx);
 #define init_TokenList(__size) g_array_sized_new(FALSE, FALSE, sizeof (ARKToken), __size)
 #define TokenList_resize(__size) g_array_set_size(FALSE, __size)
-typedef struct __LEXER{
-	   	char * lexeme;
-		size_t begin;
-		size_t cursor;
+typedef struct {
+     char * lexeme;
+     size_t begin;
+     size_t cursor;
 }ARKLexer;
 
 int isIdentifier(int _c);
