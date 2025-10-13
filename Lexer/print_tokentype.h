@@ -2,26 +2,31 @@
 #define __PRINT_TOKENTYPE__
 
 
-#define TOKEN_COUNT 29
-const char * TOKEN_TYPE[] = {
-	"TOKEN_UNKNOWN",
+static const char *TOKEN_TYPE[] = {
+    "TOKEN_UNKNOWN",
     "TOKEN_IDENTIFIER",
     "TOKEN_NUMBER",
     "TOKEN_STRING",
-
+    "TOKEN_TRUE",
+    "TOKEN_FALSE",
     // Keywords
     "TOKEN_IF",
     "TOKEN_ELSE",
     "TOKEN_RETURN",
     "TOKEN_LET",
     "TOKEN_WHILE",
-	"TOKEN_FOR",
-
+    "TOKEN_FOR",
+    "TOKEN_DEF",
+    "TOKEN_AND",
+    "TOKEN_OR",
     // Operators and punctuation
     "TOKEN_PLUS",
     "TOKEN_MINUS",
-    "TOKEN_STAR",
-    "TOKEN_SLASH",
+    "TOKEN_MUL",
+    "TOKEN_DIV",
+    "TOKEN_POW",
+    "TOKEN_MOD",
+    "TOKEN_BANG",
     "TOKEN_EQUAL",
     "TOKEN_EQUAL_EQUAL",
     "TOKEN_NOT_EQUAL",
@@ -31,20 +36,18 @@ const char * TOKEN_TYPE[] = {
     "TOKEN_GTE",
     "TOKEN_SEMICOLON",
     "TOKEN_COMMA",
-	"TOKEN_DOT",
+    "TOKEN_DOT",
     "TOKEN_LPAREN",
     "TOKEN_RPAREN",
     "TOKEN_LBRACE",
     "TOKEN_RBRACE",
     "TOKEN_SHAPE",
-    "TOKEN_EOF"
- 
+    "TOKEN_EOF",
 };
-
 
 #ifndef TYPEOF
 #define TYPEOF
-#define typeof(__TOKEN) (((__TOKEN) <= TOKEN_COUNT && (__TOKEN) >= 0)?(TOKEN_TYPE[__TOKEN]):(TOKEN_TYPE[0])) 
+#define typeof(__TOKEN) TOKEN_TYPE[__TOKEN] 
 #endif
 
 

@@ -32,11 +32,16 @@ typedef enum {
      TOKEN_WHILE,
      TOKEN_FOR,
      TOKEN_DEF,
+     TOKEN_AND,
+     TOKEN_OR,
      // Operators and punctuation
      TOKEN_PLUS,
      TOKEN_MINUS,
-     TOKEN_STAR,
-     TOKEN_SLASH,
+     TOKEN_MUL,
+     TOKEN_DIV,
+     TOKEN_POW,
+     TOKEN_MOD,
+
      TOKEN_BANG,
      TOKEN_EQUAL,
      TOKEN_EQUAL_EQUAL,
@@ -68,16 +73,15 @@ typedef struct __TOKEN{
 
 typedef GArray ARKTokenList;
 
-#define getTkidx(__src, __type , __idx) g_array_index(__src , __type , __idx);
 #define init_TokenList(__size) g_array_sized_new(FALSE, FALSE, sizeof (ARKToken), __size)
 #define TokenList_resize(__size) g_array_set_size(FALSE, __size)
+
 typedef struct {
      char * lexeme;
      size_t begin;
      size_t cursor;
 }ARKLexer;
 
-int isIdentifier(int _c);
 ARKTokenType determine_token_type(const char* lexeme);
 ARKTokenList* scanLexer(ARKLexer *lex);
 ARKToken generate_token(const char * _s,size_t *cursor, int (*_Classifier)(int));

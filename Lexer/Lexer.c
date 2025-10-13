@@ -1,6 +1,8 @@
 #include "Lexer.h"
+#include <stdlib.h>
+#include <string.h>
 
-int isIdentifier(int _c){
+static int isIdentifier(int _c){
      return (int) (isalnum(_c) || _c == '_');
 }
 
@@ -8,6 +10,10 @@ ARKTokenType determine_token_type(const char* lexeme){
      // Keywords
      if (strcmp(lexeme, "if") == 0) return TOKEN_IF;
      if (strcmp(lexeme, "else") == 0) return TOKEN_ELSE;
+     if (    strcmp(lexeme, "and") == 0
+          || strcmp(lexeme, "&&")  == 0) return TOKEN_AND; 
+     if (    strcmp(lexeme, "or") == 0
+          || strcmp(lexeme, "||")  == 0) return TOKEN_OR; 
      if (strcmp(lexeme, "return") == 0) return TOKEN_RETURN;
      if (strcmp(lexeme, "let") == 0) return TOKEN_LET;
      if (strcmp(lexeme, "while") == 0) return TOKEN_WHILE;
@@ -16,8 +22,9 @@ ARKTokenType determine_token_type(const char* lexeme){
      // Operators and punctuation
      if (strcmp(lexeme, "+") == 0) return TOKEN_PLUS;
      if (strcmp(lexeme, "-") == 0) return TOKEN_MINUS;
-     if (strcmp(lexeme, "*") == 0) return TOKEN_STAR;
-     if (strcmp(lexeme, "/") == 0) return TOKEN_SLASH;
+     if (strcmp(lexeme, "*") == 0) return TOKEN_MUL;
+     if (strcmp(lexeme, "**") == 0) return TOKEN_POW;
+     if (strcmp(lexeme, "/") == 0) return TOKEN_DIV;
      if (strcmp(lexeme, "=") == 0) return TOKEN_EQUAL;
      if (strcmp(lexeme, "==") == 0) return TOKEN_EQUAL_EQUAL;
      if (strcmp(lexeme, "!=") == 0) return TOKEN_NOT_EQUAL;
@@ -32,7 +39,7 @@ ARKTokenType determine_token_type(const char* lexeme){
      if (strcmp(lexeme, ")") == 0) return TOKEN_RPAREN;
      if (strcmp(lexeme, "{") == 0) return TOKEN_LBRACE;
      if (strcmp(lexeme, "}") == 0) return TOKEN_RBRACE;
-     if (strcmp(lexeme, "#") == 0) return TOKEN_SHAPE; 
+     
      size_t idx = 0 ;
      int isNumToken = 1;
      ARKTokenType RETURN_TOKEN = TOKEN_IDENTIFIER;
@@ -40,7 +47,8 @@ ARKTokenType determine_token_type(const char* lexeme){
           if( !isdigit(lexeme[idx++]) )
                isNumToken = 0;  
      }
-     if(isNumToken) RETURN_TOKEN = TOKEN_NUMBER;
+     if(isNumToken) 
+          RETURN_TOKEN = TOKEN_NUMBER;
      // Default to identifier or number
      return RETURN_TOKEN;
 }
@@ -71,6 +79,33 @@ ARKTokenList* scanLexer(ARKLexer *lex) {
 
      ARKToken token;
      while ((current = lex->lexeme[lex->cursor]) != '\0') {
+          
+          // reset token to default
+          
+          memset(token._Value, '\0', sizeof(token._Value));
+          
+          if(current == '#'){
+               char *search_begin = lex->lexeme + lex->cursor; 
+               char * find_endl = 
+                         strchr(search_begin,'\n');
+
+               if(!find_endl) {
+                    lex->cursor = sizeof(lex->lexeme)-1;
+                    fprintf(stderr,"not found \n");
+                    continue;
+               }
+               printf("found # comment the line \n");
+               
+               
+     
+               // update position to the end of line
+               lex->cursor = find_endl - lex->lexeme + 1 ;
+               lex->begin = lex->cursor;
+
+               continue;
+          }
+               
+
           if (isspace(current) || current == '\n') {
                lex->cursor++;
                lex->begin = lex->cursor;
@@ -80,7 +115,8 @@ ARKTokenList* scanLexer(ARKLexer *lex) {
           int (*Classifier)(int) = NULL;	
           if (isdigit(current))  Classifier = isdigit;
           else if (isIdentifier(current)) Classifier = isIdentifier;
-          else if(current == '\"'){
+
+          else if(current == '\"'){ // check if it may be string
                size_t idx = 0;
                while(lex->lexeme[lex->cursor] != '\0'){
 
@@ -106,8 +142,50 @@ ARKTokenList* scanLexer(ARKLexer *lex) {
                || current == '*'
                || current == '.'
           ){
+               
+               if(     current == '/'  
+                    && lex->lexeme[ lex->cursor + 1 ] == '*'
+                 ){  
+                    // check if it's multi-lines comment
+
+                    char *search_begin = lex->lexeme + lex->cursor ;
+                    char *find_end_comment =
+                              strstr(search_begin, "*/");
+                    if(!find_end_comment){
+                         free(lex->lexeme);
+                         fprintf(stderr, "SyntaxError : Unterminated Comment \n");
+                         exit(EXIT_FAILURE);
+                    }
+
+                    lex->cursor = find_end_comment - lex->lexeme + 2;
+                    lex->begin = lex->cursor; 
+                    continue;
+               }
+
                token._Value[0] = current;
-               token._Value[1] ='\0';
+               token._Value[1] = '\0' ;
+
+               switch(lex->lexeme[lex->cursor+1]){
+                    case '*':
+                         token._Value[1] = '*';
+                         lex->cursor++;
+                         break;
+                    case '/':
+                         token._Value[1] = '/';
+                         lex->cursor++;
+                         break;
+                    case '|':
+                         token._Value[1] = '|';
+                         lex->cursor++;
+                         break;
+                    case '&':
+                         token._Value[1] = '&';
+                         lex->cursor++;
+                         break;
+                    default :
+                         break;
+               }
+               token._Value[2] = '\0';
                token._Type = determine_token_type(token._Value);
                lex->cursor++;
           }
@@ -122,8 +200,10 @@ ARKTokenList* scanLexer(ARKLexer *lex) {
                token = generate_token(lex->lexeme, &lex->cursor, Classifier);
           g_array_append_val(ret, token);
           lex->begin = lex->cursor;
-     }
-
+     } 
+     
+     ARKToken eof =  {._Type=TOKEN_EOF,._Value="<EOF>"};
+     g_array_append_val(ret, eof);
      return ret;
 }
 
