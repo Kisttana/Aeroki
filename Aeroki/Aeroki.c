@@ -1,4 +1,5 @@
 #include "Aeroki.h"
+#include "../Parser/lexer.cpp"
 
 #define MAX_VARIABLES 100
 #define MAX_CMDS 256
