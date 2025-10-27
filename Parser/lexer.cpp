@@ -1,4 +1,4 @@
-#include "Aeroki.h"
+#include "../Aeroki/Aeroki.h"
 
 typedef enum {
     TOK_GIVE, TOK_FIND, TOK_INPUT, TOK_RESULT,
