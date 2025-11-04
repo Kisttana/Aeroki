@@ -218,6 +218,63 @@ void execute_block() {
     if (peek()->type == TOK_RBRACE) next();
 }
 
+// ==== Command Buffer ====
+
+char *cmd_buffer[MAX_CMDS];
+int cmd_count = 0;
+
+void add_command(const char *line) {
+    if (cmd_count < MAX_CMDS) {
+        cmd_buffer[cmd_count] = strdup(line);
+        cmd_count++;
+    }
+}
+
+void run_all_commands() {
+    for (int i = 0; i < cmd_count; i++) {
+        lex_line(cmd_buffer[i]);
+        // run the command
+        if (tokens[0].type == TOK_GIVE) {
+            if (tokens[1].type == TOK_ID && tokens[2].type == TOK_ASSIGN) {
+                tok_pos = 3;
+                Node *expr = parse_expr();
+                int val = eval(expr);
+                set_variable(tokens[1].text, val);
+            }
+        } else if (tokens[0].type == TOK_FIND) {
+            tok_pos = 1;
+            Node *expr = parse_expr();
+            printf("%d\n", eval(expr));
+        } else if (tokens[0].type == TOK_INPUT) {
+            if (tokens[1].type == TOK_ID) {
+                int val;
+                printf("กรอกค่า %s: ", tokens[1].text);
+                fflush(stdout);
+                if (scanf("%d", &val) == 1) {
+                    set_variable(tokens[1].text, val);
+                } else {
+                    printf("Invalid input.\n");
+                    int c; while ((c = getchar()) != '\n' && c != EOF);
+                }
+            }
+        }
+        free(cmd_buffer[i]);
+    }
+    cmd_count = 0;
+}
+
+// ==== Helpers ====
+
+static void ltrim(char *str) {
+    int index = 0;
+    while (str[index] == ' ' || str[index] == '\t') index++;
+    if (index > 0) {
+        int i = 0;
+        while (str[index]) str[i++] = str[index++];
+        str[i] = '\0';
+    }
+}
+
 // ==== Shell Interpreter ====
 
 void __Ark_Shell() {
