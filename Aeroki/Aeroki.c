@@ -3,6 +3,8 @@
 #define MAX_VARIABLES 100
 #define MAX_CMDS 256
 
+// ==== Variable ====
+
 typedef struct {
     char name[32];
     int value;
@@ -12,19 +14,23 @@ Variable variables[MAX_VARIABLES];
 int var_count = 0;
 
 int get_variable(const char *name) {
-    for (int i = 0; i < var_count; ++i)
-        if (strcmp(variables[i].name, name) == 0)
+    for (int i = 0; i < var_count; ++i) {
+        if (strcmp(variables[i].name, name) == 0) {
             return variables[i].value;
+        }
+    }
     fprintf(stderr, "Variable not found: %s\n", name);
     exit(1);
 }
 
 void set_variable(const char *name, int value) {
-    for (int i = 0; i < var_count; ++i)
+    for (int i = 0; i < var_count; ++i) {
         if (strcmp(variables[i].name, name) == 0) {
             variables[i].value = value;
             return;
         }
+    }
+
     if (var_count < MAX_VARIABLES) {
         strcpy(variables[var_count].name, name);
         variables[var_count].value = value;
@@ -35,24 +41,21 @@ void set_variable(const char *name, int value) {
     }
 }
 
-// ===== LEXER =====
+// ==== Lexer ====
 
 typedef enum {
-    TOK_GIVE, TOK_FIND, TOK_INPUT, TOK_RESULT, TOK_PRINT,
-    TOK_IF, TOK_ELSE,
-    TOK_ID, TOK_NUM, TOK_STRING,
+    TOK_GIVE, TOK_FIND, TOK_INPUT, TOK_RESULT,
+    TOK_ID, TOK_NUM,
     TOK_ASSIGN, TOK_PLUS, TOK_MINUS, TOK_MUL, TOK_DIV,
-    TOK_LT, TOK_GT, TOK_EQEQ,
-    TOK_LBRACE, TOK_RBRACE,
     TOK_EOF
 } TokenType;
 
 typedef struct {
     TokenType type;
-    char text[128];
+    char text[64];
 } Token;
 
-Token tokens[512];
+Token tokens[128];
 int tok_count, tok_pos;
 
 void lex_line(const char *line) {
@@ -70,23 +73,8 @@ void lex_line(const char *line) {
             tokens[tok_count++] = (Token){TOK_INPUT, "รับค่า"}; p += strlen("รับค่า");
         } else if (strncmp(p, "ผล", strlen("ผล")) == 0) {
             tokens[tok_count++] = (Token){TOK_RESULT, "ผล"}; p += strlen("ผล");
-        } else if (strncmp(p, "แสดง", strlen("แสดง")) == 0) {
-            tokens[tok_count++] = (Token){TOK_PRINT, "แสดง"}; p += strlen("แสดง");
-        } else if (strncmp(p, "ถ้าไม่", strlen("ถ้าไม่")) == 0) {
-            tokens[tok_count++] = (Token){TOK_ELSE, "ถ้าไม่"}; p += strlen("ถ้าไม่");
-        } else if (strncmp(p, "ถ้า", strlen("ถ้า")) == 0) {
-            tokens[tok_count++] = (Token){TOK_IF, "ถ้า"}; p += strlen("ถ้า");
-        } else if (*p == '{') {
-            tokens[tok_count++] = (Token){TOK_LBRACE, "{"}; p++;
-        } else if (*p == '}') {
-            tokens[tok_count++] = (Token){TOK_RBRACE, "}"}; p++;
         } else if (*p == '=') {
-            if (*(p+1) == '=') { tokens[tok_count++] = (Token){TOK_EQEQ, "=="}; p += 2; }
-            else { tokens[tok_count++] = (Token){TOK_ASSIGN, "="}; p++; }
-        } else if (*p == '<') {
-            tokens[tok_count++] = (Token){TOK_LT, "<"}; p++;
-        } else if (*p == '>') {
-            tokens[tok_count++] = (Token){TOK_GT, ">"}; p++;
+            tokens[tok_count++] = (Token){TOK_ASSIGN, "="}; p++;
         } else if (*p == '+') {
             tokens[tok_count++] = (Token){TOK_PLUS, "+"}; p++;
         } else if (*p == '-') {
@@ -95,14 +83,6 @@ void lex_line(const char *line) {
             tokens[tok_count++] = (Token){TOK_MUL, "*"}; p++;
         } else if (*p == '/') {
             tokens[tok_count++] = (Token){TOK_DIV, "/"}; p++;
-        } else if (*p == '"') {
-            p++;
-            char buf[128]; int len = 0;
-            while (*p && *p != '"') buf[len++] = *p++;
-            buf[len] = '\0';
-            if (*p == '"') p++;
-            tokens[tok_count++] = (Token){TOK_STRING, ""};
-            strcpy(tokens[tok_count-1].text, buf);
         } else if (isdigit(*p)) {
             char buf[64]; int len = 0;
             while (isdigit(*p)) buf[len++] = *p++;
@@ -124,98 +104,87 @@ void lex_line(const char *line) {
 Token *peek() { return &tokens[tok_pos]; }
 Token *next() { return &tokens[tok_pos++]; }
 
-// ==== Expressions ====
+// ==== AST ====
 
-int parse_expr();
+typedef enum { NODE_NUM, NODE_VAR, NODE_BINOP } NodeType;
 
-int parse_factor() {
+typedef struct Node {
+    NodeType type;
+    int value;
+    char varname[32];
+    char op;
+    struct Node *left, *right;
+} Node;
+
+Node *make_num(int v) {
+    Node *n = malloc(sizeof(Node));
+    n->type = NODE_NUM; n->value = v;
+    n->left = n->right = NULL;
+    return n;
+}
+Node *make_var(const char *name) {
+    Node *n = malloc(sizeof(Node));
+    n->type = NODE_VAR; strcpy(n->varname, name);
+    n->left = n->right = NULL;
+    return n;
+}
+Node *make_binop(char op, Node *l, Node *r) {
+    Node *n = malloc(sizeof(Node));
+    n->type = NODE_BINOP; n->op = op;
+    n->left = l; n->right = r;
+    return n;
+}
+
+// ==== Parser (recursive descent) ====
+
+Node *parse_expr();
+
+Node *parse_factor() {
     Token *t = peek();
     if (t->type == TOK_NUM) {
-        next(); return atoi(t->text);
+        next();
+        return make_num(atoi(t->text));
     } else if (t->type == TOK_ID) {
-        next(); return get_variable(t->text);
+        next();
+        return make_var(t->text);
     }
-    return 0;
+    return make_num(0);
 }
 
-int parse_term() {
-    int val = parse_factor();
+Node *parse_term() {
+    Node *node = parse_factor();
     while (peek()->type == TOK_MUL || peek()->type == TOK_DIV) {
-        char op = next()->text[0];
-        int right = parse_factor();
-        if (op == '*') val *= right;
-        else val /= right;
+        char op = peek()->text[0];
+        next();
+        node = make_binop(op, node, parse_factor());
     }
-    return val;
+    return node;
 }
-
-int parse_expr() {
-    int val = parse_term();
+Node *parse_expr() {
+    Node *node = parse_term();
     while (peek()->type == TOK_PLUS || peek()->type == TOK_MINUS) {
-        char op = next()->text[0];
-        int right = parse_term();
-        if (op == '+') val += right;
-        else val -= right;
+        char op = peek()->text[0];
+        next();
+        node = make_binop(op, node, parse_term());
     }
-    return val;
+    return node;
 }
 
 // ==== Interpreter ====
 
-void execute_block();
-
-void execute_if() {
-    next(); // skip ถ้า
-    int condition_left = parse_expr();
-    int truth = condition_left;
-
-    if (peek()->type == TOK_LBRACE) next();
-    if (truth) {
-        execute_block();
-        // skip else block if exists
-        if (peek()->type == TOK_ELSE) {
-            next();
-            if (peek()->type == TOK_LBRACE) {
-                int brace = 1;
-                while (brace > 0) {
-                    if (peek()->type == TOK_LBRACE) brace++;
-                    else if (peek()->type == TOK_RBRACE) brace--;
-                    next();
-                }
-            }
-        }
-    } else {
-        // skip until else or end
-        int brace = 1;
-        while (brace > 0) {
-            if (peek()->type == TOK_LBRACE) brace++;
-            else if (peek()->type == TOK_RBRACE) brace--;
-            next();
-        }
-        if (peek()->type == TOK_ELSE) {
-            next();
-            if (peek()->type == TOK_LBRACE) next();
-            execute_block();
+int eval(Node *n) {
+    if (n->type == NODE_NUM) return n->value;
+    if (n->type == NODE_VAR) return get_variable(n->varname);
+    if (n->type == NODE_BINOP) {
+        int l = eval(n->left), r = eval(n->right);
+        switch (n->op) {
+            case '+': return l + r;
+            case '-': return l - r;
+            case '*': return l * r;
+            case '/': return r ? l / r : 0;
         }
     }
-}
-
-void execute_block() {
-    while (peek()->type != TOK_RBRACE && peek()->type != TOK_EOF) {
-        Token *t = peek();
-        if (t->type == TOK_PRINT) {
-            next();
-            if (peek()->type == TOK_STRING) {
-                printf("%s\n", peek()->text);
-                next();
-            }
-        } else if (t->type == TOK_IF) {
-            execute_if();
-        } else {
-            next();
-        }
-    }
-    if (peek()->type == TOK_RBRACE) next();
+    return 0;
 }
 
 // ==== Command Buffer ====
