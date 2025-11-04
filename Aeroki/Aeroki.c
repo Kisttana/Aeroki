@@ -218,26 +218,25 @@ void execute_block() {
     if (peek()->type == TOK_RBRACE) next();
 }
 
-// ==== Shell ====
+// ==== Shell Interpreter ====
 
 void __Ark_Shell() {
-    char line[512];
+    char line[256];
     printf("Aeroki Shell Mode (type 'ออก' to exit)\n");
-
     while (1) {
         printf(">>> ");
         fflush(stdout);
         if (!fgets(line, sizeof(line), stdin)) break;
         line[strcspn(line, "\n")] = '\0';
+        ltrim(line);
         if (strcmp(line, "ออก") == 0) break;
+        if (line[0] == '\0') continue;
+
         lex_line(line);
-        if (peek()->type == TOK_IF)
-            execute_if();
-        else if (tokens[0].type == TOK_PRINT) {
-            next();
-            if (peek()->type == TOK_STRING) {
-                printf("%s\n", peek()->text);
-            }
+        if (tokens[0].type == TOK_RESULT) {
+            run_all_commands();
+        } else {
+            add_command(line);
         }
     }
 }
