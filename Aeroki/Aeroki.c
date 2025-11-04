@@ -266,3 +266,22 @@ void __Ark_Shell() {
         }
     }
 }
+
+// ==== File Interpreter ====
+
+void __Ark_Interpreted(FILE *src) {
+    char line[256];
+
+    while (fgets(line, sizeof(line), src)) {
+        line[strcspn(line, "\n")] = '\0';
+        ltrim(line);
+        if (line[0] == '\0') continue;
+
+        lex_line(line);
+        if (tokens[0].type == TOK_RESULT) {
+            run_all_commands();
+        } else {
+            add_command(line);
+        }
+    }
+}
