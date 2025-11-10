@@ -1,6 +1,8 @@
 import subprocess
 import tkinter as tk
 from tkinter import filedialog, scrolledtext
+import tempfile
+import os
 
 class AerokiIDE:
     def __init__(self, root):
@@ -65,19 +67,29 @@ class AerokiIDE:
         self.output_box.delete("1.0", tk.END)
         code = self.editor.get("1.0", tk.END)
 
-        # Save temporary file
-        temp_file = "temp.aero"
-        with open(temp_file, "w", encoding="utf-8") as f:
-            f.write(code)
+        # --- Save temporary file safely in system temp folder ---
+        temp_dir = tempfile.gettempdir()
+        temp_file = os.path.join(temp_dir, "temp.aero")
 
         try:
-            # On Windows, './aeroki' should be 'aeroki.exe'
-            cmd = ["aeroki.exe", temp_file] if subprocess.os.name == "nt" else ["./aeroki", temp_file]
+            with open(temp_file, "w", encoding="utf-8") as f:
+                f.write(code)
+        except PermissionError:
+            self.output_box.insert(tk.END, f"Permission denied when writing to: {temp_file}\n")
+            return
+
+        try:
+            # Locate aeroki.exe in same folder as this script
+            exe_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "aeroki.exe")
+            if not os.path.exists(exe_path):
+                raise FileNotFoundError
+
+            cmd = [exe_path, temp_file] if subprocess.os.name == "nt" else ["./aeroki", temp_file]
             result = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
-                encoding="utf-8"  # ensures Thai text prints correctly
+                encoding="utf-8"
             )
             output = result.stdout + result.stderr
             self.output_box.insert(tk.END, output)
@@ -86,6 +98,12 @@ class AerokiIDE:
                 tk.END,
                 "Aeroki compiler not found!\nMake sure 'aeroki.exe' exists in the same folder."
             )
+        finally:
+            # --- Clean up temporary file ---
+            try:
+                os.remove(temp_file)
+            except Exception:
+                pass
 
 # --- Run the GUI ---
 if __name__ == "__main__":
