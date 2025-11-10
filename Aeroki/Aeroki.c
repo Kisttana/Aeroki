@@ -277,8 +277,8 @@ void run_all_commands() {
                             }
                         }
                     }
-                    if (i + 2 < cmd_count) {
-                        lex_line(cmd_buffer[i + 2]);
+                    if (i + 1 < cmd_count) {
+                        lex_line(cmd_buffer[i + 1]);
                         if (tokens[0].type == TOK_ELSE) {
                             i += 2;
                         } else {
