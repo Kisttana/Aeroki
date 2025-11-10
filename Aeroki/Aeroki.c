@@ -67,7 +67,6 @@ void lex_line(const char *line) {
     while (*p) {
         if (isspace((unsigned char)*p)) { p++; continue; }
 
-        // Check multi-word keywords first
         if (strncmp(p, "ให้", strlen("ให้")) == 0) {
             tokens[tok_count++] = (Token){TOK_GIVE, "ให้"}; p += strlen("ให้");
         } else if (strncmp(p, "หา", strlen("หา")) == 0) {
@@ -79,7 +78,6 @@ void lex_line(const char *line) {
         } else if (strncmp(p, "ถ้า", strlen("ถ้า")) == 0) {
             tokens[tok_count++] = (Token){TOK_IF, "ถ้า"}; p += strlen("ถ้า");
         }
-        // comparisons and operators
         else if (*p == '<') {
             if (*(p+1) == '=') { tokens[tok_count++] = (Token){TOK_LE, "<="}; p+=2; }
             else { tokens[tok_count++] = (Token){TOK_LT, "<"}; p++; }
@@ -107,7 +105,6 @@ void lex_line(const char *line) {
             tokens[tok_count++] = (Token){TOK_NUM, ""};
             strcpy(tokens[tok_count-1].text, buf);
         } else {
-            // identifier or combined token
             char buf[64]; int len = 0;
             while (*p && !isspace((unsigned char)*p) && *p!='=' && *p!='+' && *p!='-' && *p!='*' && *p!='/'
                    && *p!='<' && *p!='>' && *p!='!') {
@@ -220,7 +217,6 @@ void add_command(const char *line) {
 }
 
 // helper: evaluate condition with comparison operators
-// assumes tok_pos is set to the token right after TOK_IF (i.e., 1)
 int eval_condition_from_tokpos() {
     Node *left_expr = parse_expr();
     int left_val = eval(left_expr);
@@ -229,7 +225,7 @@ int eval_condition_from_tokpos() {
     if (cmp->type == TOK_LT || cmp->type == TOK_GT || cmp->type == TOK_LE || cmp->type == TOK_GE
         || cmp->type == TOK_EQEQ || cmp->type == TOK_NEQ) {
         TokenType cmpType = cmp->type;
-        next();
+        next(); // consume comparator
         Node *right_expr = parse_expr();
         int right_val = eval(right_expr);
 
@@ -243,7 +239,6 @@ int eval_condition_from_tokpos() {
             default: return 0;
         }
     } else {
-        // no comparator; truthiness: non-zero = true
         return left_val != 0;
     }
 }
@@ -252,16 +247,11 @@ void run_all_commands() {
     for (int i = 0; i < cmd_count; i++) {
         lex_line(cmd_buffer[i]);
 
-        // If-statement handling:
         if (tokens[0].type == TOK_IF) {
-            // Evaluate condition starting at tok_pos = 1
             tok_pos = 1;
             int cond = eval_condition_from_tokpos();
-
-            // if true: execute next line (if exists) and skip optional else
             if (cond) {
                 if (i + 1 < cmd_count) {
-                    // execute line i+1
                     lex_line(cmd_buffer[i + 1]);
                     if (tokens[0].type == TOK_GIVE) {
                         if (tokens[1].type == TOK_ID && tokens[2].type == TOK_ASSIGN) {
@@ -287,26 +277,21 @@ void run_all_commands() {
                             }
                         }
                     }
-                    // after running the true-branch line, we must check if there's an else and skip it
                     if (i + 2 < cmd_count) {
-                        // peek next line to see if it's an else keyword
                         lex_line(cmd_buffer[i + 2]);
                         if (tokens[0].type == TOK_ELSE) {
-                            // skip the else line and its body (we assume else body is the line after else)
-                            i += 2; // will be incremented by loop's i++ -> effectively skip else and else-body
+                            i += 2;
                         } else {
-                            i += 1; // skip the executed branch line
+                            i += 1;
                         }
                     } else {
-                        i += 1; // skip the executed branch line
+                        i += 1;
                     }
                 }
             } else {
-                // condition false -> check for else
                 if (i + 1 < cmd_count) {
                     lex_line(cmd_buffer[i + 1]);
                     if (tokens[0].type == TOK_ELSE) {
-                        // execute else body at i+2 if exists
                         if (i + 2 < cmd_count) {
                             lex_line(cmd_buffer[i + 2]);
                             if (tokens[0].type == TOK_GIVE) {
@@ -333,17 +318,14 @@ void run_all_commands() {
                                     }
                                 }
                             }
-                            i += 2; // skip else and its body
+                            i += 2;
                         } else {
-                            i += 1; // skip else (no body)
+                            i += 1;
                         }
-                    } else {
-                        // next line was not else, so nothing to do; just continue
                     }
                 }
             }
         }
-        // Normal commands
         else if (tokens[0].type == TOK_GIVE) {
             if (tokens[1].type == TOK_ID && tokens[2].type == TOK_ASSIGN) {
                 tok_pos = 3;
