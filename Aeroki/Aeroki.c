@@ -44,9 +44,11 @@ void set_variable(const char *name, int value) {
 // ==== Lexer ====
 
 typedef enum {
-    TOK_GIVE, TOK_FIND, TOK_INPUT, TOK_RESULT,
+    TOK_GIVE, TOK_FIND, TOK_INPUT,
+    TOK_IF, TOK_ELSE,
     TOK_ID, TOK_NUM,
     TOK_ASSIGN, TOK_PLUS, TOK_MINUS, TOK_MUL, TOK_DIV,
+    TOK_LT, TOK_GT, TOK_LE, TOK_GE, TOK_EQEQ, TOK_NEQ,
     TOK_EOF
 } TokenType;
 
@@ -63,18 +65,33 @@ void lex_line(const char *line) {
     const char *p = line;
 
     while (*p) {
-        if (isspace(*p)) { p++; continue; }
+        if (isspace((unsigned char)*p)) { p++; continue; }
 
+        // Check multi-word keywords first
         if (strncmp(p, "ให้", strlen("ให้")) == 0) {
             tokens[tok_count++] = (Token){TOK_GIVE, "ให้"}; p += strlen("ให้");
         } else if (strncmp(p, "หา", strlen("หา")) == 0) {
             tokens[tok_count++] = (Token){TOK_FIND, "หา"}; p += strlen("หา");
         } else if (strncmp(p, "รับค่า", strlen("รับค่า")) == 0) {
             tokens[tok_count++] = (Token){TOK_INPUT, "รับค่า"}; p += strlen("รับค่า");
-        } else if (strncmp(p, "ผล", strlen("ผล")) == 0) {
-            tokens[tok_count++] = (Token){TOK_RESULT, "ผล"}; p += strlen("ผล");
+        } else if (strncmp(p, "ถ้าไม่", strlen("ถ้าไม่")) == 0) {
+            tokens[tok_count++] = (Token){TOK_ELSE, "ถ้าไม่"}; p += strlen("ถ้าไม่");
+        } else if (strncmp(p, "ถ้า", strlen("ถ้า")) == 0) {
+            tokens[tok_count++] = (Token){TOK_IF, "ถ้า"}; p += strlen("ถ้า");
+        }
+        // comparisons and operators
+        else if (*p == '<') {
+            if (*(p+1) == '=') { tokens[tok_count++] = (Token){TOK_LE, "<="}; p+=2; }
+            else { tokens[tok_count++] = (Token){TOK_LT, "<"}; p++; }
+        } else if (*p == '>') {
+            if (*(p+1) == '=') { tokens[tok_count++] = (Token){TOK_GE, ">="}; p+=2; }
+            else { tokens[tok_count++] = (Token){TOK_GT, ">"}; p++; }
         } else if (*p == '=') {
-            tokens[tok_count++] = (Token){TOK_ASSIGN, "="}; p++;
+            if (*(p+1) == '=') { tokens[tok_count++] = (Token){TOK_EQEQ, "=="}; p+=2; }
+            else { tokens[tok_count++] = (Token){TOK_ASSIGN, "="}; p++; }
+        } else if (*p == '!') {
+            if (*(p+1) == '=') { tokens[tok_count++] = (Token){TOK_NEQ, "!="}; p+=2; }
+            else p++;
         } else if (*p == '+') {
             tokens[tok_count++] = (Token){TOK_PLUS, "+"}; p++;
         } else if (*p == '-') {
@@ -83,16 +100,19 @@ void lex_line(const char *line) {
             tokens[tok_count++] = (Token){TOK_MUL, "*"}; p++;
         } else if (*p == '/') {
             tokens[tok_count++] = (Token){TOK_DIV, "/"}; p++;
-        } else if (isdigit(*p)) {
+        } else if (isdigit((unsigned char)*p)) {
             char buf[64]; int len = 0;
-            while (isdigit(*p)) buf[len++] = *p++;
+            while (isdigit((unsigned char)*p)) buf[len++] = *p++;
             buf[len] = '\0';
             tokens[tok_count++] = (Token){TOK_NUM, ""};
             strcpy(tokens[tok_count-1].text, buf);
         } else {
+            // identifier or combined token
             char buf[64]; int len = 0;
-            while (*p && !isspace(*p) && *p!='=' && *p!='+' && *p!='-' && *p!='*' && *p!='/')
+            while (*p && !isspace((unsigned char)*p) && *p!='=' && *p!='+' && *p!='-' && *p!='*' && *p!='/'
+                   && *p!='<' && *p!='>' && *p!='!') {
                 buf[len++] = *p++;
+            }
             buf[len] = '\0';
             tokens[tok_count++] = (Token){TOK_ID, ""};
             strcpy(tokens[tok_count-1].text, buf);
@@ -199,11 +219,132 @@ void add_command(const char *line) {
     }
 }
 
+// helper: evaluate condition with comparison operators
+// assumes tok_pos is set to the token right after TOK_IF (i.e., 1)
+int eval_condition_from_tokpos() {
+    Node *left_expr = parse_expr();
+    int left_val = eval(left_expr);
+
+    Token *cmp = peek();
+    if (cmp->type == TOK_LT || cmp->type == TOK_GT || cmp->type == TOK_LE || cmp->type == TOK_GE
+        || cmp->type == TOK_EQEQ || cmp->type == TOK_NEQ) {
+        TokenType cmpType = cmp->type;
+        next();
+        Node *right_expr = parse_expr();
+        int right_val = eval(right_expr);
+
+        switch (cmpType) {
+            case TOK_LT: return left_val < right_val;
+            case TOK_GT: return left_val > right_val;
+            case TOK_LE: return left_val <= right_val;
+            case TOK_GE: return left_val >= right_val;
+            case TOK_EQEQ: return left_val == right_val;
+            case TOK_NEQ: return left_val != right_val;
+            default: return 0;
+        }
+    } else {
+        // no comparator; truthiness: non-zero = true
+        return left_val != 0;
+    }
+}
+
 void run_all_commands() {
     for (int i = 0; i < cmd_count; i++) {
         lex_line(cmd_buffer[i]);
-        // run the command
-        if (tokens[0].type == TOK_GIVE) {
+
+        // If-statement handling:
+        if (tokens[0].type == TOK_IF) {
+            // Evaluate condition starting at tok_pos = 1
+            tok_pos = 1;
+            int cond = eval_condition_from_tokpos();
+
+            // if true: execute next line (if exists) and skip optional else
+            if (cond) {
+                if (i + 1 < cmd_count) {
+                    // execute line i+1
+                    lex_line(cmd_buffer[i + 1]);
+                    if (tokens[0].type == TOK_GIVE) {
+                        if (tokens[1].type == TOK_ID && tokens[2].type == TOK_ASSIGN) {
+                            tok_pos = 3;
+                            Node *expr = parse_expr();
+                            int val = eval(expr);
+                            set_variable(tokens[1].text, val);
+                        }
+                    } else if (tokens[0].type == TOK_FIND) {
+                        tok_pos = 1;
+                        Node *expr = parse_expr();
+                        printf("%d\n", eval(expr));
+                    } else if (tokens[0].type == TOK_INPUT) {
+                        if (tokens[1].type == TOK_ID) {
+                            int val;
+                            printf("กรอกค่า %s: ", tokens[1].text);
+                            fflush(stdout);
+                            if (scanf("%d", &val) == 1) {
+                                set_variable(tokens[1].text, val);
+                            } else {
+                                printf("Invalid input.\n");
+                                int c; while ((c = getchar()) != '\n' && c != EOF);
+                            }
+                        }
+                    }
+                    // after running the true-branch line, we must check if there's an else and skip it
+                    if (i + 2 < cmd_count) {
+                        // peek next line to see if it's an else keyword
+                        lex_line(cmd_buffer[i + 2]);
+                        if (tokens[0].type == TOK_ELSE) {
+                            // skip the else line and its body (we assume else body is the line after else)
+                            i += 2; // will be incremented by loop's i++ -> effectively skip else and else-body
+                        } else {
+                            i += 1; // skip the executed branch line
+                        }
+                    } else {
+                        i += 1; // skip the executed branch line
+                    }
+                }
+            } else {
+                // condition false -> check for else
+                if (i + 1 < cmd_count) {
+                    lex_line(cmd_buffer[i + 1]);
+                    if (tokens[0].type == TOK_ELSE) {
+                        // execute else body at i+2 if exists
+                        if (i + 2 < cmd_count) {
+                            lex_line(cmd_buffer[i + 2]);
+                            if (tokens[0].type == TOK_GIVE) {
+                                if (tokens[1].type == TOK_ID && tokens[2].type == TOK_ASSIGN) {
+                                    tok_pos = 3;
+                                    Node *expr = parse_expr();
+                                    int val = eval(expr);
+                                    set_variable(tokens[1].text, val);
+                                }
+                            } else if (tokens[0].type == TOK_FIND) {
+                                tok_pos = 1;
+                                Node *expr = parse_expr();
+                                printf("%d\n", eval(expr));
+                            } else if (tokens[0].type == TOK_INPUT) {
+                                if (tokens[1].type == TOK_ID) {
+                                    int val;
+                                    printf("กรอกค่า %s: ", tokens[1].text);
+                                    fflush(stdout);
+                                    if (scanf("%d", &val) == 1) {
+                                        set_variable(tokens[1].text, val);
+                                    } else {
+                                        printf("Invalid input.\n");
+                                        int c; while ((c = getchar()) != '\n' && c != EOF);
+                                    }
+                                }
+                            }
+                            i += 2; // skip else and its body
+                        } else {
+                            i += 1; // skip else (no body)
+                        }
+                    } else {
+                        // next line was not else, so nothing to do; just continue
+                    }
+                }
+            }
+        }
+        // Normal commands
+        else if (tokens[0].type == TOK_GIVE) {
             if (tokens[1].type == TOK_ID && tokens[2].type == TOK_ASSIGN) {
                 tok_pos = 3;
                 Node *expr = parse_expr();
@@ -258,12 +399,8 @@ void __Ark_Shell() {
         if (strcmp(line, "ออก") == 0) break;
         if (line[0] == '\0') continue;
 
-        lex_line(line);
-        if (tokens[0].type == TOK_RESULT) {
-            run_all_commands();
-        } else {
-            add_command(line);
-        }
+        add_command(line);
+        run_all_commands();
     }
 }
 
@@ -277,11 +414,7 @@ void __Ark_Interpreted(FILE *src) {
         ltrim(line);
         if (line[0] == '\0') continue;
 
-        lex_line(line);
-        if (tokens[0].type == TOK_RESULT) {
-            run_all_commands();
-        } else {
-            add_command(line);
-        }
+        add_command(line);
+        run_all_commands();
     }
 }
