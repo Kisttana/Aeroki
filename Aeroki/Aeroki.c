@@ -42,9 +42,9 @@ void set_variable(const char *name, int value) {
 }
 
 // ==== GUI Input Callback System ====
-
 char *(*__Aeroki_GUI_Input_Callback)(const char *prompt) = NULL;
 
+// ---- GUI-safe get_input_value() ----
 int get_input_value(const char *prompt) {
     if (__Aeroki_GUI_Input_Callback) {
         char *val = __Aeroki_GUI_Input_Callback(prompt);
@@ -55,13 +55,15 @@ int get_input_value(const char *prompt) {
         }
     }
 
-    int v;
-    printf("กรอกค่า %s: ", prompt);
+    // GUI-safe fallback: send special message to GUI
+    printf("__AEROKI_INPUT_REQUEST__%s\n", prompt);
     fflush(stdout);
-    if (scanf("%d", &v) == 1) return v;
 
-    printf("Invalid input.\n");
-    int c; while ((c = getchar()) != '\n' && c != EOF);
+    char buf[64];
+    if (fgets(buf, sizeof(buf), stdin)) {
+        int val = atoi(buf);
+        return val;
+    }
     return 0;
 }
 
