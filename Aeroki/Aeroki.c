@@ -41,6 +41,30 @@ void set_variable(const char *name, int value) {
     }
 }
 
+// ==== GUI Input Callback System ====
+
+char *(*__Aeroki_GUI_Input_Callback)(const char *prompt) = NULL;
+
+int get_input_value(const char *prompt) {
+    if (__Aeroki_GUI_Input_Callback) {
+        char *val = __Aeroki_GUI_Input_Callback(prompt);
+        if (val) {
+            int num = atoi(val);
+            free(val);
+            return num;
+        }
+    }
+
+    int v;
+    printf("กรอกค่า %s: ", prompt);
+    fflush(stdout);
+    if (scanf("%d", &v) == 1) return v;
+
+    printf("Invalid input.\n");
+    int c; while ((c = getchar()) != '\n' && c != EOF);
+    return 0;
+}
+
 // ==== Lexer ====
 
 typedef enum {
@@ -332,15 +356,8 @@ void run_all_commands() {
                         printf("%d\n", eval(expr));
                     } else if (tokens[0].type == TOK_INPUT) {
                         if (tokens[1].type == TOK_ID) {
-                            int val;
-                            printf("กรอกค่า %s: ", tokens[1].text);
-                            fflush(stdout);
-                            if (scanf("%d", &val) == 1) {
-                                set_variable(tokens[1].text, val);
-                            } else {
-                                printf("Invalid input.\n");
-                                int c; while ((c = getchar()) != '\n' && c != EOF);
-                            }
+                            int val = get_input_value(tokens[1].text);
+                            set_variable(tokens[1].text, val);
                         }
                     }
                     if (i + 1 < cmd_count) {
@@ -373,15 +390,8 @@ void run_all_commands() {
                                 printf("%d\n", eval(expr));
                             } else if (tokens[0].type == TOK_INPUT) {
                                 if (tokens[1].type == TOK_ID) {
-                                    int val;
-                                    printf("กรอกค่า %s: ", tokens[1].text);
-                                    fflush(stdout);
-                                    if (scanf("%d", &val) == 1) {
-                                        set_variable(tokens[1].text, val);
-                                    } else {
-                                        printf("Invalid input.\n");
-                                        int c; while ((c = getchar()) != '\n' && c != EOF);
-                                    }
+                                    int val = get_input_value(tokens[1].text);
+                                    set_variable(tokens[1].text, val);
                                 }
                             }
                             i += 2;
@@ -405,15 +415,8 @@ void run_all_commands() {
             printf("%d\n", eval(expr));
         } else if (tokens[0].type == TOK_INPUT) {
             if (tokens[1].type == TOK_ID) {
-                int val;
-                printf("กรอกค่า %s: ", tokens[1].text);
-                fflush(stdout);
-                if (scanf("%d", &val) == 1) {
-                    set_variable(tokens[1].text, val);
-                } else {
-                    printf("Invalid input.\n");
-                    int c; while ((c = getchar()) != '\n' && c != EOF);
-                }
+                int val = get_input_value(tokens[1].text);
+                set_variable(tokens[1].text, val);
             }
         }
         free(cmd_buffer[i]);
