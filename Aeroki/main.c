@@ -8,8 +8,20 @@ int main(int argc, char *argv[]) {
 
     FILE *src = fopen(argv[1], "r");
     if (!src) {
-        fprintf(stderr, "Cannot open file: %s\n", argv[1]);
-        return 1;
+        // Try to create the missing file automatically
+        src = fopen(argv[1], "w");
+        if (!src) {
+            fprintf(stderr, "Cannot create file: %s\n", argv[1]);
+            return 1;
+        }
+        fprintf(src, "// Auto-created by Aeroki runtime\n");
+        fclose(src);
+
+        src = fopen(argv[1], "r");
+        if (!src) {
+            fprintf(stderr, "Cannot reopen file: %s\n", argv[1]);
+            return 1;
+        }
     }
 
     __Ark_Interpreted(src);
