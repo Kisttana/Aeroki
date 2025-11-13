@@ -41,32 +41,6 @@ void set_variable(const char *name, int value) {
     }
 }
 
-// ==== GUI Input Callback System ====
-char *(*__Aeroki_GUI_Input_Callback)(const char *prompt) = NULL;
-
-// ---- GUI-safe get_input_value() ----
-int get_input_value(const char *prompt) {
-    if (__Aeroki_GUI_Input_Callback) {
-        char *val = __Aeroki_GUI_Input_Callback(prompt);
-        if (val) {
-            int num = atoi(val);
-            free(val);
-            return num;
-        }
-    }
-
-    // GUI-safe fallback: send special message to GUI
-    printf("__AEROKI_INPUT_REQUEST__%s\n", prompt);
-    fflush(stdout);
-
-    char buf[64];
-    if (fgets(buf, sizeof(buf), stdin)) {
-        int val = atoi(buf);
-        return val;
-    }
-    return 0;
-}
-
 // ==== Lexer ====
 
 typedef enum {
@@ -178,7 +152,7 @@ Node *make_binop(char op, Node *l, Node *r) {
     return n;
 }
 
-// ==== Parser ====
+// ==== Parser (recursive descent) ====
 
 Node *parse_expr();
 
@@ -242,71 +216,7 @@ void add_command(const char *line) {
     }
 }
 
-// ==== Function System ====
-
-typedef struct {
-    char name[64];
-    char *lines[MAX_CMDS];
-    int line_count;
-} Function;
-
-Function functions[MAX_VARIABLES];
-int func_count = 0;
-int in_function_def = 0;
-char current_func_name[64];
-
-void add_function_line(const char *line) {
-    for (int i = 0; i < func_count; i++) {
-        if (strcmp(functions[i].name, current_func_name) == 0) {
-            if (functions[i].line_count < MAX_CMDS) {
-                functions[i].lines[functions[i].line_count] = strdup(line);
-                functions[i].line_count++;
-            }
-            return;
-        }
-    }
-}
-
-void define_function_start(const char *name) {
-    if (func_count < MAX_VARIABLES) {
-        strcpy(functions[func_count].name, name);
-        functions[func_count].line_count = 0;
-        func_count++;
-        strcpy(current_func_name, name);
-        in_function_def = 1;
-    } else {
-        fprintf(stderr, "Too many functions.\n");
-        exit(1);
-    }
-}
-
-void define_function_end() {
-    in_function_def = 0;
-    current_func_name[0] = '\0';
-}
-
-Function *find_function(const char *name) {
-    for (int i = 0; i < func_count; i++) {
-        if (strcmp(functions[i].name, name) == 0)
-            return &functions[i];
-    }
-    return NULL;
-}
-
-void call_function(const char *name) {
-    Function *f = find_function(name);
-    if (!f) {
-        fprintf(stderr, "ไม่พบฟังก์ชัน: %s\n", name);
-        return;
-    }
-    for (int i = 0; i < f->line_count; i++) {
-        add_command(f->lines[i]);
-        run_all_commands();
-    }
-}
-
-// ==== Condition Eval ====
-
+// helper: evaluate condition with comparison operators
 int eval_condition_from_tokpos() {
     Node *left_expr = parse_expr();
     int left_val = eval(left_expr);
@@ -315,7 +225,7 @@ int eval_condition_from_tokpos() {
     if (cmp->type == TOK_LT || cmp->type == TOK_GT || cmp->type == TOK_LE || cmp->type == TOK_GE
         || cmp->type == TOK_EQEQ || cmp->type == TOK_NEQ) {
         TokenType cmpType = cmp->type;
-        next();
+        next(); // consume comparator
         Node *right_expr = parse_expr();
         int right_val = eval(right_expr);
 
@@ -332,8 +242,6 @@ int eval_condition_from_tokpos() {
         return left_val != 0;
     }
 }
-
-// ==== Command Runner ====
 
 void run_all_commands() {
     for (int i = 0; i < cmd_count; i++) {
@@ -358,8 +266,15 @@ void run_all_commands() {
                         printf("%d\n", eval(expr));
                     } else if (tokens[0].type == TOK_INPUT) {
                         if (tokens[1].type == TOK_ID) {
-                            int val = get_input_value(tokens[1].text);
-                            set_variable(tokens[1].text, val);
+                            int val;
+                            printf("กรอกค่า %s: ", tokens[1].text);
+                            fflush(stdout);
+                            if (scanf("%d", &val) == 1) {
+                                set_variable(tokens[1].text, val);
+                            } else {
+                                printf("Invalid input.\n");
+                                int c; while ((c = getchar()) != '\n' && c != EOF);
+                            }
                         }
                     }
                     if (i + 1 < cmd_count) {
@@ -392,8 +307,15 @@ void run_all_commands() {
                                 printf("%d\n", eval(expr));
                             } else if (tokens[0].type == TOK_INPUT) {
                                 if (tokens[1].type == TOK_ID) {
-                                    int val = get_input_value(tokens[1].text);
-                                    set_variable(tokens[1].text, val);
+                                    int val;
+                                    printf("กรอกค่า %s: ", tokens[1].text);
+                                    fflush(stdout);
+                                    if (scanf("%d", &val) == 1) {
+                                        set_variable(tokens[1].text, val);
+                                    } else {
+                                        printf("Invalid input.\n");
+                                        int c; while ((c = getchar()) != '\n' && c != EOF);
+                                    }
                                 }
                             }
                             i += 2;
@@ -417,8 +339,15 @@ void run_all_commands() {
             printf("%d\n", eval(expr));
         } else if (tokens[0].type == TOK_INPUT) {
             if (tokens[1].type == TOK_ID) {
-                int val = get_input_value(tokens[1].text);
-                set_variable(tokens[1].text, val);
+                int val;
+                printf("กรอกค่า %s: ", tokens[1].text);
+                fflush(stdout);
+                if (scanf("%d", &val) == 1) {
+                    set_variable(tokens[1].text, val);
+                } else {
+                    printf("Invalid input.\n");
+                    int c; while ((c = getchar()) != '\n' && c != EOF);
+                }
             }
         }
         free(cmd_buffer[i]);
@@ -452,29 +381,8 @@ void __Ark_Shell() {
         if (strcmp(line, "ออก") == 0) break;
         if (line[0] == '\0') continue;
 
-        if (strncmp(line, "สร้าง ", strlen("สร้าง ")) == 0) {
-            const char *name = line + strlen("สร้าง ");
-            define_function_start(name);
-            printf("เริ่มสร้างฟังก์ชัน: %s\n", name);
-            continue;
-        }
-        if (strcmp(line, "จบฟังก์ชัน") == 0) {
-            define_function_end();
-            printf("สิ้นสุดฟังก์ชัน\n");
-            continue;
-        }
-        if (strncmp(line, "เรียก ", strlen("เรียก ")) == 0) {
-            const char *name = line + strlen("เรียก ");
-            call_function(name);
-            continue;
-        }
-
-        if (in_function_def) {
-            add_function_line(line);
-        } else {
-            add_command(line);
-            run_all_commands();
-        }
+        add_command(line);
+        run_all_commands();
     }
 }
 
@@ -482,31 +390,13 @@ void __Ark_Shell() {
 
 void __Ark_Interpreted(FILE *src) {
     char line[256];
+
     while (fgets(line, sizeof(line), src)) {
         line[strcspn(line, "\n")] = '\0';
         ltrim(line);
         if (line[0] == '\0') continue;
 
-        if (strncmp(line, "สร้าง ", strlen("สร้าง ")) == 0) {
-            const char *name = line + strlen("สร้าง ");
-            define_function_start(name);
-            continue;
-        }
-        if (strcmp(line, "จบฟังก์ชัน") == 0) {
-            define_function_end();
-            continue;
-        }
-        if (strncmp(line, "เรียก ", strlen("เรียก ")) == 0) {
-            const char *name = line + strlen("เรียก ");
-            call_function(name);
-            continue;
-        }
-
-        if (in_function_def) {
-            add_function_line(line);
-        } else {
-            add_command(line);
-            run_all_commands();
-        }
+        add_command(line);
+        run_all_commands();
     }
 }
