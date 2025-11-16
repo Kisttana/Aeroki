@@ -3,17 +3,62 @@
 #define MAX_VARIABLES 100
 #define MAX_CMDS 256
 
+// ==== Value (decimal-aware) ====
+
+typedef struct {
+    long double v;   // numeric value
+    int scale;       // preferred decimals from source (e.g., 5.00 => 2, 5 => 0)
+} Value;
+
+static inline Value make_value(long double v, int scale) {
+    Value x; x.v = v; x.scale = (scale < 0 ? 0 : scale); return x;
+}
+
+static inline int max_int(int a, int b) { return a > b ? a : b; }
+
+static int g_out_dp = 2;    // default cap at 2
+static int g_fixed_dp = 0;  // 0 = auto, 1 = fixed padding
+
+// Round half away from zero to N decimals
+static long double round_to(long double x, int dp) {
+    if (dp < 0) dp = 0;
+    long double p = powl(10.0L, (long double)dp);
+    long double y = x * p;
+    if (y >= 0) y = floorl(y + 0.5L);
+    else        y = ceill(y - 0.5L);
+    return y / p;
+}
+
+static void print_value(Value val) {
+    int decimals = g_fixed_dp ? g_out_dp : (val.scale < g_out_dp ? val.scale : g_out_dp);
+    long double rv = round_to(val.v, decimals);
+    // Use %.*Lf for long double with dynamic decimals
+    printf("%.*Lf\n", decimals, rv);
+}
+
+// Parse decimal lexeme "123", "5.0", "5.00", "5.005"
+static Value parse_decimal_lexeme(const char *lex) {
+    int scale = 0;
+    const char *dot = strchr(lex, '.');
+    if (dot) {
+        scale = (int)strlen(dot + 1);
+    }
+    // Note: keep exact scale from lexeme (including trailing zeros)
+    long double v = strtold(lex, NULL);
+    return make_value(v, scale);
+}
+
 // ==== Variable ====
 
 typedef struct {
     char name[32];
-    int value;
+    Value value;
 } Variable;
 
 Variable variables[MAX_VARIABLES];
 int var_count = 0;
 
-int get_variable(const char *name) {
+Value get_variable(const char *name) {
     for (int i = 0; i < var_count; ++i) {
         if (strcmp(variables[i].name, name) == 0) {
             return variables[i].value;
@@ -23,7 +68,7 @@ int get_variable(const char *name) {
     exit(1);
 }
 
-void set_variable(const char *name, int value) {
+void set_variable(const char *name, Value value) {
     for (int i = 0; i < var_count; ++i) {
         if (strcmp(variables[i].name, name) == 0) {
             variables[i].value = value;
@@ -46,6 +91,7 @@ void set_variable(const char *name, int value) {
 typedef enum {
     TOK_GIVE, TOK_FIND, TOK_INPUT,
     TOK_IF, TOK_ELSE,
+    TOK_PREC, // ทศนิยม
     TOK_ID, TOK_NUM,
     TOK_ASSIGN, TOK_PLUS, TOK_MINUS, TOK_MUL, TOK_DIV,
     TOK_LT, TOK_GT, TOK_LE, TOK_GE, TOK_EQEQ, TOK_NEQ,
@@ -73,6 +119,8 @@ void lex_line(const char *line) {
             tokens[tok_count++] = (Token){TOK_FIND, "หา"}; p += strlen("หา");
         } else if (strncmp(p, "รับค่า", strlen("รับค่า")) == 0) {
             tokens[tok_count++] = (Token){TOK_INPUT, "รับค่า"}; p += strlen("รับค่า");
+        } else if (strncmp(p, "ทศนิยม", strlen("ทศนิยม")) == 0) {
+            tokens[tok_count++] = (Token){TOK_PREC, "ทศนิยม"}; p += strlen("ทศนิยม");
         } else if (strncmp(p, "ถ้าไม่", strlen("ถ้าไม่")) == 0) {
             tokens[tok_count++] = (Token){TOK_ELSE, "ถ้าไม่"}; p += strlen("ถ้าไม่");
         } else if (strncmp(p, "ถ้า", strlen("ถ้า")) == 0) {
@@ -99,15 +147,20 @@ void lex_line(const char *line) {
         } else if (*p == '/') {
             tokens[tok_count++] = (Token){TOK_DIV, "/"}; p++;
         } else if (isdigit((unsigned char)*p)) {
+            // number with optional decimal part
             char buf[64]; int len = 0;
             while (isdigit((unsigned char)*p)) buf[len++] = *p++;
+            if (*p == '.') {
+                buf[len++] = *p++; // dot
+                while (isdigit((unsigned char)*p)) buf[len++] = *p++;
+            }
             buf[len] = '\0';
             tokens[tok_count++] = (Token){TOK_NUM, ""};
             strcpy(tokens[tok_count-1].text, buf);
         } else {
             char buf[64]; int len = 0;
             while (*p && !isspace((unsigned char)*p) && *p!='=' && *p!='+' && *p!='-' && *p!='*' && *p!='/'
-                   && *p!='<' && *p!='>' && *p!='!') {
+                   && *p!='<' && *p!='>' && *p!='!' && *p!='.') {
                 buf[len++] = *p++;
             }
             buf[len] = '\0';
@@ -127,15 +180,16 @@ typedef enum { NODE_NUM, NODE_VAR, NODE_BINOP } NodeType;
 
 typedef struct Node {
     NodeType type;
-    int value;
+    long double fvalue;
+    int scale;
     char varname[32];
     char op;
     struct Node *left, *right;
 } Node;
 
-Node *make_num(int v) {
+Node *make_num_ld(long double v, int scale) {
     Node *n = malloc(sizeof(Node));
-    n->type = NODE_NUM; n->value = v;
+    n->type = NODE_NUM; n->fvalue = v; n->scale = scale;
     n->left = n->right = NULL;
     return n;
 }
@@ -160,12 +214,13 @@ Node *parse_factor() {
     Token *t = peek();
     if (t->type == TOK_NUM) {
         next();
-        return make_num(atoi(t->text));
+        Value val = parse_decimal_lexeme(t->text);
+        return make_num_ld(val.v, val.scale);
     } else if (t->type == TOK_ID) {
         next();
         return make_var(t->text);
     }
-    return make_num(0);
+    return make_num_ld(0.0L, 0);
 }
 
 Node *parse_term() {
@@ -189,19 +244,31 @@ Node *parse_expr() {
 
 // ==== Interpreter ====
 
-int eval(Node *n) {
-    if (n->type == NODE_NUM) return n->value;
+static Value eval_node(struct Node *n);
+
+static Value bin_calc(char op, Value l, Value r) {
+    Value out;
+    switch (op) {
+        case '+': out.v = l.v + r.v; out.scale = max_int(l.scale, r.scale); break;
+        case '-': out.v = l.v - r.v; out.scale = max_int(l.scale, r.scale); break;
+        case '*': out.v = l.v * r.v; out.scale = max_int(l.scale, r.scale); break;
+        case '/':
+            if (r.v == 0.0L) { out.v = 0.0L; out.scale = 0; }
+            else { out.v = l.v / r.v; out.scale = max_int(l.scale, r.scale); }
+            break;
+        default: out.v = 0.0L; out.scale = 0; break;
+    }
+    return out;
+}
+
+static Value eval_node(struct Node *n) {
+    if (n->type == NODE_NUM) return make_value(n->fvalue, n->scale);
     if (n->type == NODE_VAR) return get_variable(n->varname);
     if (n->type == NODE_BINOP) {
-        int l = eval(n->left), r = eval(n->right);
-        switch (n->op) {
-            case '+': return l + r;
-            case '-': return l - r;
-            case '*': return l * r;
-            case '/': return r ? l / r : 0;
-        }
+        Value l = eval_node(n->left), r = eval_node(n->right);
+        return bin_calc(n->op, l, r);
     }
-    return 0;
+    return make_value(0.0L, 0);
 }
 
 // ==== Command Buffer ====
@@ -211,7 +278,7 @@ int cmd_count = 0;
 
 void add_command(const char *line) {
     if (cmd_count < MAX_CMDS) {
-        cmd_buffer[cmd_count] = strdup(line);
+        cmd_buffer[cmd_count] = _strdup(line);
         cmd_count++;
     }
 }
@@ -219,7 +286,7 @@ void add_command(const char *line) {
 // helper: evaluate condition with comparison operators
 int eval_condition_from_tokpos() {
     Node *left_expr = parse_expr();
-    int left_val = eval(left_expr);
+    Value left_val = eval_node(left_expr);
 
     Token *cmp = peek();
     if (cmp->type == TOK_LT || cmp->type == TOK_GT || cmp->type == TOK_LE || cmp->type == TOK_GE
@@ -227,20 +294,42 @@ int eval_condition_from_tokpos() {
         TokenType cmpType = cmp->type;
         next(); // consume comparator
         Node *right_expr = parse_expr();
-        int right_val = eval(right_expr);
+        Value right_val = eval_node(right_expr);
 
+        long double L = left_val.v, R = right_val.v;
         switch (cmpType) {
-            case TOK_LT: return left_val < right_val;
-            case TOK_GT: return left_val > right_val;
-            case TOK_LE: return left_val <= right_val;
-            case TOK_GE: return left_val >= right_val;
-            case TOK_EQEQ: return left_val == right_val;
-            case TOK_NEQ: return left_val != right_val;
+            case TOK_LT: return L < R;
+            case TOK_GT: return L > R;
+            case TOK_LE: return L <= R;
+            case TOK_GE: return L >= R;
+            case TOK_EQEQ: return L == R;
+            case TOK_NEQ: return L != R;
             default: return 0;
         }
     } else {
-        return left_val != 0;
+        return left_val.v != 0.0L;
     }
+}
+
+// parse user input string to Value (preserve trailing zeros)
+static Value parse_input_value() {
+    char buf[256];
+    if (!fgets(buf, sizeof(buf), stdin)) {
+        return make_value(0.0L, 0);
+    }
+    buf[strcspn(buf, "\r\n")] = '\0';
+    // trim spaces
+    char *s = buf;
+    while (*s && isspace((unsigned char)*s)) s++;
+    if (*s == '\0') return make_value(0.0L, 0);
+
+    // detect scale
+    int scale = 0;
+    char *dot = strchr(s, '.');
+    if (dot) scale = (int)strlen(dot + 1);
+
+    long double v = strtold(s, NULL);
+    return make_value(v, scale);
 }
 
 void run_all_commands() {
@@ -257,24 +346,26 @@ void run_all_commands() {
                         if (tokens[1].type == TOK_ID && tokens[2].type == TOK_ASSIGN) {
                             tok_pos = 3;
                             Node *expr = parse_expr();
-                            int val = eval(expr);
+                            Value val = eval_node(expr);
                             set_variable(tokens[1].text, val);
                         }
                     } else if (tokens[0].type == TOK_FIND) {
                         tok_pos = 1;
                         Node *expr = parse_expr();
-                        printf("%d\n", eval(expr));
+                        print_value(eval_node(expr));
                     } else if (tokens[0].type == TOK_INPUT) {
                         if (tokens[1].type == TOK_ID) {
-                            int val;
                             printf("กรอกค่า %s: ", tokens[1].text);
                             fflush(stdout);
-                            if (scanf("%d", &val) == 1) {
-                                set_variable(tokens[1].text, val);
-                            } else {
-                                printf("Invalid input.\n");
-                                int c; while ((c = getchar()) != '\n' && c != EOF);
-                            }
+                            Value v = parse_input_value();
+                            set_variable(tokens[1].text, v);
+                        }
+                    } else if (tokens[0].type == TOK_PREC) {
+                        if (tokens[1].type == TOK_NUM) {
+                            g_out_dp = (int)strtol(tokens[1].text, NULL, 10);
+                            if (g_out_dp < 0) g_out_dp = 0;
+                            if (g_out_dp > 12) g_out_dp = 12; // reasonable cap
+                            g_fixed_dp = 1;
                         }
                     }
                     if (i + 1 < cmd_count) {
@@ -298,24 +389,26 @@ void run_all_commands() {
                                 if (tokens[1].type == TOK_ID && tokens[2].type == TOK_ASSIGN) {
                                     tok_pos = 3;
                                     Node *expr = parse_expr();
-                                    int val = eval(expr);
+                                    Value val = eval_node(expr);
                                     set_variable(tokens[1].text, val);
                                 }
                             } else if (tokens[0].type == TOK_FIND) {
                                 tok_pos = 1;
                                 Node *expr = parse_expr();
-                                printf("%d\n", eval(expr));
+                                print_value(eval_node(expr));
                             } else if (tokens[0].type == TOK_INPUT) {
                                 if (tokens[1].type == TOK_ID) {
-                                    int val;
                                     printf("กรอกค่า %s: ", tokens[1].text);
                                     fflush(stdout);
-                                    if (scanf("%d", &val) == 1) {
-                                        set_variable(tokens[1].text, val);
-                                    } else {
-                                        printf("Invalid input.\n");
-                                        int c; while ((c = getchar()) != '\n' && c != EOF);
-                                    }
+                                    Value v = parse_input_value();
+                                    set_variable(tokens[1].text, v);
+                                }
+                            } else if (tokens[0].type == TOK_PREC) {
+                                if (tokens[1].type == TOK_NUM) {
+                                    g_out_dp = (int)strtol(tokens[1].text, NULL, 10);
+                                    if (g_out_dp < 0) g_out_dp = 0;
+                                    if (g_out_dp > 12) g_out_dp = 12;
+                                    g_fixed_dp = 1;
                                 }
                             }
                             i += 2;
@@ -330,24 +423,26 @@ void run_all_commands() {
             if (tokens[1].type == TOK_ID && tokens[2].type == TOK_ASSIGN) {
                 tok_pos = 3;
                 Node *expr = parse_expr();
-                int val = eval(expr);
+                Value val = eval_node(expr);
                 set_variable(tokens[1].text, val);
             }
         } else if (tokens[0].type == TOK_FIND) {
             tok_pos = 1;
             Node *expr = parse_expr();
-            printf("%d\n", eval(expr));
+            print_value(eval_node(expr));
         } else if (tokens[0].type == TOK_INPUT) {
             if (tokens[1].type == TOK_ID) {
-                int val;
                 printf("กรอกค่า %s: ", tokens[1].text);
                 fflush(stdout);
-                if (scanf("%d", &val) == 1) {
-                    set_variable(tokens[1].text, val);
-                } else {
-                    printf("Invalid input.\n");
-                    int c; while ((c = getchar()) != '\n' && c != EOF);
-                }
+                Value v = parse_input_value();
+                set_variable(tokens[1].text, v);
+            }
+        } else if (tokens[0].type == TOK_PREC) {
+            if (tokens[1].type == TOK_NUM) {
+                g_out_dp = (int)strtol(tokens[1].text, NULL, 10);
+                if (g_out_dp < 0) g_out_dp = 0;
+                if (g_out_dp > 12) g_out_dp = 12;
+                g_fixed_dp = 1;
             }
         }
         free(cmd_buffer[i]);
