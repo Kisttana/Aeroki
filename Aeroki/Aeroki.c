@@ -30,10 +30,35 @@ static long double round_to(long double x, int dp) {
 }
 
 static void print_value(Value val) {
-    int decimals = g_fixed_dp ? g_out_dp : (val.scale < g_out_dp ? val.scale : g_out_dp);
+    int decimals;
+    if (g_fixed_dp) {
+        decimals = g_out_dp;
+    } else {
+        if (val.scale > 0) {
+            decimals = (val.scale < g_out_dp) ? val.scale : g_out_dp;
+        } else {
+            // If the stored scale is 0 but the value actually has a fractional
+            // part (e.g. scale was lost), show up to g_out_dp decimals so
+            // values like 3.14 aren't printed as "3".
+            long double frac = fabsl(val.v - floorl(val.v));
+            if (frac > 0.0L) decimals = g_out_dp;
+            else decimals = 0;
+        }
+    }
+
     long double rv = round_to(val.v, decimals);
-    // Use %.*Lf for long double with dynamic decimals
-    printf("%.*Lf\n", decimals, rv);
+    // Use a generated format string but print as `double` with `%%f`.
+    // Many Windows/MSVC runtimes do not support `%%Lf`, so casting to
+    // `double` and using `%%f` is the most portable choice here.
+    char fmt[16];
+    snprintf(fmt, sizeof(fmt), "%%.%df\n", decimals);
+    // Debug: print internal info to stderr when AEROKI_DEBUG is set.
+    if (getenv("AEROKI_DEBUG")) {
+        fprintf(stderr, "[debug] val.v=%.*Lg val.scale=%d decimals=%d rv=%.*Lg\n",
+                12, val.v, val.scale, decimals, 12, rv);
+    }
+
+    printf(fmt, (double)rv);
 }
 
 // Parse decimal lexeme "123", "5.0", "5.00", "5.005"
@@ -466,6 +491,9 @@ static void ltrim(char *str) {
 
 void __Ark_Shell() {
     char line[256];
+    // Ensure numeric parsing/printing uses C locale (decimal '.'),
+    // useful when running inside GUIs which may inherit different locales.
+    setlocale(LC_NUMERIC, "C");
     printf("Aeroki Shell Mode (type 'ออก' to exit)\n");
     while (1) {
         printf(">>> ");
@@ -485,6 +513,8 @@ void __Ark_Shell() {
 
 void __Ark_Interpreted(FILE *src) {
     char line[256];
+    // Ensure numeric parsing/printing uses C locale (decimal '.') for file mode.
+    setlocale(LC_NUMERIC, "C");
 
     while (fgets(line, sizeof(line), src)) {
         line[strcspn(line, "\n")] = '\0';
