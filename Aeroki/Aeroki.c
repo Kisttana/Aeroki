@@ -24,9 +24,13 @@ static long double round_to(long double x, int dp) {
     if (dp < 0) dp = 0;
     long double p = powl(10.0L, (long double)dp);
     long double y = x * p;
-    if (y >= 0) y = floorl(y + 0.5L);
-    else        y = ceill(y - 0.5L);
-    return y / p;
+    // Nudge y by a tiny epsilon proportional to its magnitude to avoid
+    // binary-floating point being slightly below an exact halfway value
+    // (e.g., 1355.4999999999999) which would round down incorrectly.
+    long double eps = fabsl(y) * 1e-15L + 1e-18L;
+    if (y >= 0) y += eps; else y -= eps;
+    long double r = roundl(y); // roundl does round-half-away-from-zero per C standard
+    return r / p;
 }
 
 static void print_value(Value val) {
