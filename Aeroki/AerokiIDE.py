@@ -189,6 +189,11 @@ class AerokiIDE:
                         self.root.after(0, lambda r=remaining: self.output_box.insert(tk.END, r))
                 except Exception:
                     pass
+                # Clean up temporary file after process ends
+                try:
+                    os.remove(temp_file)
+                except Exception:
+                    pass
                 self.root.after(0, lambda: self.output_box.insert(tk.END, f"\n[Process exited with {self.proc.returncode}]\n"))
 
             threading.Thread(target=waiter, daemon=True).start()
@@ -198,11 +203,7 @@ class AerokiIDE:
                 "Aeroki compiler not found!\nMake sure 'aeroki.exe' exists in the same folder."
             )
         finally:
-            # --- Clean up temporary file ---
-            try:
-                os.remove(temp_file)
-            except Exception:
-                pass
+            pass
 
 # --- Run the GUI ---
 if __name__ == "__main__":
