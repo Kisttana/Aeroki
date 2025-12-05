@@ -1,15 +1,15 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include <glib.h>
-#include <stddef.h>
 
 /* lexer header must define:
-   typedef GArray ARKTokenList;
+   typedef vector vector;
    typedef <something> ARKToken;    
    typedef enum { ... } ARKTokenType;  // values like TOKEN_NUMBER, TOKEN_IDENTIFIER, TOKEN_LPAREN, TOKEN_RPAREN, TOKEN_COMMA, TOKEN_EOF, TOKEN_DEF, TOKEN_COMMA etc.
 */
+#include "../libs/Aegis/include/aegis.h"
 #include "../Lexer/Lexer.h" /* adapt path/name if needed */
+
 
 /* AST node types (match your previous names or adapt) */
 typedef enum {
@@ -34,7 +34,7 @@ typedef struct BinaryNode {
 } ASTBinary;
 
 typedef struct PrototypeNode {
-    GArray *Args; /* GArray of char* */
+    vector *Args; /* GArray of char* */
     char *fnName;
 } ASTFuncPrototype;
 
@@ -45,7 +45,7 @@ typedef struct FunctionNode {
 
 typedef struct CallFunc {
     char *Callee;
-    GArray *Args; /* GArray of AST* */
+    vector *Args; /* GArray of AST* */
 } ASTCall;
 
 struct AbstractSyntaxTree {
@@ -59,23 +59,22 @@ struct AbstractSyntaxTree {
     };
 };
 
-/* Parser context struct you defined */
+/* Parser context struct definition*/
 typedef struct {
-    ARKTokenList *tokens;
+    vector *tokens;
     size_t current_idx;
     struct Parser_context { ARKTokenType type; char *val; } ctx;
 } ARKParser;
 
-/* ---- Public API (kept the names you used) ---- */
 
 /* initialize parser with token list (previously initRoutine) */
-void initRoutine(ARKTokenList *tokens);
+void initRoutine(vector *tokens);
 
 /* advance token - exposed in case other code expects it */
 void getNextToken(void);
 
 /* Parsing entry points (names kept from your code) */
-AST *Parse( void ); /* behaves as ParsePrimary / expression entry (kept name) */
+AST *Parse( void );  
 AST *ParseExpression(void);
 AST *ParseTopLevelExpr(void);
 AST *ParsePrototype(void);
@@ -88,10 +87,21 @@ void printAST(const AST *node, int depth);
 void freeAST(AST *node);
 
 /* Utility to map operator strings to precedence */
-int getTokenPrec(const char *op);
+int getTokenPrec(ARKTokenType op);
 
 /* For external debugging: set tokenlist manually (alias) */
-void setTokenList(ARKTokenList *tokens);
+void setTokenList(vector *tokens);
 
-#endif /* PARSER_H */
+
+typedef struct { 
+     char ModuleName[128];
+     size_t ASTExprCount;
+     vector *ASTExprVector;
+}ASTProgram;
+
+
+void ast_parse(ASTProgram *__context__, const char *__module__, vector *tokens);
+void print_ast_structure(ASTProgram *ast);
+
+#endif // PARSER_H 
 

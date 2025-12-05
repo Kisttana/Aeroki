@@ -1,5 +1,5 @@
-#ifndef ARK_LLEXER_H
-#define ARK_LLEXER_H
+#ifndef ARK_LEXER_H
+#define ARK_LEXER_H
 
 
 #define MAX_LEN 256
@@ -9,13 +9,14 @@ extern "C"{
 #endif
 
 // === tools ===
+#include "../libs/Aegis/include/aegis/aegis_vector.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 
+
 // === Data structure ===
-#include <glib-2.0/glib.h>
 
 typedef enum {
      TOKEN_UNKNOWN = 0,
@@ -71,10 +72,7 @@ typedef struct __TOKEN{
      char _Value[MAX_LEN];
 }ARKToken;
 
-typedef GArray ARKTokenList;
 
-#define init_TokenList(__size) g_array_sized_new(FALSE, FALSE, sizeof (ARKToken), __size)
-#define TokenList_resize(__size) g_array_set_size(FALSE, __size)
 
 typedef struct {
      char * lexeme;
@@ -83,7 +81,7 @@ typedef struct {
 }ARKLexer;
 
 ARKTokenType determine_token_type(const char* lexeme);
-ARKTokenList* scanLexer(ARKLexer *lex);
+vector* get_tokens(ARKLexer *lex);
 ARKToken generate_token(const char * _s,size_t *cursor, int (*_Classifier)(int));
 ARKLexer init_lexer(char * _s);
 

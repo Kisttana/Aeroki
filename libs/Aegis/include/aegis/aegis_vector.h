@@ -1,6 +1,7 @@
 #ifndef AEGIS_VECTOR_H
 #define AEGIS_VECTOR_H
 
+#include "aegis_common.h"
 typedef struct __VECTOR__{
      // Public :
      void* data;         // Pointer to the raw memory buffer
@@ -27,7 +28,8 @@ typedef struct __VECTOR__{
 #define vec_fill(__ptrvec__, begin, end, type ,val) \ 
      __vec_fill(__ptrvec__, begin, end, vec_wrap_val(type, val))
 
-#define vec_at(__ptrvec__, type, index) *(((type*)((__ptrvec__)->data)) + index )
+#define vec_at_ptr(__ptrvec__ ,type, index) (((type*)((__ptrvec__)->data)) + index)
+#define vec_at(__ptrvec__, type, index) *(vec_at_ptr(__ptrvec__, type, index))
 
 
 #define vec_push_back(__ptrvec__, type, val) \

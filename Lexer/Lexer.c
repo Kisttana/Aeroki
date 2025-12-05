@@ -1,6 +1,4 @@
 #include "Lexer.h"
-#include <stdlib.h>
-#include <string.h>
 
 static int isIdentifier(int _c){
      return (int) (isalnum(_c) || _c == '_');
@@ -72,9 +70,10 @@ ARKToken generate_token(const char * _s,size_t *cursor, int (*_Classifier)(int))
      return token;
 }
 
-ARKTokenList* scanLexer(ARKLexer *lex) {
+vector* get_tokens(ARKLexer *lex) {
      printf("Lexeme : \n%s\n", lex->lexeme);
-     ARKTokenList *ret = init_TokenList(1);
+     vector *tokenlist = vec_init(0, ARKToken, 1);
+
      char current;
 
      ARKToken token;
@@ -198,13 +197,13 @@ ARKTokenList* scanLexer(ARKLexer *lex) {
 
           if(Classifier != NULL)
                token = generate_token(lex->lexeme, &lex->cursor, Classifier);
-          g_array_append_val(ret, token);
+          vec_push_back(tokenlist, ARKToken, token);
           lex->begin = lex->cursor;
      } 
      
      ARKToken eof =  {._Type=TOKEN_EOF,._Value="<EOF>"};
-     g_array_append_val(ret, eof);
-     return ret;
+     vec_push_back(tokenlist, ARKToken, eof);
+     return tokenlist;
 }
 
 ARKLexer init_lexer(char * _s){

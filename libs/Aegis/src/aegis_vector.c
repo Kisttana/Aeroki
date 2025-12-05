@@ -1,8 +1,7 @@
-#include "../include/aegis_common.h" // for standard library , including type => byte 
-#include "../include/aegis_utils.h" // agmin(), agmax() 
+#include "aegis/aegis_utils.h"
+#include "aegis/aegis_common.h"
+#include "aegis/aegis_vector.h"
 
-
-#include "../include/aegis_vector.h" // function difinition
 
 
 #define VEC_DEFLUAT_CAPACITY 8
@@ -37,8 +36,7 @@ __vec_init(size_t init_size,size_t element_size , bool set_zero)
 }
 
 
-vector* 
-__vec_init_fill(size_t init_size,size_t element_size, void *val)
+vector* __vec_init_fill(size_t init_size,size_t element_size, void *val)
 {
      vector *vec = __vec_init(init_size, element_size, 0);
      __vec_fill(vec, 0, init_size, val);
@@ -69,8 +67,8 @@ __vec_push_back(vector* vec, void *val)
      vec->size++;
 }
 
-void 
-inline __vec_pop_back(vector *vec)
+  void 
+__vec_pop_back(vector *vec)
 {
      if(vec->size > 0) vec->size--;
 }
@@ -84,7 +82,7 @@ __vec_set_capacity(vector *vec, size_t new_capacity)
      vec->data = temp;
 }
 
-void inline 
+  void  
 __vec_shrink_to_fit(vector *vec)
 {
      __vec_set_capacity(vec, vec->size);
@@ -116,7 +114,7 @@ __vec_insert(vector* vec, size_t pos, void *val)
 void 
 __vec_erase(vector* vec, size_t pos)
 {
-     assert(pos >= 0 && vec->size >= 1);
+     assert(vec->size >= 1);
      
      size_t num_element_to_shift = vec->size - pos - 1;
      size_t nsize = vec->element_size;
@@ -127,13 +125,10 @@ __vec_erase(vector* vec, size_t pos)
       
      vec->size--;
 }
-void inline
+void 
 __vec_clean(vector* vec)
 {
      free(vec->data);
      free(vec);
      vec = NULL;
 }
-
-
-
