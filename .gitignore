@@ -1,5 +1,9 @@
-# ignore Virtual Studio Code
+# ignore IDE config files 
 .vscode
+.idea
+
+
+
 *.swp
 *.swo
 *.ark
