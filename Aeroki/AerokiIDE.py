@@ -71,7 +71,8 @@ class AerokiIDE:
 
         # --- Save temporary file safely in system temp folder ---
         temp_dir = tempfile.gettempdir()
-        temp_file = os.path.join(temp_dir, "temp.aero")
+        # Use a unique filename to avoid conflicts
+        temp_file = os.path.join(temp_dir, f"aeroki_temp_{os.getpid()}.aero")
 
         try:
             with open(temp_file, "w", encoding="utf-8") as f:
@@ -86,124 +87,78 @@ class AerokiIDE:
             if not os.path.exists(exe_path):
                 raise FileNotFoundError
 
-            cmd = [exe_path, temp_file] if subprocess.os.name == "nt" else ["./aeroki", temp_file]
+            cmd = [exe_path, temp_file]
 
             # If a previous process is running, terminate it
             if hasattr(self, 'proc') and self.proc and self.proc.poll() is None:
                 try:
                     self.proc.kill()
+                    self.proc.wait()
                 except Exception:
                     pass
 
-            # Start Aeroki as a subprocess with pipes so we can interactively
-            # forward input prompts back to the GUI without blocking.
+            # Start Aeroki as a subprocess
             self.proc = subprocess.Popen(
                 cmd,
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
+                stderr=subprocess.STDOUT,  # Merge stderr into stdout
                 text=True,
                 encoding='utf-8',
-                bufsize=1
+                bufsize=1,
+                universal_newlines=True
             )
 
-            prompt_queue = queue.Queue()
-
-            def stdout_reader():
-                # Read one character at a time to detect prompts that have no newline
-                buf = ''
-                while True:
-                    ch = self.proc.stdout.read(1)
-                    if ch == '':
-                        break
-                    buf += ch
-                    # Append to output box on main thread
-                    self.root.after(0, lambda c=ch: self.output_box.insert(tk.END, c))
-                    # Keep buffer short
-                    if len(buf) > 1024:
-                        buf = buf[-512:]
-                    # Detect prompt prefix "กรอกค่า"
-                    if 'กรอกค่า' in buf:
-                        # Try to capture until ':' which the C prompt prints
-                        if ':' in buf:
-                            # extract variable name between 'กรอกค่า ' and ':'
-                            try:
-                                start = buf.rfind('กรอกค่า')
-                                after = buf[start:]
-                                # find colon in after
-                                colon = after.find(':')
-                                prompt_text = after[:colon]
-                                # prompt_text looks like 'กรอกค่า name'
-                                parts = prompt_text.split()
-                                varname = parts[1] if len(parts) > 1 else ''
-                            except Exception:
-                                varname = ''
-                            prompt_queue.put(varname)
-                            buf = ''
-
-            def stderr_reader():
-                for line in self.proc.stderr:
-                    self.root.after(0, lambda l=line: self.output_box.insert(tk.END, l))
-
-            t_out = threading.Thread(target=stdout_reader, daemon=True)
-            t_err = threading.Thread(target=stderr_reader, daemon=True)
-            t_out.start()
-            t_err.start()
-
-            # Poll queue on main thread to display input dialog and send input
-            def poll_prompt():
+            def output_reader():
+                """Read output line by line and display it"""
                 try:
-                    varname = prompt_queue.get_nowait()
-                except queue.Empty:
-                    if self.proc.poll() is None:
-                        self.root.after(100, poll_prompt)
-                    return
-
-                # Show input dialog on main thread
-                prompt_label = f"กรอกค่า {varname}:" if varname else "กรอกค่า:"
-                answer = simpledialog.askstring("Input", prompt_label, parent=self.root)
-                if answer is None:
-                    answer = ''
-                # send answer with newline to subprocess stdin
-                try:
-                    if self.proc and self.proc.stdin:
-                        self.proc.stdin.write(answer + '\n')
-                        self.proc.stdin.flush()
+                    for line in iter(self.proc.stdout.readline, ''):
+                        if line:
+                            self.root.after(0, lambda l=line: self.output_box.insert(tk.END, l))
+                            self.root.after(0, lambda: self.output_box.see(tk.END))
                 except Exception:
                     pass
 
-                # continue polling
-                if self.proc.poll() is None:
-                    self.root.after(100, poll_prompt)
+            # Start output reader thread
+            threading.Thread(target=output_reader, daemon=True).start()
 
-            # start polling
-            self.root.after(100, poll_prompt)
-
-            # Wait for process to finish in a background thread so GUI stays responsive
+            # Wait for process to finish in a background thread
             def waiter():
                 self.proc.wait()
-                # ensure any remaining stdout/stderr are read before finishing
+                
+                # Small delay to ensure all output is displayed
+                import time
+                time.sleep(0.2)
+                
+                # Close streams
                 try:
-                    remaining = self.proc.stdout.read()
-                    if remaining:
-                        self.root.after(0, lambda r=remaining: self.output_box.insert(tk.END, r))
+                    if self.proc.stdout:
+                        self.proc.stdout.close()
+                    if self.proc.stdin:
+                        self.proc.stdin.close()
                 except Exception:
                     pass
-                # Clean up temporary file after process ends
+                
+                # Clean up temporary file
+                time.sleep(0.1)
                 try:
-                    os.remove(temp_file)
+                    if os.path.exists(temp_file):
+                        os.remove(temp_file)
                 except Exception:
-                    pass
-                self.root.after(0, lambda: self.output_box.insert(tk.END, f"\n[Process exited with {self.proc.returncode}]\n"))
+                    pass  # Silently ignore if file can't be deleted
+                
+                # Show exit status
+                exit_code = self.proc.returncode
+                self.root.after(0, lambda: self.output_box.insert(tk.END, f"\n[Process exited with code {exit_code}]\n"))
+                self.root.after(0, lambda: self.output_box.see(tk.END))
 
             threading.Thread(target=waiter, daemon=True).start()
+            
         except FileNotFoundError:
             self.output_box.insert(
                 tk.END,
                 "Aeroki compiler not found!\nMake sure 'aeroki.exe' exists in the same folder."
             )
-        finally:
-            pass
 
 # --- Run the GUI ---
 if __name__ == "__main__":
