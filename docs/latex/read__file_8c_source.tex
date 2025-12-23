@@ -1,0 +1,49 @@
+\doxysection{read\+\_\+file.\+c}
+\hypertarget{read__file_8c_source}{}\label{read__file_8c_source}\index{Parser/Lexer/read\_file.c@{Parser/Lexer/read\_file.c}}
+\mbox{\hyperlink{read__file_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{read__file_8h}{read\_file.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00003}\mbox{\hyperlink{read__file_8c_ac51414d3c7220a8317049639dfa2becc}{00003}}\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{read__file_8c_ac51414d3c7220a8317049639dfa2becc}{read\_file}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ filepath)\{}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00005}00005\ \ \ \ \ \ FILE*\ fp\ =\ fopen(filepath,\ \textcolor{stringliteral}{"{}r"{}});\ \textcolor{comment}{//\ opening\ \ file\ as\ a\ read-\/only\ file\ }}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00006}00006\ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00007}00007\ \ \ \ \ \ \textcolor{keywordflow}{if}(fp\ ==\ NULL)\ \{\ \textcolor{comment}{//\ check\ if\ the\ file\ can't\ be\ opened\ up}}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00008}00008\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ printing\ error\ expect\ :\ No\ such\ file\ or\ directory.}}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00009}00009\ \ \ \ \ \ \ \ \ \ \ fprintf(stderr,\ \textcolor{stringliteral}{"{}[error]\ :\ \%s\ "{}}\ ,strerror(errno));}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00010}00010\ \ \ \ \ \ \ \ \ \ \ exit(EXIT\_FAILURE);}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00011}00011\ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00012}00012\ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00013}00013\ \ \ \ \ \ fseek(fp,0,\ SEEK\_END);\ \textcolor{comment}{//\ Set\ file\ indicator\ to\ the\ end\ of\ file\ (EOF)}}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00015}00015\ \ \ \ \ \ \textcolor{comment}{/*\ Set\ var\ len\ to\ the\ curren\ t\ position\ of\ file\ indicator\ }}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00016}00016\ \textcolor{comment}{\ \ \ \ \ \ *\ (Set\ The\ length\ of\ file)\ }}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00017}00017\ \textcolor{comment}{\ \ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00018}00018\ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ len\ =\ ftell(fp);\ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00019}00019\ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00020}00020\ \ \ \ \ \ rewind(fp);\ \textcolor{comment}{//\ reset\ the\ file\ position\ indicator\ of\ the\ begining\ of\ file\ }}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00022}00022\ \ \ \ \ \ \textcolor{keywordtype}{char}\ *buffer\ =\ (\textcolor{keywordtype}{char}*)malloc(len\ +\ 1);\ \textcolor{comment}{//\ +1\ for\ null\ terminator}}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00024}00024\ \ \ \ \ \ \textcolor{comment}{//\ check\ if\ Memory\ Acllocation\ is\ not\ success.}}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00025}00025\ \ \ \ \ \ \textcolor{keywordflow}{if}\ (buffer\ !=\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00026}00026\ \ \ \ \ \ \ \ \ \ \ perror(\textcolor{stringliteral}{"{}malloc\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ exit(EXIT\_FAILURE);}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00028}00028\ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00029}00029\ \ \ \ \ \ \textcolor{comment}{//\ Reading\ File\ into\ buffer}}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00030}00030\ \ \ \ \ \ fread(buffer,\ 1,\ len,\ fp);}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00032}00032\ \ \ \ \ \ \textcolor{comment}{//\ check\ if\ Memory\ Acllocation\ is\ not\ success.}}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00033}00033\ \ \ \ \ \ \textcolor{keywordflow}{if}(buffer\ ==\ NULL)\{}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ perror(\textcolor{stringliteral}{"{}fread\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ exit(EXIT\_FAILURE);}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00036}00036\ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00038}00038\ \ \ \ \ \ buffer[len]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};\ \textcolor{comment}{//\ Setting\ Null-\/terminate\ }}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00040}00040\ \ \ \ \ \ fclose(fp);\ \textcolor{comment}{//\ Closing\ File}}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00042}00042\ \ \ \ \ \ \textcolor{keywordflow}{return}\ buffer;}
+\DoxyCodeLine{\Hypertarget{read__file_8c_source_l00043}00043\ \}}
+
+\end{DoxyCode}

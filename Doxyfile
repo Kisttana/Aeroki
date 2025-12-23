@@ -1,0 +1,11 @@
+PROJECT_NAME           = "Aeroki Programming Language"
+PROJECT_NUMBER         = "1.0.0"
+OUTPUT_DIRECTORY       = docs
+OPTIMIZE_OUTPUT_FOR_C  = YES
+
+INPUT = Parser
+
+EXTRACT_ALL            = YES
+EXTRACT_STATIC         = YES  
+SOURCE_BROWSER         = YES
+RECURSIVE              = YES

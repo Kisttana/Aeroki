@@ -1,0 +1,113 @@
+\doxysection{Parser.\+h}
+\hypertarget{Parser_8h_source}{}\label{Parser_8h_source}\index{Parser/Parser.h@{Parser/Parser.h}}
+\mbox{\hyperlink{Parser_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00001}00001\ \textcolor{preprocessor}{\#ifndef\ PARSER\_H}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00002}00002\ \textcolor{preprocessor}{\#define\ PARSER\_H}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00005}00005\ \textcolor{comment}{/*\ lexer\ header\ must\ define:}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00006}00006\ \textcolor{comment}{\ \ \ typedef\ vector\ vector;}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00007}00007\ \textcolor{comment}{\ \ \ typedef\ <something>\ ARKToken;\ \ \ \ }}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00008}00008\ \textcolor{comment}{\ \ \ typedef\ enum\ \{\ ...\ \}\ ARKTokenType;\ \ //\ values\ like\ TOKEN\_NUMBER,\ TOKEN\_IDENTIFIER,\ TOKEN\_LPAREN,\ TOKEN\_RPAREN,\ TOKEN\_COMMA,\ TOKEN\_EOF,\ TOKEN\_DEF,\ TOKEN\_COMMA\ etc.}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00009}00009\ \textcolor{comment}{*/}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}../libs/Aegis/include/aegis.h"{}}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}../Lexer/Lexer.h"{}}\ \textcolor{comment}{/*\ adapt\ path/name\ if\ needed\ */}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00014}00014\ \textcolor{comment}{/*\ AST\ node\ types\ (match\ your\ previous\ names\ or\ adapt)\ */}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00015}\mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248}{00015}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00016}\mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248a7982834c4541f163a66dbe5f2e425245}{00016}}\ \ \ \ \ \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248a7982834c4541f163a66dbe5f2e425245}{AST\_NUMBER}},}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00017}\mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248afdeb4a775a6e86f9e1aa4822d70caa59}{00017}}\ \ \ \ \ \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248afdeb4a775a6e86f9e1aa4822d70caa59}{AST\_IDENTIFIER}},}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00018}\mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248ac4cc2b2923b2ba645fe46edd1f36ef9b}{00018}}\ \ \ \ \ \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248ac4cc2b2923b2ba645fe46edd1f36ef9b}{AST\_BINARY}},}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00019}\mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248a6e7f49f0db4e1c481c5b39c0dbe54c7c}{00019}}\ \ \ \ \ \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248a6e7f49f0db4e1c481c5b39c0dbe54c7c}{AST\_UNARY}},}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00020}\mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248a32c02eebdb8ea6a14e3a8c0ae302542e}{00020}}\ \ \ \ \ \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248a32c02eebdb8ea6a14e3a8c0ae302542e}{AST\_CALL}},}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00021}\mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248a2a02ec9cfcb5a74251132623bc7b4c04}{00021}}\ \ \ \ \ \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248a2a02ec9cfcb5a74251132623bc7b4c04}{AST\_PROTOTYPE}},}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00022}\mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248aca72ec3f021680346ad5d4f7f396c342}{00022}}\ \ \ \ \ \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248aca72ec3f021680346ad5d4f7f396c342}{AST\_FUNCTION}},}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00023}\mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248ab845bbc0e0fdade1d53c4104e7888a8f}{00023}}\ \ \ \ \ \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248ab845bbc0e0fdade1d53c4104e7888a8f}{AST\_UNKNOWN}}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00024}00024\ \}\ \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248}{ASTNodeType}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00026}00026\ \textcolor{comment}{/*\ Forward\ declaration\ */}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00027}\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{00027}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structAbstractSyntaxTree}{AbstractSyntaxTree}}\ \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00029}00029\ \textcolor{comment}{/*\ AST\ structures\ -\/\ same\ layout\ you\ used\ earlier\ */}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00030}\mbox{\hyperlink{structBinaryNode}{00030}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structBinaryNode}{BinaryNode}}\ \{}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00031}\mbox{\hyperlink{structBinaryNode_a992aeb9df47cf954fe0e3dd5fd18da02}{00031}}\ \ \ \ \ \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}}\ *\mbox{\hyperlink{structBinaryNode_a992aeb9df47cf954fe0e3dd5fd18da02}{left}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00032}\mbox{\hyperlink{structBinaryNode_a46a1ef0058c9502be0f93ff6fdb6ca00}{00032}}\ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structBinaryNode_a46a1ef0058c9502be0f93ff6fdb6ca00}{op}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00033}\mbox{\hyperlink{structBinaryNode_ad2ed8a3d09f849a5a056644f5fe59b2b}{00033}}\ \ \ \ \ \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}}\ *\mbox{\hyperlink{structBinaryNode_ad2ed8a3d09f849a5a056644f5fe59b2b}{right}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00034}\mbox{\hyperlink{Parser_8h_a1d7d690fa09d751e474a7f5cbebea4f2}{00034}}\ \}\ \mbox{\hyperlink{Parser_8h_a1d7d690fa09d751e474a7f5cbebea4f2}{ASTBinary}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00036}\mbox{\hyperlink{structPrototypeNode}{00036}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structPrototypeNode}{PrototypeNode}}\ \{}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00037}\mbox{\hyperlink{structPrototypeNode_a445c0b2f5e6c8a43f66e4a6264678648}{00037}}\ \ \ \ \ vector\ *\mbox{\hyperlink{structPrototypeNode_a445c0b2f5e6c8a43f66e4a6264678648}{Args}};\ \textcolor{comment}{/*\ GArray\ of\ char*\ */}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00038}\mbox{\hyperlink{structPrototypeNode_a090b8d9c3fafa9a5b5cb6fc7ee9efba3}{00038}}\ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structPrototypeNode_a090b8d9c3fafa9a5b5cb6fc7ee9efba3}{fnName}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00039}\mbox{\hyperlink{Parser_8h_a97e9b8617464e4a52ef410c4f5072c11}{00039}}\ \}\ \mbox{\hyperlink{Parser_8h_a97e9b8617464e4a52ef410c4f5072c11}{ASTFuncPrototype}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00041}\mbox{\hyperlink{structFunctionNode}{00041}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structFunctionNode}{FunctionNode}}\ \{}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00042}\mbox{\hyperlink{structFunctionNode_a00a497d2bb199ad9dd03afe62bf8fa6b}{00042}}\ \ \ \ \ \mbox{\hyperlink{Parser_8h_a97e9b8617464e4a52ef410c4f5072c11}{ASTFuncPrototype}}\ *\mbox{\hyperlink{structFunctionNode_a00a497d2bb199ad9dd03afe62bf8fa6b}{proto}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00043}\mbox{\hyperlink{structFunctionNode_a6d17d31ddbcb7aad3a3216d1e3b3f5ff}{00043}}\ \ \ \ \ \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}}\ *\mbox{\hyperlink{structFunctionNode_a6d17d31ddbcb7aad3a3216d1e3b3f5ff}{body}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00044}\mbox{\hyperlink{Parser_8h_afb5826b14665df24cdfb623f02b763e7}{00044}}\ \}\ \mbox{\hyperlink{Parser_8h_afb5826b14665df24cdfb623f02b763e7}{ASTFunc}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00046}\mbox{\hyperlink{structCallFunc}{00046}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structCallFunc}{CallFunc}}\ \{}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00047}\mbox{\hyperlink{structCallFunc_ac5ae95151983f5b49e2f6181309a135a}{00047}}\ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structCallFunc_ac5ae95151983f5b49e2f6181309a135a}{Callee}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00048}\mbox{\hyperlink{structCallFunc_a81956dd546eda3384ad8d07583038668}{00048}}\ \ \ \ \ vector\ *\mbox{\hyperlink{structCallFunc_a81956dd546eda3384ad8d07583038668}{Args}};\ \textcolor{comment}{/*\ GArray\ of\ AST*\ */}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00049}\mbox{\hyperlink{Parser_8h_ae4076b9265dc404b63a394260ea25220}{00049}}\ \}\ \mbox{\hyperlink{Parser_8h_ae4076b9265dc404b63a394260ea25220}{ASTCall}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00051}\mbox{\hyperlink{structAbstractSyntaxTree}{00051}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structAbstractSyntaxTree}{AbstractSyntaxTree}}\ \{}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00052}\mbox{\hyperlink{structAbstractSyntaxTree_aeb16e8860415b4806e0b4faecc3c9f35}{00052}}\ \ \ \ \ \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248}{ASTNodeType}}\ \mbox{\hyperlink{structAbstractSyntaxTree_aeb16e8860415b4806e0b4faecc3c9f35}{\_Type}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00053}00053\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00054}\mbox{\hyperlink{structAbstractSyntaxTree_a1558de0134d0c2a3d4c6f47b125181e2}{00054}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structAbstractSyntaxTree_a1558de0134d0c2a3d4c6f47b125181e2}{\_Number}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00055}\mbox{\hyperlink{structAbstractSyntaxTree_ae96eb8859c57bd0b929ce1ff154c8e32}{00055}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structAbstractSyntaxTree_ae96eb8859c57bd0b929ce1ff154c8e32}{Variable\_name}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00056}\mbox{\hyperlink{structAbstractSyntaxTree_a5ae7c4bab2893f0f53ca8f78ffe93e77}{00056}}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{Parser_8h_a1d7d690fa09d751e474a7f5cbebea4f2}{ASTBinary}}\ \mbox{\hyperlink{structAbstractSyntaxTree_a5ae7c4bab2893f0f53ca8f78ffe93e77}{Binary}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00057}\mbox{\hyperlink{structAbstractSyntaxTree_ac4046a69b5a61ae0713b90b5aff10a7a}{00057}}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{Parser_8h_afb5826b14665df24cdfb623f02b763e7}{ASTFunc}}\ \mbox{\hyperlink{structAbstractSyntaxTree_ac4046a69b5a61ae0713b90b5aff10a7a}{Function}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00058}\mbox{\hyperlink{structAbstractSyntaxTree_a40ae7b5edf361a647d4e9ffcc279d1fa}{00058}}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{Parser_8h_ae4076b9265dc404b63a394260ea25220}{ASTCall}}\ \mbox{\hyperlink{structAbstractSyntaxTree_a40ae7b5edf361a647d4e9ffcc279d1fa}{Call}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00059}00059\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00060}00060\ \};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00062}00062\ \textcolor{comment}{/*\ Parser\ context\ struct\ definition*/}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00063}\mbox{\hyperlink{structARKParser}{00063}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00064}\mbox{\hyperlink{structARKParser_ad78174fe0b5a6fde711978a4da41491b}{00064}}\ \ \ \ \ vector\ *\mbox{\hyperlink{structARKParser_ad78174fe0b5a6fde711978a4da41491b}{tokens}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00065}\mbox{\hyperlink{structARKParser_a391a5a4fec559c023fc2607760561101}{00065}}\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structARKParser_a391a5a4fec559c023fc2607760561101}{current\_idx}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00066}\mbox{\hyperlink{structARKParser_ab67599dcfa0df233a1e3d92cb82e554a}{00066}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structARKParser_1_1Parser__context}{Parser\_context}}\ \{\ ARKTokenType\ \mbox{\hyperlink{structARKParser_1_1Parser__context_a721d82d3cf9be82e2f2e23dd34648db5}{type}};\ \textcolor{keywordtype}{char}\ *\mbox{\hyperlink{structARKParser_1_1Parser__context_abdf2a63a6adc99d325f68d25f619401e}{val}};\ \}\ \mbox{\hyperlink{structARKParser_ab67599dcfa0df233a1e3d92cb82e554a}{ctx}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00067}00067\ \}\ \mbox{\hyperlink{structARKParser}{ARKParser}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00070}00070\ \textcolor{comment}{/*\ initialize\ parser\ with\ token\ list\ (previously\ initRoutine)\ */}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00071}00071\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{Parser_8h_a1a797d091aec52636df4f0a4985a4a12}{initRoutine}}(vector\ *tokens);}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00073}00073\ \textcolor{comment}{/*\ advance\ token\ -\/\ exposed\ in\ case\ other\ code\ expects\ it\ */}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00074}00074\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{Parser_8h_a93f237788b1eaf4b3890acc7c3cee28a}{getNextToken}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00076}00076\ \textcolor{comment}{/*\ Parsing\ entry\ points\ (names\ kept\ from\ your\ code)\ */}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00077}00077\ \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}}\ *\mbox{\hyperlink{Parser_8h_ae4b7e588e2a1639f961fe46e8b054c3d}{Parse}}(\ \textcolor{keywordtype}{void}\ );\ \ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00078}00078\ \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}}\ *\mbox{\hyperlink{Parser_8h_aff6bc3a653623bdb415639f62a13db8f}{ParseExpression}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00079}\mbox{\hyperlink{Parser_8h_abd21d58d6e38fd81fabcd3bbd3cb6c2c}{00079}}\ \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}}\ *\mbox{\hyperlink{Parser_8h_abd21d58d6e38fd81fabcd3bbd3cb6c2c}{ParseTopLevelExpr}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00080}00080\ \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}}\ *\mbox{\hyperlink{Parser_8h_a2467c8ace189ea1819b06a11395bfc95}{ParsePrototype}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00081}00081\ \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}}\ *\mbox{\hyperlink{Parser_8h_aafb6b74c30be46a361f077eda3806f08}{ParseDefinition}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00082}00082\ \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}}\ *\mbox{\hyperlink{Parser_8h_a9db460325d1f1369808d7f3013c637a2}{ParseIdentifier}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00083}00083\ \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}}\ *\mbox{\hyperlink{Parser_8h_af755376a514f781ec1d976d8835012bb}{parseParen}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00085}00085\ \textcolor{comment}{/*\ Debug\ /\ helpers\ */}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00086}00086\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{Parser_8h_af41c9b6459a8ad7667d0b5303217de09}{printAST}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}}\ *node,\ \textcolor{keywordtype}{int}\ depth);}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00087}00087\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{Parser_8h_a6fbb8276e5c26ff809f7e3dc2989d0bf}{freeAST}}(\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}}\ *node);}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00089}00089\ \textcolor{comment}{/*\ Utility\ to\ map\ operator\ strings\ to\ precedence\ */}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00090}00090\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{Parser_8h_a0be6c17ca377dcbb33272def93ff3d4e}{getTokenPrec}}(ARKTokenType\ op);}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00092}00092\ \textcolor{comment}{/*\ For\ external\ debugging:\ set\ tokenlist\ manually\ (alias)\ */}}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00093}00093\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{Parser_8h_aea35df66b02cf8dcb8289f31ba0d3076}{setTokenList}}(vector\ *tokens);}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00096}\mbox{\hyperlink{structASTProgram}{00096}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00097}\mbox{\hyperlink{structASTProgram_a4f6118147038ea73bdf9aa2669bbfc2b}{00097}}\ \ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{structASTProgram_a4f6118147038ea73bdf9aa2669bbfc2b}{ModuleName}}[128];}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00098}\mbox{\hyperlink{structASTProgram_a4a97e9768a2202578403974465b74d3f}{00098}}\ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structASTProgram_a4a97e9768a2202578403974465b74d3f}{ASTExprCount}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00099}\mbox{\hyperlink{structASTProgram_a4e9106a4bfb354f91dc0c41b7bd9a5ef}{00099}}\ \ \ \ \ \ vector\ *\mbox{\hyperlink{structASTProgram_a4e9106a4bfb354f91dc0c41b7bd9a5ef}{ASTExprVector}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00100}00100\ \}\mbox{\hyperlink{structASTProgram}{ASTProgram}};}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00103}00103\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{Parser_8h_adbbe416785030ac05dec65fb01853fad}{ast\_parse}}(\mbox{\hyperlink{structASTProgram}{ASTProgram}}\ *\_\_context\_\_,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\_\_module\_\_,\ vector\ *tokens);}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00104}00104\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{Parser_8h_ac3d1780e368c8f425f3733360bf198bc}{print\_ast\_structure}}(\mbox{\hyperlink{structASTProgram}{ASTProgram}}\ *ast);}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00106}00106\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ PARSER\_H\ }}
+\DoxyCodeLine{\Hypertarget{Parser_8h_source_l00107}00107\ }
+
+\end{DoxyCode}

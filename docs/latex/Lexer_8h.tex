@@ -1,0 +1,91 @@
+\doxysection{Parser/\+Lexer/\+Lexer.h File Reference}
+\hypertarget{Lexer_8h}{}\label{Lexer_8h}\index{Parser/Lexer/Lexer.h@{Parser/Lexer/Lexer.h}}
+{\ttfamily \#include "{}../../libs/aegis/include/aegis.\+h"{}}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$ctype.\+h$>$}\newline
+{\ttfamily \#include "{}tokennizer.\+h"{}}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct__lexeme}{\+\_\+lexeme}}
+\item 
+struct \mbox{\hyperlink{struct__lexer}{\+\_\+lexer}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{Lexer_8h_a369266c24eacffb87046522897a570d5}{\+\_\+\+GNU\+\_\+\+SOURCE}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{struct__lexeme}{\+\_\+lexeme}} \mbox{\hyperlink{Lexer_8h_abb38e469263a7993c8c6ddd03de6b040}{Arklexeme}}
+\item 
+typedef struct \mbox{\hyperlink{struct__lexer}{\+\_\+lexer}} \mbox{\hyperlink{Lexer_8h_a901e4ece70fa587daf55dc4199b428d8}{Ark\+Lexer}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{Lexer_8h_a901e4ece70fa587daf55dc4199b428d8}{Ark\+Lexer}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{Lexer_8h_adec2b6d49e4460de8c37a2ed565dee02}{\+\_\+\+Ark\+\_\+scan\+\_\+lexemes}} (const char \texorpdfstring{$\ast$}{*}file\+\_\+to\+\_\+scan)
+\begin{DoxyCompactList}\small\item\em Create The List of lexemes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{Lexer_8h_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{Lexer_8h_a369266c24eacffb87046522897a570d5}\index{Lexer.h@{Lexer.h}!\_GNU\_SOURCE@{\_GNU\_SOURCE}}
+\index{\_GNU\_SOURCE@{\_GNU\_SOURCE}!Lexer.h@{Lexer.h}}
+\doxysubsubsection{\texorpdfstring{\_GNU\_SOURCE}{\_GNU\_SOURCE}}
+{\footnotesize\ttfamily \label{Lexer_8h_a369266c24eacffb87046522897a570d5} 
+\#define \+\_\+\+GNU\+\_\+\+SOURCE}
+
+
+
+Definition at line \mbox{\hyperlink{Lexer_8h_source_l00013}{13}} of file \mbox{\hyperlink{Lexer_8h_source}{Lexer.\+h}}.
+
+
+
+\label{doc-typedef-members}
+\Hypertarget{Lexer_8h_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{Lexer_8h_abb38e469263a7993c8c6ddd03de6b040}\index{Lexer.h@{Lexer.h}!Arklexeme@{Arklexeme}}
+\index{Arklexeme@{Arklexeme}!Lexer.h@{Lexer.h}}
+\doxysubsubsection{\texorpdfstring{Arklexeme}{Arklexeme}}
+{\footnotesize\ttfamily \label{Lexer_8h_abb38e469263a7993c8c6ddd03de6b040} 
+typedef struct \mbox{\hyperlink{struct__lexeme}{\+\_\+lexeme}} \mbox{\hyperlink{Lexer_8h_abb38e469263a7993c8c6ddd03de6b040}{Arklexeme}}}
+
+\Hypertarget{Lexer_8h_a901e4ece70fa587daf55dc4199b428d8}\index{Lexer.h@{Lexer.h}!ArkLexer@{ArkLexer}}
+\index{ArkLexer@{ArkLexer}!Lexer.h@{Lexer.h}}
+\doxysubsubsection{\texorpdfstring{ArkLexer}{ArkLexer}}
+{\footnotesize\ttfamily \label{Lexer_8h_a901e4ece70fa587daf55dc4199b428d8} 
+typedef struct \mbox{\hyperlink{struct__lexer}{\+\_\+lexer}} \mbox{\hyperlink{Lexer_8h_a901e4ece70fa587daf55dc4199b428d8}{Ark\+Lexer}}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{Lexer_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{Lexer_8h_adec2b6d49e4460de8c37a2ed565dee02}\index{Lexer.h@{Lexer.h}!\_Ark\_scan\_lexemes@{\_Ark\_scan\_lexemes}}
+\index{\_Ark\_scan\_lexemes@{\_Ark\_scan\_lexemes}!Lexer.h@{Lexer.h}}
+\doxysubsubsection{\texorpdfstring{\_Ark\_scan\_lexemes()}{\_Ark\_scan\_lexemes()}}
+{\footnotesize\ttfamily \label{Lexer_8h_adec2b6d49e4460de8c37a2ed565dee02} 
+\mbox{\hyperlink{Lexer_8h_a901e4ece70fa587daf55dc4199b428d8}{Ark\+Lexer}} \texorpdfstring{$\ast$}{*} \+\_\+\+Ark\+\_\+scan\+\_\+lexemes (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{file\+\_\+to\+\_\+scan}{}\end{DoxyParamCaption})}
+
+
+
+Create The List of lexemes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+\_\+to\+\_\+scan} & Path to source code file to scan. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The vector (List) of lexemes Note \+: type vector is a implementation of dynamic array from Aegis-\/\+Template-\/\+Library 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{Lexer_8c_source_l00006}{6}} of file \mbox{\hyperlink{Lexer_8c_source}{Lexer.\+c}}.
+

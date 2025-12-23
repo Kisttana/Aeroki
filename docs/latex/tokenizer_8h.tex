@@ -1,0 +1,858 @@
+\doxysection{Parser/\+Lexer/tokenizer.h File Reference}
+\hypertarget{tokenizer_8h}{}\label{tokenizer_8h}\index{Parser/Lexer/tokenizer.h@{Parser/Lexer/tokenizer.h}}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a5729a004bd724166fbd08cbfc19caea9}{ENDMARKER}}~0
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a47f2e62c0dbebc787052c165afcada0e}{NAME}}~1
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_abc544a4ed22112e62773c113652c5063}{NUMBER}}~2
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a0f4d394a3ab4e09bff60f714c66dc5ee}{STRING}}~3
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a806511f4930171733227c99101dc0606}{NEWLINE}}~4
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a502b06aa5ad25116c775d201326bad52}{INDENT}}~5
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a152b7820cf1f5200be4a1327823a967a}{DEDENT}}~6
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a48ea1fc2fe2e898c390f7f425b280ea8}{LPAR}}~7
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a5e78e592b96d384fb9f910870af69cb0}{RPAR}}~8
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a05d57e1be332c20aa70fbe3891d282d1}{LSQB}}~9
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_ae4b905b76e3306cb3be37144c3cbde38}{RSQB}}~10
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a8301ee0d0b0055ebb4e8ecc46fadd69e}{COLON}}~11
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_aa2f49001be13949a16a57e6c99ab00ad}{COMMA}}~12
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_ac88faf9893d99512e6c80ca70365f85b}{SEMI}}~13
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a0ea7ff5947c5f5430a29fdd98391eb2a}{PLUS}}~14
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a5381a445a1e4bdc36460151d82eed95a}{MINUS}}~15
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a94c3dc9846edbbb70f678768633a4796}{STAR}}~16
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a69eb17477fd6f6af2c9ca2d5f4c7df3c}{SLASH}}~17
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_af9125a077287c7502fe99733f95c21f3}{VBAR}}~18
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a3d547441aecbd85e15190c70215b342f}{AMPER}}~19
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a16bcdd65ecdd3313af9e393538fa7fa8}{LESS}}~20
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_ae27a03218878a9af9d7d946e186f8598}{GREATER}}~21
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a214c717b2e51e1993a749ac99df7de58}{EQUAL}}~22
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a8a5043e7ab655e37e903ffbd8b95d6b2}{DOT}}~23
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a9b321fc8474a410f24deb460c4fa014e}{PERCENT}}~24
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_af078bec81516d407fe17fc7cb8b355ac}{LBRACE}}~25
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a301875c1e1858bdc810760f25fcd02d2}{RBRACE}}~26
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_af7d74dce03748f612968a6d02a0e3b08}{EQEQUAL}}~27
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a15627a08ed52bf7684467fa15c44a97e}{NOTEQUAL}}~28
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_ac3cb64b515631fe5f3e430db76c9978a}{LESSEQUAL}}~29
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a9374d91a660c5e23f02e5f68ce94de0b}{GREATEREQUAL}}~30
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_af8fcc20bc3c07231ed32dd372a78b78e}{TILDE}}~31
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a4a4c21e5c52a2d12bd883afbd50b7bb3}{CIRCUMFLEX}}~32
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a29870f655cade0ad3f14779c8112618c}{LEFTSHIFT}}~33
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a9cc204da9bdc2eed73ef1ea3dbd375e0}{RIGHTSHIFT}}~34
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a0a8f6a6080806250a04758e3bcb964a3}{DOUBLESTAR}}~35
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_af6461f7dcd08e7cccbf04a1d661f57b7}{PLUSEQUAL}}~36
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a11ababa41ab5e39d361aa014a78441ce}{MINEQUAL}}~37
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a46713dd80909b82638e7c9c62b9d46f6}{STAREQUAL}}~38
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a2cebe86970aedab023317a3b6517b294}{SLASHEQUAL}}~39
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a89a1ffa6cb53bca13d101eaf0aa397f4}{PERCENTEQUAL}}~40
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a6f0263e68665ef44e385e11e15b1ffe4}{AMPEREQUAL}}~41
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_ac1cfcd38c0adecb77863083ff51a886c}{VBAREQUAL}}~42
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a77dfa2200c07c06ccfe4a9cdafa12b30}{CIRCUMFLEXEQUAL}}~43
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a88572dbfd08e69f3470b563ef9e4fe0b}{LEFTSHIFTEQUAL}}~44
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_af5bfc03a0262d01aed1fd3cec5509aa1}{RIGHTSHIFTEQUAL}}~45
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a6441e269be626994a8c3a17f81b8903c}{DOUBLESTAREQUAL}}~46
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a020f4f276c5ec5182dff96ea7c780d8d}{DOUBLESLASH}}~47
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a90c2230d7594642633ed73dbfc6ee76e}{DOUBLESLASHEQUAL}}~48
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_ad37a804df2a1060b453ce07fe0ee3cbc}{AT}}~49
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a856e7227e29dc453f563f7d311948ec7}{ATEQUAL}}~50
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a23ed27877f0d21bd864ececd3792b9a4}{RARROW}}~51
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a3e88205e2cdbcefbf6b08cae10d83916}{ELLIPSIS}}~52
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a32c060ec5a6075163ba8d187fc5c409e}{COLONEQUAL}}~53
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_af8bec7112465419ad92e29210d5e6fda}{EXCLAMATION}}~54
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_aa79b1be0ef317a63d011aa727009a14a}{OP}}~55
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a75bc567b868f069449d1e233ac79bae5}{TYPE\+\_\+\+IGNORE}}~56
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a16366fddcc48ddd81dfcfdd1edb6b846}{TYPE\+\_\+\+COMMENT}}~57
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a2fbbf4201d319d444a692119d732f662}{SOFT\+\_\+\+KEYWORD}}~58
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a6cda0d5530de9fc9a461181fa55856de}{FSTRING\+\_\+\+START}}~59
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_af3a526d3d81cb5f9e5f5418b710e7a6f}{FSTRING\+\_\+\+MIDDLE}}~60
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a0a97c1361ea294b6f97dbf06e39dad8e}{FSTRING\+\_\+\+END}}~61
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a8963c8bb3cf38c1e9075abaad16cce1e}{TSTRING\+\_\+\+START}}~62
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_ae0e7c5ef977d783268c7ef33979df177}{TSTRING\+\_\+\+MIDDLE}}~63
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a136be0bfebba74112e4ff38bb7e77a27}{TSTRING\+\_\+\+END}}~64
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a180f5b3835bdbfc11b353fd2af5c8659}{COMMENT}}~65
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a4fc34b120ed3bd1120c1eb36abbcd6af}{NL}}~66
+\item 
+\#define \mbox{\hyperlink{tokenizer_8h_a29dcf8b3ff75c2a5f8d8d5c2d4aa64c5}{ERRORTOKEN}}~67
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{tokenizer_8h_a6f36bd6f99f9dcaca62a2827af28e6fa}{\+\_\+\+Ark\+Token\+\_\+\+One\+Char}} (int c1)
+\item 
+int \mbox{\hyperlink{tokenizer_8h_a3f6a0bfe68bf701f588f481c64fc1c83}{\+\_\+\+Ark\+Token\+\_\+\+Two\+Char}} (int c1, int c2)
+\item 
+int \mbox{\hyperlink{tokenizer_8h_ad4df2724fac993c4b47aa1467b26b2f3}{\+\_\+\+Ark\+Token\+\_\+\+Three\+Char}} (int c1, int c2, int c3)
+\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{tokenizer_8h_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{tokenizer_8h_a3d547441aecbd85e15190c70215b342f}\index{tokenizer.h@{tokenizer.h}!AMPER@{AMPER}}
+\index{AMPER@{AMPER}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{AMPER}{AMPER}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a3d547441aecbd85e15190c70215b342f} 
+\#define AMPER~19}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00027}{27}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a6f0263e68665ef44e385e11e15b1ffe4}\index{tokenizer.h@{tokenizer.h}!AMPEREQUAL@{AMPEREQUAL}}
+\index{AMPEREQUAL@{AMPEREQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{AMPEREQUAL}{AMPEREQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a6f0263e68665ef44e385e11e15b1ffe4} 
+\#define AMPEREQUAL~41}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00049}{49}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_ad37a804df2a1060b453ce07fe0ee3cbc}\index{tokenizer.h@{tokenizer.h}!AT@{AT}}
+\index{AT@{AT}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{AT}{AT}}
+{\footnotesize\ttfamily \label{tokenizer_8h_ad37a804df2a1060b453ce07fe0ee3cbc} 
+\#define AT~49}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00057}{57}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a856e7227e29dc453f563f7d311948ec7}\index{tokenizer.h@{tokenizer.h}!ATEQUAL@{ATEQUAL}}
+\index{ATEQUAL@{ATEQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{ATEQUAL}{ATEQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a856e7227e29dc453f563f7d311948ec7} 
+\#define ATEQUAL~50}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00058}{58}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a4a4c21e5c52a2d12bd883afbd50b7bb3}\index{tokenizer.h@{tokenizer.h}!CIRCUMFLEX@{CIRCUMFLEX}}
+\index{CIRCUMFLEX@{CIRCUMFLEX}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{CIRCUMFLEX}{CIRCUMFLEX}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a4a4c21e5c52a2d12bd883afbd50b7bb3} 
+\#define CIRCUMFLEX~32}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00040}{40}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a77dfa2200c07c06ccfe4a9cdafa12b30}\index{tokenizer.h@{tokenizer.h}!CIRCUMFLEXEQUAL@{CIRCUMFLEXEQUAL}}
+\index{CIRCUMFLEXEQUAL@{CIRCUMFLEXEQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{CIRCUMFLEXEQUAL}{CIRCUMFLEXEQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a77dfa2200c07c06ccfe4a9cdafa12b30} 
+\#define CIRCUMFLEXEQUAL~43}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00051}{51}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a8301ee0d0b0055ebb4e8ecc46fadd69e}\index{tokenizer.h@{tokenizer.h}!COLON@{COLON}}
+\index{COLON@{COLON}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{COLON}{COLON}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a8301ee0d0b0055ebb4e8ecc46fadd69e} 
+\#define COLON~11}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00019}{19}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a32c060ec5a6075163ba8d187fc5c409e}\index{tokenizer.h@{tokenizer.h}!COLONEQUAL@{COLONEQUAL}}
+\index{COLONEQUAL@{COLONEQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{COLONEQUAL}{COLONEQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a32c060ec5a6075163ba8d187fc5c409e} 
+\#define COLONEQUAL~53}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00061}{61}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_aa2f49001be13949a16a57e6c99ab00ad}\index{tokenizer.h@{tokenizer.h}!COMMA@{COMMA}}
+\index{COMMA@{COMMA}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{COMMA}{COMMA}}
+{\footnotesize\ttfamily \label{tokenizer_8h_aa2f49001be13949a16a57e6c99ab00ad} 
+\#define COMMA~12}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00020}{20}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a180f5b3835bdbfc11b353fd2af5c8659}\index{tokenizer.h@{tokenizer.h}!COMMENT@{COMMENT}}
+\index{COMMENT@{COMMENT}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{COMMENT}{COMMENT}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a180f5b3835bdbfc11b353fd2af5c8659} 
+\#define COMMENT~65}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00073}{73}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a152b7820cf1f5200be4a1327823a967a}\index{tokenizer.h@{tokenizer.h}!DEDENT@{DEDENT}}
+\index{DEDENT@{DEDENT}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{DEDENT}{DEDENT}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a152b7820cf1f5200be4a1327823a967a} 
+\#define DEDENT~6}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00014}{14}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a8a5043e7ab655e37e903ffbd8b95d6b2}\index{tokenizer.h@{tokenizer.h}!DOT@{DOT}}
+\index{DOT@{DOT}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{DOT}{DOT}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a8a5043e7ab655e37e903ffbd8b95d6b2} 
+\#define DOT~23}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00031}{31}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a020f4f276c5ec5182dff96ea7c780d8d}\index{tokenizer.h@{tokenizer.h}!DOUBLESLASH@{DOUBLESLASH}}
+\index{DOUBLESLASH@{DOUBLESLASH}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{DOUBLESLASH}{DOUBLESLASH}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a020f4f276c5ec5182dff96ea7c780d8d} 
+\#define DOUBLESLASH~47}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00055}{55}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a90c2230d7594642633ed73dbfc6ee76e}\index{tokenizer.h@{tokenizer.h}!DOUBLESLASHEQUAL@{DOUBLESLASHEQUAL}}
+\index{DOUBLESLASHEQUAL@{DOUBLESLASHEQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{DOUBLESLASHEQUAL}{DOUBLESLASHEQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a90c2230d7594642633ed73dbfc6ee76e} 
+\#define DOUBLESLASHEQUAL~48}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00056}{56}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a0a8f6a6080806250a04758e3bcb964a3}\index{tokenizer.h@{tokenizer.h}!DOUBLESTAR@{DOUBLESTAR}}
+\index{DOUBLESTAR@{DOUBLESTAR}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{DOUBLESTAR}{DOUBLESTAR}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a0a8f6a6080806250a04758e3bcb964a3} 
+\#define DOUBLESTAR~35}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00043}{43}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a6441e269be626994a8c3a17f81b8903c}\index{tokenizer.h@{tokenizer.h}!DOUBLESTAREQUAL@{DOUBLESTAREQUAL}}
+\index{DOUBLESTAREQUAL@{DOUBLESTAREQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{DOUBLESTAREQUAL}{DOUBLESTAREQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a6441e269be626994a8c3a17f81b8903c} 
+\#define DOUBLESTAREQUAL~46}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00054}{54}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a3e88205e2cdbcefbf6b08cae10d83916}\index{tokenizer.h@{tokenizer.h}!ELLIPSIS@{ELLIPSIS}}
+\index{ELLIPSIS@{ELLIPSIS}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{ELLIPSIS}{ELLIPSIS}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a3e88205e2cdbcefbf6b08cae10d83916} 
+\#define ELLIPSIS~52}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00060}{60}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a5729a004bd724166fbd08cbfc19caea9}\index{tokenizer.h@{tokenizer.h}!ENDMARKER@{ENDMARKER}}
+\index{ENDMARKER@{ENDMARKER}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{ENDMARKER}{ENDMARKER}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a5729a004bd724166fbd08cbfc19caea9} 
+\#define ENDMARKER~0}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00008}{8}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_af7d74dce03748f612968a6d02a0e3b08}\index{tokenizer.h@{tokenizer.h}!EQEQUAL@{EQEQUAL}}
+\index{EQEQUAL@{EQEQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{EQEQUAL}{EQEQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_af7d74dce03748f612968a6d02a0e3b08} 
+\#define EQEQUAL~27}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00035}{35}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a214c717b2e51e1993a749ac99df7de58}\index{tokenizer.h@{tokenizer.h}!EQUAL@{EQUAL}}
+\index{EQUAL@{EQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{EQUAL}{EQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a214c717b2e51e1993a749ac99df7de58} 
+\#define EQUAL~22}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00030}{30}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a29dcf8b3ff75c2a5f8d8d5c2d4aa64c5}\index{tokenizer.h@{tokenizer.h}!ERRORTOKEN@{ERRORTOKEN}}
+\index{ERRORTOKEN@{ERRORTOKEN}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{ERRORTOKEN}{ERRORTOKEN}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a29dcf8b3ff75c2a5f8d8d5c2d4aa64c5} 
+\#define ERRORTOKEN~67}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00075}{75}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_af8bec7112465419ad92e29210d5e6fda}\index{tokenizer.h@{tokenizer.h}!EXCLAMATION@{EXCLAMATION}}
+\index{EXCLAMATION@{EXCLAMATION}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{EXCLAMATION}{EXCLAMATION}}
+{\footnotesize\ttfamily \label{tokenizer_8h_af8bec7112465419ad92e29210d5e6fda} 
+\#define EXCLAMATION~54}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00062}{62}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a0a97c1361ea294b6f97dbf06e39dad8e}\index{tokenizer.h@{tokenizer.h}!FSTRING\_END@{FSTRING\_END}}
+\index{FSTRING\_END@{FSTRING\_END}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{FSTRING\_END}{FSTRING\_END}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a0a97c1361ea294b6f97dbf06e39dad8e} 
+\#define FSTRING\+\_\+\+END~61}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00069}{69}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_af3a526d3d81cb5f9e5f5418b710e7a6f}\index{tokenizer.h@{tokenizer.h}!FSTRING\_MIDDLE@{FSTRING\_MIDDLE}}
+\index{FSTRING\_MIDDLE@{FSTRING\_MIDDLE}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{FSTRING\_MIDDLE}{FSTRING\_MIDDLE}}
+{\footnotesize\ttfamily \label{tokenizer_8h_af3a526d3d81cb5f9e5f5418b710e7a6f} 
+\#define FSTRING\+\_\+\+MIDDLE~60}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00068}{68}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a6cda0d5530de9fc9a461181fa55856de}\index{tokenizer.h@{tokenizer.h}!FSTRING\_START@{FSTRING\_START}}
+\index{FSTRING\_START@{FSTRING\_START}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{FSTRING\_START}{FSTRING\_START}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a6cda0d5530de9fc9a461181fa55856de} 
+\#define FSTRING\+\_\+\+START~59}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00067}{67}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_ae27a03218878a9af9d7d946e186f8598}\index{tokenizer.h@{tokenizer.h}!GREATER@{GREATER}}
+\index{GREATER@{GREATER}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{GREATER}{GREATER}}
+{\footnotesize\ttfamily \label{tokenizer_8h_ae27a03218878a9af9d7d946e186f8598} 
+\#define GREATER~21}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00029}{29}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a9374d91a660c5e23f02e5f68ce94de0b}\index{tokenizer.h@{tokenizer.h}!GREATEREQUAL@{GREATEREQUAL}}
+\index{GREATEREQUAL@{GREATEREQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{GREATEREQUAL}{GREATEREQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a9374d91a660c5e23f02e5f68ce94de0b} 
+\#define GREATEREQUAL~30}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00038}{38}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a502b06aa5ad25116c775d201326bad52}\index{tokenizer.h@{tokenizer.h}!INDENT@{INDENT}}
+\index{INDENT@{INDENT}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{INDENT}{INDENT}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a502b06aa5ad25116c775d201326bad52} 
+\#define INDENT~5}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00013}{13}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_af078bec81516d407fe17fc7cb8b355ac}\index{tokenizer.h@{tokenizer.h}!LBRACE@{LBRACE}}
+\index{LBRACE@{LBRACE}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{LBRACE}{LBRACE}}
+{\footnotesize\ttfamily \label{tokenizer_8h_af078bec81516d407fe17fc7cb8b355ac} 
+\#define LBRACE~25}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00033}{33}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a29870f655cade0ad3f14779c8112618c}\index{tokenizer.h@{tokenizer.h}!LEFTSHIFT@{LEFTSHIFT}}
+\index{LEFTSHIFT@{LEFTSHIFT}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{LEFTSHIFT}{LEFTSHIFT}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a29870f655cade0ad3f14779c8112618c} 
+\#define LEFTSHIFT~33}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00041}{41}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a88572dbfd08e69f3470b563ef9e4fe0b}\index{tokenizer.h@{tokenizer.h}!LEFTSHIFTEQUAL@{LEFTSHIFTEQUAL}}
+\index{LEFTSHIFTEQUAL@{LEFTSHIFTEQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{LEFTSHIFTEQUAL}{LEFTSHIFTEQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a88572dbfd08e69f3470b563ef9e4fe0b} 
+\#define LEFTSHIFTEQUAL~44}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00052}{52}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a16bcdd65ecdd3313af9e393538fa7fa8}\index{tokenizer.h@{tokenizer.h}!LESS@{LESS}}
+\index{LESS@{LESS}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{LESS}{LESS}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a16bcdd65ecdd3313af9e393538fa7fa8} 
+\#define LESS~20}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00028}{28}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_ac3cb64b515631fe5f3e430db76c9978a}\index{tokenizer.h@{tokenizer.h}!LESSEQUAL@{LESSEQUAL}}
+\index{LESSEQUAL@{LESSEQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{LESSEQUAL}{LESSEQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_ac3cb64b515631fe5f3e430db76c9978a} 
+\#define LESSEQUAL~29}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00037}{37}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a48ea1fc2fe2e898c390f7f425b280ea8}\index{tokenizer.h@{tokenizer.h}!LPAR@{LPAR}}
+\index{LPAR@{LPAR}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{LPAR}{LPAR}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a48ea1fc2fe2e898c390f7f425b280ea8} 
+\#define LPAR~7}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00015}{15}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a05d57e1be332c20aa70fbe3891d282d1}\index{tokenizer.h@{tokenizer.h}!LSQB@{LSQB}}
+\index{LSQB@{LSQB}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{LSQB}{LSQB}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a05d57e1be332c20aa70fbe3891d282d1} 
+\#define LSQB~9}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00017}{17}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a11ababa41ab5e39d361aa014a78441ce}\index{tokenizer.h@{tokenizer.h}!MINEQUAL@{MINEQUAL}}
+\index{MINEQUAL@{MINEQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{MINEQUAL}{MINEQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a11ababa41ab5e39d361aa014a78441ce} 
+\#define MINEQUAL~37}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00045}{45}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a5381a445a1e4bdc36460151d82eed95a}\index{tokenizer.h@{tokenizer.h}!MINUS@{MINUS}}
+\index{MINUS@{MINUS}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{MINUS}{MINUS}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a5381a445a1e4bdc36460151d82eed95a} 
+\#define MINUS~15}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00023}{23}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a47f2e62c0dbebc787052c165afcada0e}\index{tokenizer.h@{tokenizer.h}!NAME@{NAME}}
+\index{NAME@{NAME}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{NAME}{NAME}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a47f2e62c0dbebc787052c165afcada0e} 
+\#define NAME~1}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00009}{9}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a806511f4930171733227c99101dc0606}\index{tokenizer.h@{tokenizer.h}!NEWLINE@{NEWLINE}}
+\index{NEWLINE@{NEWLINE}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{NEWLINE}{NEWLINE}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a806511f4930171733227c99101dc0606} 
+\#define NEWLINE~4}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00012}{12}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a4fc34b120ed3bd1120c1eb36abbcd6af}\index{tokenizer.h@{tokenizer.h}!NL@{NL}}
+\index{NL@{NL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{NL}{NL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a4fc34b120ed3bd1120c1eb36abbcd6af} 
+\#define NL~66}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00074}{74}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a15627a08ed52bf7684467fa15c44a97e}\index{tokenizer.h@{tokenizer.h}!NOTEQUAL@{NOTEQUAL}}
+\index{NOTEQUAL@{NOTEQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{NOTEQUAL}{NOTEQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a15627a08ed52bf7684467fa15c44a97e} 
+\#define NOTEQUAL~28}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00036}{36}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_abc544a4ed22112e62773c113652c5063}\index{tokenizer.h@{tokenizer.h}!NUMBER@{NUMBER}}
+\index{NUMBER@{NUMBER}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{NUMBER}{NUMBER}}
+{\footnotesize\ttfamily \label{tokenizer_8h_abc544a4ed22112e62773c113652c5063} 
+\#define NUMBER~2}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00010}{10}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_aa79b1be0ef317a63d011aa727009a14a}\index{tokenizer.h@{tokenizer.h}!OP@{OP}}
+\index{OP@{OP}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{OP}{OP}}
+{\footnotesize\ttfamily \label{tokenizer_8h_aa79b1be0ef317a63d011aa727009a14a} 
+\#define OP~55}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00063}{63}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a9b321fc8474a410f24deb460c4fa014e}\index{tokenizer.h@{tokenizer.h}!PERCENT@{PERCENT}}
+\index{PERCENT@{PERCENT}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{PERCENT}{PERCENT}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a9b321fc8474a410f24deb460c4fa014e} 
+\#define PERCENT~24}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00032}{32}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a89a1ffa6cb53bca13d101eaf0aa397f4}\index{tokenizer.h@{tokenizer.h}!PERCENTEQUAL@{PERCENTEQUAL}}
+\index{PERCENTEQUAL@{PERCENTEQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{PERCENTEQUAL}{PERCENTEQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a89a1ffa6cb53bca13d101eaf0aa397f4} 
+\#define PERCENTEQUAL~40}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00048}{48}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a0ea7ff5947c5f5430a29fdd98391eb2a}\index{tokenizer.h@{tokenizer.h}!PLUS@{PLUS}}
+\index{PLUS@{PLUS}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{PLUS}{PLUS}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a0ea7ff5947c5f5430a29fdd98391eb2a} 
+\#define PLUS~14}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00022}{22}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_af6461f7dcd08e7cccbf04a1d661f57b7}\index{tokenizer.h@{tokenizer.h}!PLUSEQUAL@{PLUSEQUAL}}
+\index{PLUSEQUAL@{PLUSEQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{PLUSEQUAL}{PLUSEQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_af6461f7dcd08e7cccbf04a1d661f57b7} 
+\#define PLUSEQUAL~36}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00044}{44}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a23ed27877f0d21bd864ececd3792b9a4}\index{tokenizer.h@{tokenizer.h}!RARROW@{RARROW}}
+\index{RARROW@{RARROW}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{RARROW}{RARROW}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a23ed27877f0d21bd864ececd3792b9a4} 
+\#define RARROW~51}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00059}{59}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a301875c1e1858bdc810760f25fcd02d2}\index{tokenizer.h@{tokenizer.h}!RBRACE@{RBRACE}}
+\index{RBRACE@{RBRACE}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{RBRACE}{RBRACE}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a301875c1e1858bdc810760f25fcd02d2} 
+\#define RBRACE~26}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00034}{34}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a9cc204da9bdc2eed73ef1ea3dbd375e0}\index{tokenizer.h@{tokenizer.h}!RIGHTSHIFT@{RIGHTSHIFT}}
+\index{RIGHTSHIFT@{RIGHTSHIFT}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{RIGHTSHIFT}{RIGHTSHIFT}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a9cc204da9bdc2eed73ef1ea3dbd375e0} 
+\#define RIGHTSHIFT~34}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00042}{42}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_af5bfc03a0262d01aed1fd3cec5509aa1}\index{tokenizer.h@{tokenizer.h}!RIGHTSHIFTEQUAL@{RIGHTSHIFTEQUAL}}
+\index{RIGHTSHIFTEQUAL@{RIGHTSHIFTEQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{RIGHTSHIFTEQUAL}{RIGHTSHIFTEQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_af5bfc03a0262d01aed1fd3cec5509aa1} 
+\#define RIGHTSHIFTEQUAL~45}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00053}{53}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a5e78e592b96d384fb9f910870af69cb0}\index{tokenizer.h@{tokenizer.h}!RPAR@{RPAR}}
+\index{RPAR@{RPAR}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{RPAR}{RPAR}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a5e78e592b96d384fb9f910870af69cb0} 
+\#define RPAR~8}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00016}{16}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_ae4b905b76e3306cb3be37144c3cbde38}\index{tokenizer.h@{tokenizer.h}!RSQB@{RSQB}}
+\index{RSQB@{RSQB}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{RSQB}{RSQB}}
+{\footnotesize\ttfamily \label{tokenizer_8h_ae4b905b76e3306cb3be37144c3cbde38} 
+\#define RSQB~10}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00018}{18}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_ac88faf9893d99512e6c80ca70365f85b}\index{tokenizer.h@{tokenizer.h}!SEMI@{SEMI}}
+\index{SEMI@{SEMI}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{SEMI}{SEMI}}
+{\footnotesize\ttfamily \label{tokenizer_8h_ac88faf9893d99512e6c80ca70365f85b} 
+\#define SEMI~13}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00021}{21}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a69eb17477fd6f6af2c9ca2d5f4c7df3c}\index{tokenizer.h@{tokenizer.h}!SLASH@{SLASH}}
+\index{SLASH@{SLASH}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{SLASH}{SLASH}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a69eb17477fd6f6af2c9ca2d5f4c7df3c} 
+\#define SLASH~17}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00025}{25}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a2cebe86970aedab023317a3b6517b294}\index{tokenizer.h@{tokenizer.h}!SLASHEQUAL@{SLASHEQUAL}}
+\index{SLASHEQUAL@{SLASHEQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{SLASHEQUAL}{SLASHEQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a2cebe86970aedab023317a3b6517b294} 
+\#define SLASHEQUAL~39}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00047}{47}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a2fbbf4201d319d444a692119d732f662}\index{tokenizer.h@{tokenizer.h}!SOFT\_KEYWORD@{SOFT\_KEYWORD}}
+\index{SOFT\_KEYWORD@{SOFT\_KEYWORD}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{SOFT\_KEYWORD}{SOFT\_KEYWORD}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a2fbbf4201d319d444a692119d732f662} 
+\#define SOFT\+\_\+\+KEYWORD~58}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00066}{66}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a94c3dc9846edbbb70f678768633a4796}\index{tokenizer.h@{tokenizer.h}!STAR@{STAR}}
+\index{STAR@{STAR}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{STAR}{STAR}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a94c3dc9846edbbb70f678768633a4796} 
+\#define STAR~16}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00024}{24}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a46713dd80909b82638e7c9c62b9d46f6}\index{tokenizer.h@{tokenizer.h}!STAREQUAL@{STAREQUAL}}
+\index{STAREQUAL@{STAREQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{STAREQUAL}{STAREQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a46713dd80909b82638e7c9c62b9d46f6} 
+\#define STAREQUAL~38}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00046}{46}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a0f4d394a3ab4e09bff60f714c66dc5ee}\index{tokenizer.h@{tokenizer.h}!STRING@{STRING}}
+\index{STRING@{STRING}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{STRING}{STRING}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a0f4d394a3ab4e09bff60f714c66dc5ee} 
+\#define STRING~3}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00011}{11}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_af8fcc20bc3c07231ed32dd372a78b78e}\index{tokenizer.h@{tokenizer.h}!TILDE@{TILDE}}
+\index{TILDE@{TILDE}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{TILDE}{TILDE}}
+{\footnotesize\ttfamily \label{tokenizer_8h_af8fcc20bc3c07231ed32dd372a78b78e} 
+\#define TILDE~31}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00039}{39}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a136be0bfebba74112e4ff38bb7e77a27}\index{tokenizer.h@{tokenizer.h}!TSTRING\_END@{TSTRING\_END}}
+\index{TSTRING\_END@{TSTRING\_END}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{TSTRING\_END}{TSTRING\_END}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a136be0bfebba74112e4ff38bb7e77a27} 
+\#define TSTRING\+\_\+\+END~64}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00072}{72}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_ae0e7c5ef977d783268c7ef33979df177}\index{tokenizer.h@{tokenizer.h}!TSTRING\_MIDDLE@{TSTRING\_MIDDLE}}
+\index{TSTRING\_MIDDLE@{TSTRING\_MIDDLE}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{TSTRING\_MIDDLE}{TSTRING\_MIDDLE}}
+{\footnotesize\ttfamily \label{tokenizer_8h_ae0e7c5ef977d783268c7ef33979df177} 
+\#define TSTRING\+\_\+\+MIDDLE~63}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00071}{71}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a8963c8bb3cf38c1e9075abaad16cce1e}\index{tokenizer.h@{tokenizer.h}!TSTRING\_START@{TSTRING\_START}}
+\index{TSTRING\_START@{TSTRING\_START}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{TSTRING\_START}{TSTRING\_START}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a8963c8bb3cf38c1e9075abaad16cce1e} 
+\#define TSTRING\+\_\+\+START~62}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00070}{70}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a16366fddcc48ddd81dfcfdd1edb6b846}\index{tokenizer.h@{tokenizer.h}!TYPE\_COMMENT@{TYPE\_COMMENT}}
+\index{TYPE\_COMMENT@{TYPE\_COMMENT}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{TYPE\_COMMENT}{TYPE\_COMMENT}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a16366fddcc48ddd81dfcfdd1edb6b846} 
+\#define TYPE\+\_\+\+COMMENT~57}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00065}{65}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_a75bc567b868f069449d1e233ac79bae5}\index{tokenizer.h@{tokenizer.h}!TYPE\_IGNORE@{TYPE\_IGNORE}}
+\index{TYPE\_IGNORE@{TYPE\_IGNORE}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{TYPE\_IGNORE}{TYPE\_IGNORE}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a75bc567b868f069449d1e233ac79bae5} 
+\#define TYPE\+\_\+\+IGNORE~56}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00064}{64}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_af9125a077287c7502fe99733f95c21f3}\index{tokenizer.h@{tokenizer.h}!VBAR@{VBAR}}
+\index{VBAR@{VBAR}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{VBAR}{VBAR}}
+{\footnotesize\ttfamily \label{tokenizer_8h_af9125a077287c7502fe99733f95c21f3} 
+\#define VBAR~18}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00026}{26}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+\Hypertarget{tokenizer_8h_ac1cfcd38c0adecb77863083ff51a886c}\index{tokenizer.h@{tokenizer.h}!VBAREQUAL@{VBAREQUAL}}
+\index{VBAREQUAL@{VBAREQUAL}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{VBAREQUAL}{VBAREQUAL}}
+{\footnotesize\ttfamily \label{tokenizer_8h_ac1cfcd38c0adecb77863083ff51a886c} 
+\#define VBAREQUAL~42}
+
+
+
+Definition at line \mbox{\hyperlink{tokenizer_8h_source_l00050}{50}} of file \mbox{\hyperlink{tokenizer_8h_source}{tokenizer.\+h}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{tokenizer_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{tokenizer_8h_a6f36bd6f99f9dcaca62a2827af28e6fa}\index{tokenizer.h@{tokenizer.h}!\_ArkToken\_OneChar@{\_ArkToken\_OneChar}}
+\index{\_ArkToken\_OneChar@{\_ArkToken\_OneChar}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{\_ArkToken\_OneChar()}{\_ArkToken\_OneChar()}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a6f36bd6f99f9dcaca62a2827af28e6fa} 
+int \+\_\+\+Ark\+Token\+\_\+\+One\+Char (\begin{DoxyParamCaption}\item[{int}]{c1}{}\end{DoxyParamCaption})}
+
+\Hypertarget{tokenizer_8h_ad4df2724fac993c4b47aa1467b26b2f3}\index{tokenizer.h@{tokenizer.h}!\_ArkToken\_ThreeChar@{\_ArkToken\_ThreeChar}}
+\index{\_ArkToken\_ThreeChar@{\_ArkToken\_ThreeChar}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{\_ArkToken\_ThreeChar()}{\_ArkToken\_ThreeChar()}}
+{\footnotesize\ttfamily \label{tokenizer_8h_ad4df2724fac993c4b47aa1467b26b2f3} 
+int \+\_\+\+Ark\+Token\+\_\+\+Three\+Char (\begin{DoxyParamCaption}\item[{int}]{c1}{, }\item[{int}]{c2}{, }\item[{int}]{c3}{}\end{DoxyParamCaption})}
+
+\Hypertarget{tokenizer_8h_a3f6a0bfe68bf701f588f481c64fc1c83}\index{tokenizer.h@{tokenizer.h}!\_ArkToken\_TwoChar@{\_ArkToken\_TwoChar}}
+\index{\_ArkToken\_TwoChar@{\_ArkToken\_TwoChar}!tokenizer.h@{tokenizer.h}}
+\doxysubsubsection{\texorpdfstring{\_ArkToken\_TwoChar()}{\_ArkToken\_TwoChar()}}
+{\footnotesize\ttfamily \label{tokenizer_8h_a3f6a0bfe68bf701f588f481c64fc1c83} 
+int \+\_\+\+Ark\+Token\+\_\+\+Two\+Char (\begin{DoxyParamCaption}\item[{int}]{c1}{, }\item[{int}]{c2}{}\end{DoxyParamCaption})}
+

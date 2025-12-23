@@ -1,0 +1,99 @@
+\doxysection{tokenizer.\+h}
+\hypertarget{tokenizer_8h_source}{}\label{tokenizer_8h_source}\index{Parser/Lexer/tokenizer.h@{Parser/Lexer/tokenizer.h}}
+\mbox{\hyperlink{tokenizer_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00001}00001\ \textcolor{preprocessor}{\#ifndef\ ARK\_TOKENIZER\_H}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00002}00002\ \textcolor{preprocessor}{\#define\ ARK\_TOKENIZER\_H}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00004}00004\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00005}00005\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00006}00006\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00008}\mbox{\hyperlink{tokenizer_8h_a5729a004bd724166fbd08cbfc19caea9}{00008}}\ \textcolor{preprocessor}{\#define\ ENDMARKER\ \ \ \ \ \ \ 0}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00009}\mbox{\hyperlink{tokenizer_8h_a47f2e62c0dbebc787052c165afcada0e}{00009}}\ \textcolor{preprocessor}{\#define\ NAME\ \ \ \ \ \ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00010}\mbox{\hyperlink{tokenizer_8h_abc544a4ed22112e62773c113652c5063}{00010}}\ \textcolor{preprocessor}{\#define\ NUMBER\ \ \ \ \ \ \ \ \ \ 2}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00011}\mbox{\hyperlink{tokenizer_8h_a0f4d394a3ab4e09bff60f714c66dc5ee}{00011}}\ \textcolor{preprocessor}{\#define\ STRING\ \ \ \ \ \ \ \ \ \ 3}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00012}\mbox{\hyperlink{tokenizer_8h_a806511f4930171733227c99101dc0606}{00012}}\ \textcolor{preprocessor}{\#define\ NEWLINE\ \ \ \ \ \ \ \ \ 4}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00013}\mbox{\hyperlink{tokenizer_8h_a502b06aa5ad25116c775d201326bad52}{00013}}\ \textcolor{preprocessor}{\#define\ INDENT\ \ \ \ \ \ \ \ \ \ 5}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00014}\mbox{\hyperlink{tokenizer_8h_a152b7820cf1f5200be4a1327823a967a}{00014}}\ \textcolor{preprocessor}{\#define\ DEDENT\ \ \ \ \ \ \ \ \ \ 6}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00015}\mbox{\hyperlink{tokenizer_8h_a48ea1fc2fe2e898c390f7f425b280ea8}{00015}}\ \textcolor{preprocessor}{\#define\ LPAR\ \ \ \ \ \ \ \ \ \ \ \ 7}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00016}\mbox{\hyperlink{tokenizer_8h_a5e78e592b96d384fb9f910870af69cb0}{00016}}\ \textcolor{preprocessor}{\#define\ RPAR\ \ \ \ \ \ \ \ \ \ \ \ 8}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00017}\mbox{\hyperlink{tokenizer_8h_a05d57e1be332c20aa70fbe3891d282d1}{00017}}\ \textcolor{preprocessor}{\#define\ LSQB\ \ \ \ \ \ \ \ \ \ \ \ 9}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00018}\mbox{\hyperlink{tokenizer_8h_ae4b905b76e3306cb3be37144c3cbde38}{00018}}\ \textcolor{preprocessor}{\#define\ RSQB\ \ \ \ \ \ \ \ \ \ \ \ 10}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00019}\mbox{\hyperlink{tokenizer_8h_a8301ee0d0b0055ebb4e8ecc46fadd69e}{00019}}\ \textcolor{preprocessor}{\#define\ COLON\ \ \ \ \ \ \ \ \ \ \ 11}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00020}\mbox{\hyperlink{tokenizer_8h_aa2f49001be13949a16a57e6c99ab00ad}{00020}}\ \textcolor{preprocessor}{\#define\ COMMA\ \ \ \ \ \ \ \ \ \ \ 12}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00021}\mbox{\hyperlink{tokenizer_8h_ac88faf9893d99512e6c80ca70365f85b}{00021}}\ \textcolor{preprocessor}{\#define\ SEMI\ \ \ \ \ \ \ \ \ \ \ \ 13}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00022}\mbox{\hyperlink{tokenizer_8h_a0ea7ff5947c5f5430a29fdd98391eb2a}{00022}}\ \textcolor{preprocessor}{\#define\ PLUS\ \ \ \ \ \ \ \ \ \ \ \ 14}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00023}\mbox{\hyperlink{tokenizer_8h_a5381a445a1e4bdc36460151d82eed95a}{00023}}\ \textcolor{preprocessor}{\#define\ MINUS\ \ \ \ \ \ \ \ \ \ \ 15}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00024}\mbox{\hyperlink{tokenizer_8h_a94c3dc9846edbbb70f678768633a4796}{00024}}\ \textcolor{preprocessor}{\#define\ STAR\ \ \ \ \ \ \ \ \ \ \ \ 16}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00025}\mbox{\hyperlink{tokenizer_8h_a69eb17477fd6f6af2c9ca2d5f4c7df3c}{00025}}\ \textcolor{preprocessor}{\#define\ SLASH\ \ \ \ \ \ \ \ \ \ \ 17}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00026}\mbox{\hyperlink{tokenizer_8h_af9125a077287c7502fe99733f95c21f3}{00026}}\ \textcolor{preprocessor}{\#define\ VBAR\ \ \ \ \ \ \ \ \ \ \ \ 18}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00027}\mbox{\hyperlink{tokenizer_8h_a3d547441aecbd85e15190c70215b342f}{00027}}\ \textcolor{preprocessor}{\#define\ AMPER\ \ \ \ \ \ \ \ \ \ \ 19}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00028}\mbox{\hyperlink{tokenizer_8h_a16bcdd65ecdd3313af9e393538fa7fa8}{00028}}\ \textcolor{preprocessor}{\#define\ LESS\ \ \ \ \ \ \ \ \ \ \ \ 20}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00029}\mbox{\hyperlink{tokenizer_8h_ae27a03218878a9af9d7d946e186f8598}{00029}}\ \textcolor{preprocessor}{\#define\ GREATER\ \ \ \ \ \ \ \ \ 21}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00030}\mbox{\hyperlink{tokenizer_8h_a214c717b2e51e1993a749ac99df7de58}{00030}}\ \textcolor{preprocessor}{\#define\ EQUAL\ \ \ \ \ \ \ \ \ \ \ 22}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00031}\mbox{\hyperlink{tokenizer_8h_a8a5043e7ab655e37e903ffbd8b95d6b2}{00031}}\ \textcolor{preprocessor}{\#define\ DOT\ \ \ \ \ \ \ \ \ \ \ \ \ 23}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00032}\mbox{\hyperlink{tokenizer_8h_a9b321fc8474a410f24deb460c4fa014e}{00032}}\ \textcolor{preprocessor}{\#define\ PERCENT\ \ \ \ \ \ \ \ \ 24}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00033}\mbox{\hyperlink{tokenizer_8h_af078bec81516d407fe17fc7cb8b355ac}{00033}}\ \textcolor{preprocessor}{\#define\ LBRACE\ \ \ \ \ \ \ \ \ \ 25}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00034}\mbox{\hyperlink{tokenizer_8h_a301875c1e1858bdc810760f25fcd02d2}{00034}}\ \textcolor{preprocessor}{\#define\ RBRACE\ \ \ \ \ \ \ \ \ \ 26}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00035}\mbox{\hyperlink{tokenizer_8h_af7d74dce03748f612968a6d02a0e3b08}{00035}}\ \textcolor{preprocessor}{\#define\ EQEQUAL\ \ \ \ \ \ \ \ \ 27}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00036}\mbox{\hyperlink{tokenizer_8h_a15627a08ed52bf7684467fa15c44a97e}{00036}}\ \textcolor{preprocessor}{\#define\ NOTEQUAL\ \ \ \ \ \ \ \ 28}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00037}\mbox{\hyperlink{tokenizer_8h_ac3cb64b515631fe5f3e430db76c9978a}{00037}}\ \textcolor{preprocessor}{\#define\ LESSEQUAL\ \ \ \ \ \ \ 29}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00038}\mbox{\hyperlink{tokenizer_8h_a9374d91a660c5e23f02e5f68ce94de0b}{00038}}\ \textcolor{preprocessor}{\#define\ GREATEREQUAL\ \ \ \ 30}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00039}\mbox{\hyperlink{tokenizer_8h_af8fcc20bc3c07231ed32dd372a78b78e}{00039}}\ \textcolor{preprocessor}{\#define\ TILDE\ \ \ \ \ \ \ \ \ \ \ 31}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00040}\mbox{\hyperlink{tokenizer_8h_a4a4c21e5c52a2d12bd883afbd50b7bb3}{00040}}\ \textcolor{preprocessor}{\#define\ CIRCUMFLEX\ \ \ \ \ \ 32}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00041}\mbox{\hyperlink{tokenizer_8h_a29870f655cade0ad3f14779c8112618c}{00041}}\ \textcolor{preprocessor}{\#define\ LEFTSHIFT\ \ \ \ \ \ \ 33}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00042}\mbox{\hyperlink{tokenizer_8h_a9cc204da9bdc2eed73ef1ea3dbd375e0}{00042}}\ \textcolor{preprocessor}{\#define\ RIGHTSHIFT\ \ \ \ \ \ 34}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00043}\mbox{\hyperlink{tokenizer_8h_a0a8f6a6080806250a04758e3bcb964a3}{00043}}\ \textcolor{preprocessor}{\#define\ DOUBLESTAR\ \ \ \ \ \ 35}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00044}\mbox{\hyperlink{tokenizer_8h_af6461f7dcd08e7cccbf04a1d661f57b7}{00044}}\ \textcolor{preprocessor}{\#define\ PLUSEQUAL\ \ \ \ \ \ \ 36}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00045}\mbox{\hyperlink{tokenizer_8h_a11ababa41ab5e39d361aa014a78441ce}{00045}}\ \textcolor{preprocessor}{\#define\ MINEQUAL\ \ \ \ \ \ \ \ 37}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00046}\mbox{\hyperlink{tokenizer_8h_a46713dd80909b82638e7c9c62b9d46f6}{00046}}\ \textcolor{preprocessor}{\#define\ STAREQUAL\ \ \ \ \ \ \ 38}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00047}\mbox{\hyperlink{tokenizer_8h_a2cebe86970aedab023317a3b6517b294}{00047}}\ \textcolor{preprocessor}{\#define\ SLASHEQUAL\ \ \ \ \ \ 39}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00048}\mbox{\hyperlink{tokenizer_8h_a89a1ffa6cb53bca13d101eaf0aa397f4}{00048}}\ \textcolor{preprocessor}{\#define\ PERCENTEQUAL\ \ \ \ 40}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00049}\mbox{\hyperlink{tokenizer_8h_a6f0263e68665ef44e385e11e15b1ffe4}{00049}}\ \textcolor{preprocessor}{\#define\ AMPEREQUAL\ \ \ \ \ \ 41}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00050}\mbox{\hyperlink{tokenizer_8h_ac1cfcd38c0adecb77863083ff51a886c}{00050}}\ \textcolor{preprocessor}{\#define\ VBAREQUAL\ \ \ \ \ \ \ 42}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00051}\mbox{\hyperlink{tokenizer_8h_a77dfa2200c07c06ccfe4a9cdafa12b30}{00051}}\ \textcolor{preprocessor}{\#define\ CIRCUMFLEXEQUAL\ 43}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00052}\mbox{\hyperlink{tokenizer_8h_a88572dbfd08e69f3470b563ef9e4fe0b}{00052}}\ \textcolor{preprocessor}{\#define\ LEFTSHIFTEQUAL\ \ 44}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00053}\mbox{\hyperlink{tokenizer_8h_af5bfc03a0262d01aed1fd3cec5509aa1}{00053}}\ \textcolor{preprocessor}{\#define\ RIGHTSHIFTEQUAL\ 45}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00054}\mbox{\hyperlink{tokenizer_8h_a6441e269be626994a8c3a17f81b8903c}{00054}}\ \textcolor{preprocessor}{\#define\ DOUBLESTAREQUAL\ 46}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00055}\mbox{\hyperlink{tokenizer_8h_a020f4f276c5ec5182dff96ea7c780d8d}{00055}}\ \textcolor{preprocessor}{\#define\ DOUBLESLASH\ \ \ \ \ 47}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00056}\mbox{\hyperlink{tokenizer_8h_a90c2230d7594642633ed73dbfc6ee76e}{00056}}\ \textcolor{preprocessor}{\#define\ DOUBLESLASHEQUAL\ 48}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00057}\mbox{\hyperlink{tokenizer_8h_ad37a804df2a1060b453ce07fe0ee3cbc}{00057}}\ \textcolor{preprocessor}{\#define\ AT\ \ \ \ \ \ \ \ \ \ \ \ \ \ 49}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00058}\mbox{\hyperlink{tokenizer_8h_a856e7227e29dc453f563f7d311948ec7}{00058}}\ \textcolor{preprocessor}{\#define\ ATEQUAL\ \ \ \ \ \ \ \ \ 50}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00059}\mbox{\hyperlink{tokenizer_8h_a23ed27877f0d21bd864ececd3792b9a4}{00059}}\ \textcolor{preprocessor}{\#define\ RARROW\ \ \ \ \ \ \ \ \ \ 51}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00060}\mbox{\hyperlink{tokenizer_8h_a3e88205e2cdbcefbf6b08cae10d83916}{00060}}\ \textcolor{preprocessor}{\#define\ ELLIPSIS\ \ \ \ \ \ \ \ 52}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00061}\mbox{\hyperlink{tokenizer_8h_a32c060ec5a6075163ba8d187fc5c409e}{00061}}\ \textcolor{preprocessor}{\#define\ COLONEQUAL\ \ \ \ \ \ 53}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00062}\mbox{\hyperlink{tokenizer_8h_af8bec7112465419ad92e29210d5e6fda}{00062}}\ \textcolor{preprocessor}{\#define\ EXCLAMATION\ \ \ \ \ 54}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00063}\mbox{\hyperlink{tokenizer_8h_aa79b1be0ef317a63d011aa727009a14a}{00063}}\ \textcolor{preprocessor}{\#define\ OP\ \ \ \ \ \ \ \ \ \ \ \ \ \ 55}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00064}\mbox{\hyperlink{tokenizer_8h_a75bc567b868f069449d1e233ac79bae5}{00064}}\ \textcolor{preprocessor}{\#define\ TYPE\_IGNORE\ \ \ \ \ 56}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00065}\mbox{\hyperlink{tokenizer_8h_a16366fddcc48ddd81dfcfdd1edb6b846}{00065}}\ \textcolor{preprocessor}{\#define\ TYPE\_COMMENT\ \ \ \ 57}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00066}\mbox{\hyperlink{tokenizer_8h_a2fbbf4201d319d444a692119d732f662}{00066}}\ \textcolor{preprocessor}{\#define\ SOFT\_KEYWORD\ \ \ \ 58}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00067}\mbox{\hyperlink{tokenizer_8h_a6cda0d5530de9fc9a461181fa55856de}{00067}}\ \textcolor{preprocessor}{\#define\ FSTRING\_START\ \ \ 59}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00068}\mbox{\hyperlink{tokenizer_8h_af3a526d3d81cb5f9e5f5418b710e7a6f}{00068}}\ \textcolor{preprocessor}{\#define\ FSTRING\_MIDDLE\ \ 60}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00069}\mbox{\hyperlink{tokenizer_8h_a0a97c1361ea294b6f97dbf06e39dad8e}{00069}}\ \textcolor{preprocessor}{\#define\ FSTRING\_END\ \ \ \ \ 61}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00070}\mbox{\hyperlink{tokenizer_8h_a8963c8bb3cf38c1e9075abaad16cce1e}{00070}}\ \textcolor{preprocessor}{\#define\ TSTRING\_START\ \ \ 62}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00071}\mbox{\hyperlink{tokenizer_8h_ae0e7c5ef977d783268c7ef33979df177}{00071}}\ \textcolor{preprocessor}{\#define\ TSTRING\_MIDDLE\ \ 63}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00072}\mbox{\hyperlink{tokenizer_8h_a136be0bfebba74112e4ff38bb7e77a27}{00072}}\ \textcolor{preprocessor}{\#define\ TSTRING\_END\ \ \ \ \ 64}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00073}\mbox{\hyperlink{tokenizer_8h_a180f5b3835bdbfc11b353fd2af5c8659}{00073}}\ \textcolor{preprocessor}{\#define\ COMMENT\ \ \ \ \ \ \ \ \ 65}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00074}\mbox{\hyperlink{tokenizer_8h_a4fc34b120ed3bd1120c1eb36abbcd6af}{00074}}\ \textcolor{preprocessor}{\#define\ NL\ \ \ \ \ \ \ \ \ \ \ \ \ \ 66}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00075}\mbox{\hyperlink{tokenizer_8h_a29dcf8b3ff75c2a5f8d8d5c2d4aa64c5}{00075}}\ \textcolor{preprocessor}{\#define\ ERRORTOKEN\ \ \ \ \ \ 67}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00077}00077\ \textcolor{comment}{/*\ Token\ names\ */}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00080}00080\ \textcolor{comment}{/*\ }}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00081}00081\ \textcolor{comment}{\ *\ @brief\ Determine\ token\ type\ }}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00082}00082\ \textcolor{comment}{\ *\ @return\ The\ token\ type\ corresponding\ to\ the\ charater}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00083}00083\ \textcolor{comment}{*/}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00085}\mbox{\hyperlink{tokenizer_8h_a6f36bd6f99f9dcaca62a2827af28e6fa}{00085}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tokenizer_8h_a6f36bd6f99f9dcaca62a2827af28e6fa}{\_ArkToken\_OneChar}}(\textcolor{keywordtype}{int}\ c1);}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00086}\mbox{\hyperlink{tokenizer_8h_a3f6a0bfe68bf701f588f481c64fc1c83}{00086}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tokenizer_8h_a3f6a0bfe68bf701f588f481c64fc1c83}{\_ArkToken\_TwoChar}}(\textcolor{keywordtype}{int}\ c1,\textcolor{keywordtype}{int}\ c2);}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00087}\mbox{\hyperlink{tokenizer_8h_ad4df2724fac993c4b47aa1467b26b2f3}{00087}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{tokenizer_8h_ad4df2724fac993c4b47aa1467b26b2f3}{\_ArkToken\_ThreeChar}}(\textcolor{keywordtype}{int}\ c1,\textcolor{keywordtype}{int}\ c2,\ \textcolor{keywordtype}{int}\ c3);}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00089}00089\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00090}00090\ \}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00091}00091\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{tokenizer_8h_source_l00093}00093\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ ARK\_TOKENIZER\_H}}
+
+\end{DoxyCode}

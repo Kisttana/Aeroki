@@ -1,0 +1,47 @@
+\doxysection{Lexer.\+h}
+\hypertarget{Lexer_8h_source}{}\label{Lexer_8h_source}\index{Parser/Lexer/Lexer.h@{Parser/Lexer/Lexer.h}}
+\mbox{\hyperlink{Lexer_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00001}00001\ \textcolor{preprocessor}{\#ifndef\ ARK\_LEXER\_H}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00002}00002\ \textcolor{preprocessor}{\#define\ ARK\_LEXER\_H}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00005}00005\ \textcolor{comment}{//\ =======\ Maximax\ length\ of\ lexeme\ ======}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00007}00007\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ }}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00008}00008\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\{}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00009}00009\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00011}00011\ \textcolor{comment}{//\ ===\ tools\ ===}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00013}\mbox{\hyperlink{Lexer_8h_a369266c24eacffb87046522897a570d5}{00013}}\ \textcolor{preprocessor}{\#define\ \_GNU\_SOURCE}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}../../libs/aegis/include/aegis.h"{}}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00015}00015\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00016}00016\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00017}00017\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00018}00018\ \textcolor{preprocessor}{\#include\ <ctype.h>}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00020}00020\ \textcolor{preprocessor}{\#include\ "{}tokennizer.h"{}}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00030}\mbox{\hyperlink{struct__lexeme}{00030}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__lexeme}{\_lexeme}}\ \{}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00031}\mbox{\hyperlink{struct__lexeme_a9a6127a4ee3f0c74a56d2869acbae026}{00031}}\ \ \ \ \ \ Ark\_tokentype\ \ \mbox{\hyperlink{struct__lexeme_a9a6127a4ee3f0c74a56d2869acbae026}{type}};}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00032}\mbox{\hyperlink{struct__lexeme_a983356cbec5256a129bf33579aea1aa4}{00032}}\ \ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \mbox{\hyperlink{struct__lexeme_a983356cbec5256a129bf33579aea1aa4}{line}};\ \ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00033}\mbox{\hyperlink{struct__lexeme_af55c54b038079271c0c865f040ebe777}{00033}}\ \ \ \ \ \ ag\_string\ \ \ \ \ \ \mbox{\hyperlink{struct__lexeme_af55c54b038079271c0c865f040ebe777}{name}};}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00034}\mbox{\hyperlink{Lexer_8h_abb38e469263a7993c8c6ddd03de6b040}{00034}}\ \}\mbox{\hyperlink{Lexer_8h_abb38e469263a7993c8c6ddd03de6b040}{Arklexeme}};}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00036}\mbox{\hyperlink{struct__lexer}{00036}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct__lexer}{\_lexer}}\ \{}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00037}\mbox{\hyperlink{struct__lexer_a17e57e897ddfb5845341945b96b7dfff}{00037}}\ \ \ \ \ \ vector\ *\mbox{\hyperlink{struct__lexer_a17e57e897ddfb5845341945b96b7dfff}{Lexeme\_list}};\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00038}\mbox{\hyperlink{struct__lexer_a6dd2ec18e1f2b21e6bc188d307267cd3}{00038}}\ \ \ \ \ \ FILE\ \ \ *\mbox{\hyperlink{struct__lexer_a6dd2ec18e1f2b21e6bc188d307267cd3}{file}};\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00039}\mbox{\hyperlink{Lexer_8h_a901e4ece70fa587daf55dc4199b428d8}{00039}}\ \}\mbox{\hyperlink{Lexer_8h_a901e4ece70fa587daf55dc4199b428d8}{ArkLexer}};}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00049}00049\ \mbox{\hyperlink{Lexer_8h_a901e4ece70fa587daf55dc4199b428d8}{ArkLexer}}\ *\mbox{\hyperlink{Lexer_8h_adec2b6d49e4460de8c37a2ed565dee02}{\_Ark\_scan\_lexemes}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file\_to\_scan);}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00051}00051\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00052}00052\ \}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00053}00053\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00056}00056\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ ARK\_LEXER\_H}}
+\DoxyCodeLine{\Hypertarget{Lexer_8h_source_l00057}00057\ }
+
+\end{DoxyCode}

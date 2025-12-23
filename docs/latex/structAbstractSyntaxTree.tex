@@ -1,0 +1,103 @@
+\doxysection{Abstract\+Syntax\+Tree Struct Reference}
+\hypertarget{structAbstractSyntaxTree}{}\label{structAbstractSyntaxTree}\index{AbstractSyntaxTree@{AbstractSyntaxTree}}
+
+
+{\ttfamily \#include $<$Parser.\+h$>$}
+
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248}{ASTNode\+Type}} \mbox{\hyperlink{structAbstractSyntaxTree_aeb16e8860415b4806e0b4faecc3c9f35}{\+\_\+\+Type}}
+\item 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+union \{\\
+\>long double \mbox{\hyperlink{structAbstractSyntaxTree_a1558de0134d0c2a3d4c6f47b125181e2}{\_Number}}\\
+\>char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structAbstractSyntaxTree_ae96eb8859c57bd0b929ce1ff154c8e32}{Variable\_name}}\\
+\>\mbox{\hyperlink{Parser_8h_a1d7d690fa09d751e474a7f5cbebea4f2}{ASTBinary}} \mbox{\hyperlink{structAbstractSyntaxTree_a5ae7c4bab2893f0f53ca8f78ffe93e77}{Binary}}\\
+\>\mbox{\hyperlink{Parser_8h_afb5826b14665df24cdfb623f02b763e7}{ASTFunc}} \mbox{\hyperlink{structAbstractSyntaxTree_ac4046a69b5a61ae0713b90b5aff10a7a}{Function}}\\
+\>\mbox{\hyperlink{Parser_8h_ae4076b9265dc404b63a394260ea25220}{ASTCall}} \mbox{\hyperlink{structAbstractSyntaxTree_a40ae7b5edf361a647d4e9ffcc279d1fa}{Call}}\\
+\}; \\
+
+\end{tabbing}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line \mbox{\hyperlink{Parser_8h_source_l00051}{51}} of file \mbox{\hyperlink{Parser_8h_source}{Parser.\+h}}.
+
+
+
+\label{doc-variable-members}
+\Hypertarget{structAbstractSyntaxTree_doc-variable-members}
+\doxysubsection{Field Documentation}
+\Hypertarget{structAbstractSyntaxTree_a448b1c2052495fd10df4d87ab4402b43}\doxysubsubsection{\texorpdfstring{[union]}{[union]}}
+{\footnotesize\ttfamily \label{structAbstractSyntaxTree_a448b1c2052495fd10df4d87ab4402b43} 
+union  \{ ... \}  \mbox{\hyperlink{structAbstractSyntaxTree}{Abstract\+Syntax\+Tree}}}
+
+\Hypertarget{structAbstractSyntaxTree_a1558de0134d0c2a3d4c6f47b125181e2}\index{AbstractSyntaxTree@{AbstractSyntaxTree}!\_Number@{\_Number}}
+\index{\_Number@{\_Number}!AbstractSyntaxTree@{AbstractSyntaxTree}}
+\doxysubsubsection{\texorpdfstring{\_Number}{\_Number}}
+{\footnotesize\ttfamily \label{structAbstractSyntaxTree_a1558de0134d0c2a3d4c6f47b125181e2} 
+long double Abstract\+Syntax\+Tree\+::\+\_\+\+Number}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8h_source_l00054}{54}} of file \mbox{\hyperlink{Parser_8h_source}{Parser.\+h}}.
+
+\Hypertarget{structAbstractSyntaxTree_aeb16e8860415b4806e0b4faecc3c9f35}\index{AbstractSyntaxTree@{AbstractSyntaxTree}!\_Type@{\_Type}}
+\index{\_Type@{\_Type}!AbstractSyntaxTree@{AbstractSyntaxTree}}
+\doxysubsubsection{\texorpdfstring{\_Type}{\_Type}}
+{\footnotesize\ttfamily \label{structAbstractSyntaxTree_aeb16e8860415b4806e0b4faecc3c9f35} 
+\mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248}{ASTNode\+Type}} Abstract\+Syntax\+Tree\+::\+\_\+\+Type}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8h_source_l00052}{52}} of file \mbox{\hyperlink{Parser_8h_source}{Parser.\+h}}.
+
+\Hypertarget{structAbstractSyntaxTree_a5ae7c4bab2893f0f53ca8f78ffe93e77}\index{AbstractSyntaxTree@{AbstractSyntaxTree}!Binary@{Binary}}
+\index{Binary@{Binary}!AbstractSyntaxTree@{AbstractSyntaxTree}}
+\doxysubsubsection{\texorpdfstring{Binary}{Binary}}
+{\footnotesize\ttfamily \label{structAbstractSyntaxTree_a5ae7c4bab2893f0f53ca8f78ffe93e77} 
+\mbox{\hyperlink{Parser_8h_a1d7d690fa09d751e474a7f5cbebea4f2}{ASTBinary}} Abstract\+Syntax\+Tree\+::\+Binary}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8h_source_l00056}{56}} of file \mbox{\hyperlink{Parser_8h_source}{Parser.\+h}}.
+
+\Hypertarget{structAbstractSyntaxTree_a40ae7b5edf361a647d4e9ffcc279d1fa}\index{AbstractSyntaxTree@{AbstractSyntaxTree}!Call@{Call}}
+\index{Call@{Call}!AbstractSyntaxTree@{AbstractSyntaxTree}}
+\doxysubsubsection{\texorpdfstring{Call}{Call}}
+{\footnotesize\ttfamily \label{structAbstractSyntaxTree_a40ae7b5edf361a647d4e9ffcc279d1fa} 
+\mbox{\hyperlink{Parser_8h_ae4076b9265dc404b63a394260ea25220}{ASTCall}} Abstract\+Syntax\+Tree\+::\+Call}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8h_source_l00058}{58}} of file \mbox{\hyperlink{Parser_8h_source}{Parser.\+h}}.
+
+\Hypertarget{structAbstractSyntaxTree_ac4046a69b5a61ae0713b90b5aff10a7a}\index{AbstractSyntaxTree@{AbstractSyntaxTree}!Function@{Function}}
+\index{Function@{Function}!AbstractSyntaxTree@{AbstractSyntaxTree}}
+\doxysubsubsection{\texorpdfstring{Function}{Function}}
+{\footnotesize\ttfamily \label{structAbstractSyntaxTree_ac4046a69b5a61ae0713b90b5aff10a7a} 
+\mbox{\hyperlink{Parser_8h_afb5826b14665df24cdfb623f02b763e7}{ASTFunc}} Abstract\+Syntax\+Tree\+::\+Function}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8h_source_l00057}{57}} of file \mbox{\hyperlink{Parser_8h_source}{Parser.\+h}}.
+
+\Hypertarget{structAbstractSyntaxTree_ae96eb8859c57bd0b929ce1ff154c8e32}\index{AbstractSyntaxTree@{AbstractSyntaxTree}!Variable\_name@{Variable\_name}}
+\index{Variable\_name@{Variable\_name}!AbstractSyntaxTree@{AbstractSyntaxTree}}
+\doxysubsubsection{\texorpdfstring{Variable\_name}{Variable\_name}}
+{\footnotesize\ttfamily \label{structAbstractSyntaxTree_ae96eb8859c57bd0b929ce1ff154c8e32} 
+char\texorpdfstring{$\ast$}{*} Abstract\+Syntax\+Tree\+::\+Variable\+\_\+name}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8h_source_l00055}{55}} of file \mbox{\hyperlink{Parser_8h_source}{Parser.\+h}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Parser/\mbox{\hyperlink{Parser_8h}{Parser.\+h}}\end{DoxyCompactItemize}

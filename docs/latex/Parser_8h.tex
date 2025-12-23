@@ -1,0 +1,323 @@
+\doxysection{Parser/\+Parser.h File Reference}
+\hypertarget{Parser_8h}{}\label{Parser_8h}\index{Parser/Parser.h@{Parser/Parser.h}}
+{\ttfamily \#include "{}../libs/\+Aegis/include/aegis.\+h"{}}\newline
+{\ttfamily \#include "{}../\+Lexer/\+Lexer.\+h"{}}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structBinaryNode}{Binary\+Node}}
+\item 
+struct \mbox{\hyperlink{structPrototypeNode}{Prototype\+Node}}
+\item 
+struct \mbox{\hyperlink{structFunctionNode}{Function\+Node}}
+\item 
+struct \mbox{\hyperlink{structCallFunc}{Call\+Func}}
+\item 
+struct \mbox{\hyperlink{structAbstractSyntaxTree}{Abstract\+Syntax\+Tree}}
+\item 
+struct \mbox{\hyperlink{structARKParser}{ARKParser}}
+\item 
+struct \mbox{\hyperlink{structARKParser_1_1Parser__context}{ARKParser\+::\+Parser\+\_\+context}}
+\item 
+struct \mbox{\hyperlink{structASTProgram}{ASTProgram}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{structAbstractSyntaxTree}{Abstract\+Syntax\+Tree}} \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}}
+\item 
+typedef struct \mbox{\hyperlink{structBinaryNode}{Binary\+Node}} \mbox{\hyperlink{Parser_8h_a1d7d690fa09d751e474a7f5cbebea4f2}{ASTBinary}}
+\item 
+typedef struct \mbox{\hyperlink{structPrototypeNode}{Prototype\+Node}} \mbox{\hyperlink{Parser_8h_a97e9b8617464e4a52ef410c4f5072c11}{ASTFunc\+Prototype}}
+\item 
+typedef struct \mbox{\hyperlink{structFunctionNode}{Function\+Node}} \mbox{\hyperlink{Parser_8h_afb5826b14665df24cdfb623f02b763e7}{ASTFunc}}
+\item 
+typedef struct \mbox{\hyperlink{structCallFunc}{Call\+Func}} \mbox{\hyperlink{Parser_8h_ae4076b9265dc404b63a394260ea25220}{ASTCall}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248}{ASTNode\+Type}} \{ \newline
+\mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248a7982834c4541f163a66dbe5f2e425245}{AST\+\_\+\+NUMBER}}
+, \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248afdeb4a775a6e86f9e1aa4822d70caa59}{AST\+\_\+\+IDENTIFIER}}
+, \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248ac4cc2b2923b2ba645fe46edd1f36ef9b}{AST\+\_\+\+BINARY}}
+, \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248a6e7f49f0db4e1c481c5b39c0dbe54c7c}{AST\+\_\+\+UNARY}}
+, \newline
+\mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248a32c02eebdb8ea6a14e3a8c0ae302542e}{AST\+\_\+\+CALL}}
+, \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248a2a02ec9cfcb5a74251132623bc7b4c04}{AST\+\_\+\+PROTOTYPE}}
+, \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248aca72ec3f021680346ad5d4f7f396c342}{AST\+\_\+\+FUNCTION}}
+, \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248ab845bbc0e0fdade1d53c4104e7888a8f}{AST\+\_\+\+UNKNOWN}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{Parser_8h_a1a797d091aec52636df4f0a4985a4a12}{init\+Routine}} (vector \texorpdfstring{$\ast$}{*}tokens)
+\item 
+void \mbox{\hyperlink{Parser_8h_a93f237788b1eaf4b3890acc7c3cee28a}{get\+Next\+Token}} (void)
+\item 
+\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{Parser_8h_ae4b7e588e2a1639f961fe46e8b054c3d}{Parse}} (void)
+\item 
+\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{Parser_8h_aff6bc3a653623bdb415639f62a13db8f}{Parse\+Expression}} (void)
+\item 
+\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{Parser_8h_abd21d58d6e38fd81fabcd3bbd3cb6c2c}{Parse\+Top\+Level\+Expr}} (void)
+\item 
+\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{Parser_8h_a2467c8ace189ea1819b06a11395bfc95}{Parse\+Prototype}} (void)
+\item 
+\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{Parser_8h_aafb6b74c30be46a361f077eda3806f08}{Parse\+Definition}} (void)
+\item 
+\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{Parser_8h_a9db460325d1f1369808d7f3013c637a2}{Parse\+Identifier}} (void)
+\item 
+\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{Parser_8h_af755376a514f781ec1d976d8835012bb}{parse\+Paren}} (void)
+\item 
+void \mbox{\hyperlink{Parser_8h_af41c9b6459a8ad7667d0b5303217de09}{print\+AST}} (const \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*}node, int depth)
+\item 
+void \mbox{\hyperlink{Parser_8h_a6fbb8276e5c26ff809f7e3dc2989d0bf}{free\+AST}} (\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*}node)
+\item 
+int \mbox{\hyperlink{Parser_8h_a0be6c17ca377dcbb33272def93ff3d4e}{get\+Token\+Prec}} (ARKToken\+Type op)
+\item 
+void \mbox{\hyperlink{Parser_8h_aea35df66b02cf8dcb8289f31ba0d3076}{set\+Token\+List}} (vector \texorpdfstring{$\ast$}{*}tokens)
+\item 
+void \mbox{\hyperlink{Parser_8h_adbbe416785030ac05dec65fb01853fad}{ast\+\_\+parse}} (\mbox{\hyperlink{structASTProgram}{ASTProgram}} \texorpdfstring{$\ast$}{*}\+\_\+\+\_\+context\+\_\+\+\_\+, const char \texorpdfstring{$\ast$}{*}\+\_\+\+\_\+module\+\_\+\+\_\+, vector \texorpdfstring{$\ast$}{*}tokens)
+\item 
+void \mbox{\hyperlink{Parser_8h_ac3d1780e368c8f425f3733360bf198bc}{print\+\_\+ast\+\_\+structure}} (\mbox{\hyperlink{structASTProgram}{ASTProgram}} \texorpdfstring{$\ast$}{*}ast)
+\end{DoxyCompactItemize}
+
+
+\label{doc-typedef-members}
+\Hypertarget{Parser_8h_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}\index{Parser.h@{Parser.h}!AST@{AST}}
+\index{AST@{AST}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{AST}{AST}}
+{\footnotesize\ttfamily \label{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99} 
+typedef struct \mbox{\hyperlink{structAbstractSyntaxTree}{Abstract\+Syntax\+Tree}} \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}}}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8h_source_l00027}{27}} of file \mbox{\hyperlink{Parser_8h_source}{Parser.\+h}}.
+
+\Hypertarget{Parser_8h_a1d7d690fa09d751e474a7f5cbebea4f2}\index{Parser.h@{Parser.h}!ASTBinary@{ASTBinary}}
+\index{ASTBinary@{ASTBinary}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{ASTBinary}{ASTBinary}}
+{\footnotesize\ttfamily \label{Parser_8h_a1d7d690fa09d751e474a7f5cbebea4f2} 
+typedef struct \mbox{\hyperlink{structBinaryNode}{Binary\+Node}} \mbox{\hyperlink{Parser_8h_a1d7d690fa09d751e474a7f5cbebea4f2}{ASTBinary}}}
+
+\Hypertarget{Parser_8h_ae4076b9265dc404b63a394260ea25220}\index{Parser.h@{Parser.h}!ASTCall@{ASTCall}}
+\index{ASTCall@{ASTCall}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{ASTCall}{ASTCall}}
+{\footnotesize\ttfamily \label{Parser_8h_ae4076b9265dc404b63a394260ea25220} 
+typedef struct \mbox{\hyperlink{structCallFunc}{Call\+Func}} \mbox{\hyperlink{Parser_8h_ae4076b9265dc404b63a394260ea25220}{ASTCall}}}
+
+\Hypertarget{Parser_8h_afb5826b14665df24cdfb623f02b763e7}\index{Parser.h@{Parser.h}!ASTFunc@{ASTFunc}}
+\index{ASTFunc@{ASTFunc}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{ASTFunc}{ASTFunc}}
+{\footnotesize\ttfamily \label{Parser_8h_afb5826b14665df24cdfb623f02b763e7} 
+typedef struct \mbox{\hyperlink{structFunctionNode}{Function\+Node}} \mbox{\hyperlink{Parser_8h_afb5826b14665df24cdfb623f02b763e7}{ASTFunc}}}
+
+\Hypertarget{Parser_8h_a97e9b8617464e4a52ef410c4f5072c11}\index{Parser.h@{Parser.h}!ASTFuncPrototype@{ASTFuncPrototype}}
+\index{ASTFuncPrototype@{ASTFuncPrototype}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{ASTFuncPrototype}{ASTFuncPrototype}}
+{\footnotesize\ttfamily \label{Parser_8h_a97e9b8617464e4a52ef410c4f5072c11} 
+typedef struct \mbox{\hyperlink{structPrototypeNode}{Prototype\+Node}} \mbox{\hyperlink{Parser_8h_a97e9b8617464e4a52ef410c4f5072c11}{ASTFunc\+Prototype}}}
+
+
+
+\label{doc-enum-members}
+\Hypertarget{Parser_8h_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{Parser_8h_a247241e21886b2bcee2bec0d837db248}\index{Parser.h@{Parser.h}!ASTNodeType@{ASTNodeType}}
+\index{ASTNodeType@{ASTNodeType}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{ASTNodeType}{ASTNodeType}}
+{\footnotesize\ttfamily \label{Parser_8h_a247241e21886b2bcee2bec0d837db248} 
+enum \mbox{\hyperlink{Parser_8h_a247241e21886b2bcee2bec0d837db248}{ASTNode\+Type}}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_NUMBER@{AST\_NUMBER}!Parser.h@{Parser.h}}\index{Parser.h@{Parser.h}!AST\_NUMBER@{AST\_NUMBER}}}\Hypertarget{Parser_8h_a247241e21886b2bcee2bec0d837db248a7982834c4541f163a66dbe5f2e425245}\label{Parser_8h_a247241e21886b2bcee2bec0d837db248a7982834c4541f163a66dbe5f2e425245} 
+AST\+\_\+\+NUMBER&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_IDENTIFIER@{AST\_IDENTIFIER}!Parser.h@{Parser.h}}\index{Parser.h@{Parser.h}!AST\_IDENTIFIER@{AST\_IDENTIFIER}}}\Hypertarget{Parser_8h_a247241e21886b2bcee2bec0d837db248afdeb4a775a6e86f9e1aa4822d70caa59}\label{Parser_8h_a247241e21886b2bcee2bec0d837db248afdeb4a775a6e86f9e1aa4822d70caa59} 
+AST\+\_\+\+IDENTIFIER&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_BINARY@{AST\_BINARY}!Parser.h@{Parser.h}}\index{Parser.h@{Parser.h}!AST\_BINARY@{AST\_BINARY}}}\Hypertarget{Parser_8h_a247241e21886b2bcee2bec0d837db248ac4cc2b2923b2ba645fe46edd1f36ef9b}\label{Parser_8h_a247241e21886b2bcee2bec0d837db248ac4cc2b2923b2ba645fe46edd1f36ef9b} 
+AST\+\_\+\+BINARY&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_UNARY@{AST\_UNARY}!Parser.h@{Parser.h}}\index{Parser.h@{Parser.h}!AST\_UNARY@{AST\_UNARY}}}\Hypertarget{Parser_8h_a247241e21886b2bcee2bec0d837db248a6e7f49f0db4e1c481c5b39c0dbe54c7c}\label{Parser_8h_a247241e21886b2bcee2bec0d837db248a6e7f49f0db4e1c481c5b39c0dbe54c7c} 
+AST\+\_\+\+UNARY&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_CALL@{AST\_CALL}!Parser.h@{Parser.h}}\index{Parser.h@{Parser.h}!AST\_CALL@{AST\_CALL}}}\Hypertarget{Parser_8h_a247241e21886b2bcee2bec0d837db248a32c02eebdb8ea6a14e3a8c0ae302542e}\label{Parser_8h_a247241e21886b2bcee2bec0d837db248a32c02eebdb8ea6a14e3a8c0ae302542e} 
+AST\+\_\+\+CALL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_PROTOTYPE@{AST\_PROTOTYPE}!Parser.h@{Parser.h}}\index{Parser.h@{Parser.h}!AST\_PROTOTYPE@{AST\_PROTOTYPE}}}\Hypertarget{Parser_8h_a247241e21886b2bcee2bec0d837db248a2a02ec9cfcb5a74251132623bc7b4c04}\label{Parser_8h_a247241e21886b2bcee2bec0d837db248a2a02ec9cfcb5a74251132623bc7b4c04} 
+AST\+\_\+\+PROTOTYPE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_FUNCTION@{AST\_FUNCTION}!Parser.h@{Parser.h}}\index{Parser.h@{Parser.h}!AST\_FUNCTION@{AST\_FUNCTION}}}\Hypertarget{Parser_8h_a247241e21886b2bcee2bec0d837db248aca72ec3f021680346ad5d4f7f396c342}\label{Parser_8h_a247241e21886b2bcee2bec0d837db248aca72ec3f021680346ad5d4f7f396c342} 
+AST\+\_\+\+FUNCTION&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_UNKNOWN@{AST\_UNKNOWN}!Parser.h@{Parser.h}}\index{Parser.h@{Parser.h}!AST\_UNKNOWN@{AST\_UNKNOWN}}}\Hypertarget{Parser_8h_a247241e21886b2bcee2bec0d837db248ab845bbc0e0fdade1d53c4104e7888a8f}\label{Parser_8h_a247241e21886b2bcee2bec0d837db248ab845bbc0e0fdade1d53c4104e7888a8f} 
+AST\+\_\+\+UNKNOWN&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{Parser_8h_source_l00015}{15}} of file \mbox{\hyperlink{Parser_8h_source}{Parser.\+h}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{Parser_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{Parser_8h_adbbe416785030ac05dec65fb01853fad}\index{Parser.h@{Parser.h}!ast\_parse@{ast\_parse}}
+\index{ast\_parse@{ast\_parse}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{ast\_parse()}{ast\_parse()}}
+{\footnotesize\ttfamily \label{Parser_8h_adbbe416785030ac05dec65fb01853fad} 
+void ast\+\_\+parse (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structASTProgram}{ASTProgram}} \texorpdfstring{$\ast$}{*}}]{\+\_\+\+\_\+context\+\_\+\+\_\+}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{\+\_\+\+\_\+module\+\_\+\+\_\+}{, }\item[{vector \texorpdfstring{$\ast$}{*}}]{tokens}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8c_source_l00450}{450}} of file \mbox{\hyperlink{Parser_8c_source}{Parser.\+c}}.
+
+\Hypertarget{Parser_8h_a6fbb8276e5c26ff809f7e3dc2989d0bf}\index{Parser.h@{Parser.h}!freeAST@{freeAST}}
+\index{freeAST@{freeAST}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{freeAST()}{freeAST()}}
+{\footnotesize\ttfamily \label{Parser_8h_a6fbb8276e5c26ff809f7e3dc2989d0bf} 
+void free\+AST (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*}}]{node}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8c_source_l00542}{542}} of file \mbox{\hyperlink{Parser_8c_source}{Parser.\+c}}.
+
+\Hypertarget{Parser_8h_a93f237788b1eaf4b3890acc7c3cee28a}\index{Parser.h@{Parser.h}!getNextToken@{getNextToken}}
+\index{getNextToken@{getNextToken}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{getNextToken()}{getNextToken()}}
+{\footnotesize\ttfamily \label{Parser_8h_a93f237788b1eaf4b3890acc7c3cee28a} 
+void get\+Next\+Token (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8c_source_l00063}{63}} of file \mbox{\hyperlink{Parser_8c_source}{Parser.\+c}}.
+
+\Hypertarget{Parser_8h_a0be6c17ca377dcbb33272def93ff3d4e}\index{Parser.h@{Parser.h}!getTokenPrec@{getTokenPrec}}
+\index{getTokenPrec@{getTokenPrec}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{getTokenPrec()}{getTokenPrec()}}
+{\footnotesize\ttfamily \label{Parser_8h_a0be6c17ca377dcbb33272def93ff3d4e} 
+int get\+Token\+Prec (\begin{DoxyParamCaption}\item[{ARKToken\+Type}]{op}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8c_source_l00181}{181}} of file \mbox{\hyperlink{Parser_8c_source}{Parser.\+c}}.
+
+\Hypertarget{Parser_8h_a1a797d091aec52636df4f0a4985a4a12}\index{Parser.h@{Parser.h}!initRoutine@{initRoutine}}
+\index{initRoutine@{initRoutine}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{initRoutine()}{initRoutine()}}
+{\footnotesize\ttfamily \label{Parser_8h_a1a797d091aec52636df4f0a4985a4a12} 
+void init\+Routine (\begin{DoxyParamCaption}\item[{vector \texorpdfstring{$\ast$}{*}}]{tokens}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8c_source_l00033}{33}} of file \mbox{\hyperlink{Parser_8c_source}{Parser.\+c}}.
+
+\Hypertarget{Parser_8h_ae4b7e588e2a1639f961fe46e8b054c3d}\index{Parser.h@{Parser.h}!Parse@{Parse}}
+\index{Parse@{Parse}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{Parse()}{Parse()}}
+{\footnotesize\ttfamily \label{Parser_8h_ae4b7e588e2a1639f961fe46e8b054c3d} 
+\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*} Parse (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8c_source_l00380}{380}} of file \mbox{\hyperlink{Parser_8c_source}{Parser.\+c}}.
+
+\Hypertarget{Parser_8h_aafb6b74c30be46a361f077eda3806f08}\index{Parser.h@{Parser.h}!ParseDefinition@{ParseDefinition}}
+\index{ParseDefinition@{ParseDefinition}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{ParseDefinition()}{ParseDefinition()}}
+{\footnotesize\ttfamily \label{Parser_8h_aafb6b74c30be46a361f077eda3806f08} 
+\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*} Parse\+Definition (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8c_source_l00424}{424}} of file \mbox{\hyperlink{Parser_8c_source}{Parser.\+c}}.
+
+\Hypertarget{Parser_8h_aff6bc3a653623bdb415639f62a13db8f}\index{Parser.h@{Parser.h}!ParseExpression@{ParseExpression}}
+\index{ParseExpression@{ParseExpression}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{ParseExpression()}{ParseExpression()}}
+{\footnotesize\ttfamily \label{Parser_8h_aff6bc3a653623bdb415639f62a13db8f} 
+\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*} Parse\+Expression (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8c_source_l00373}{373}} of file \mbox{\hyperlink{Parser_8c_source}{Parser.\+c}}.
+
+\Hypertarget{Parser_8h_a9db460325d1f1369808d7f3013c637a2}\index{Parser.h@{Parser.h}!ParseIdentifier@{ParseIdentifier}}
+\index{ParseIdentifier@{ParseIdentifier}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{ParseIdentifier()}{ParseIdentifier()}}
+{\footnotesize\ttfamily \label{Parser_8h_a9db460325d1f1369808d7f3013c637a2} 
+\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*} Parse\+Identifier (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8c_source_l00250}{250}} of file \mbox{\hyperlink{Parser_8c_source}{Parser.\+c}}.
+
+\Hypertarget{Parser_8h_af755376a514f781ec1d976d8835012bb}\index{Parser.h@{Parser.h}!parseParen@{parseParen}}
+\index{parseParen@{parseParen}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{parseParen()}{parseParen()}}
+{\footnotesize\ttfamily \label{Parser_8h_af755376a514f781ec1d976d8835012bb} 
+\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*} parse\+Paren (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8c_source_l00296}{296}} of file \mbox{\hyperlink{Parser_8c_source}{Parser.\+c}}.
+
+\Hypertarget{Parser_8h_a2467c8ace189ea1819b06a11395bfc95}\index{Parser.h@{Parser.h}!ParsePrototype@{ParsePrototype}}
+\index{ParsePrototype@{ParsePrototype}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{ParsePrototype()}{ParsePrototype()}}
+{\footnotesize\ttfamily \label{Parser_8h_a2467c8ace189ea1819b06a11395bfc95} 
+\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*} Parse\+Prototype (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8c_source_l00389}{389}} of file \mbox{\hyperlink{Parser_8c_source}{Parser.\+c}}.
+
+\Hypertarget{Parser_8h_abd21d58d6e38fd81fabcd3bbd3cb6c2c}\index{Parser.h@{Parser.h}!ParseTopLevelExpr@{ParseTopLevelExpr}}
+\index{ParseTopLevelExpr@{ParseTopLevelExpr}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{ParseTopLevelExpr()}{ParseTopLevelExpr()}}
+{\footnotesize\ttfamily \label{Parser_8h_abd21d58d6e38fd81fabcd3bbd3cb6c2c} 
+\mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*} Parse\+Top\+Level\+Expr (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{Parser_8h_ac3d1780e368c8f425f3733360bf198bc}\index{Parser.h@{Parser.h}!print\_ast\_structure@{print\_ast\_structure}}
+\index{print\_ast\_structure@{print\_ast\_structure}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{print\_ast\_structure()}{print\_ast\_structure()}}
+{\footnotesize\ttfamily \label{Parser_8h_ac3d1780e368c8f425f3733360bf198bc} 
+void print\+\_\+ast\+\_\+structure (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structASTProgram}{ASTProgram}} \texorpdfstring{$\ast$}{*}}]{ast}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8c_source_l00477}{477}} of file \mbox{\hyperlink{Parser_8c_source}{Parser.\+c}}.
+
+\Hypertarget{Parser_8h_af41c9b6459a8ad7667d0b5303217de09}\index{Parser.h@{Parser.h}!printAST@{printAST}}
+\index{printAST@{printAST}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{printAST()}{printAST()}}
+{\footnotesize\ttfamily \label{Parser_8h_af41c9b6459a8ad7667d0b5303217de09} 
+void print\+AST (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{Parser_8h_ac181b35f0fb0d5005ce6cd2166a9ac99}{AST}} \texorpdfstring{$\ast$}{*}}]{node}{, }\item[{int}]{depth}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8c_source_l00496}{496}} of file \mbox{\hyperlink{Parser_8c_source}{Parser.\+c}}.
+
+\Hypertarget{Parser_8h_aea35df66b02cf8dcb8289f31ba0d3076}\index{Parser.h@{Parser.h}!setTokenList@{setTokenList}}
+\index{setTokenList@{setTokenList}!Parser.h@{Parser.h}}
+\doxysubsubsection{\texorpdfstring{setTokenList()}{setTokenList()}}
+{\footnotesize\ttfamily \label{Parser_8h_aea35df66b02cf8dcb8289f31ba0d3076} 
+void set\+Token\+List (\begin{DoxyParamCaption}\item[{vector \texorpdfstring{$\ast$}{*}}]{tokens}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{Parser_8c_source_l00060}{60}} of file \mbox{\hyperlink{Parser_8c_source}{Parser.\+c}}.
+
