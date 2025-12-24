@@ -1,9 +1,7 @@
 #include "read_file.h"
 
-char *read_file(const char * filepath){
+char *read_file(FILE *fp){
 
-     FILE* fp = fopen(filepath, "r"); // opening  file as a read-only file 
-     
      if(fp == NULL) { // check if the file can't be opened up
           // printing error expect : No such file or directory.
           fprintf(stderr, "[error] : %s " ,strerror(errno));

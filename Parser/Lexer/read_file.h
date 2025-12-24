@@ -4,15 +4,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <error.h>
+#include <errno.h>
 
 
 /*
  * @breif Read provieded file into string.
  *
- * @param file_path is provieded file name
+ * @param fp file to read
  * @return string of provieded file contents.
 */
-char *read_file(const char *file_path);
+char *read_file(FILE *fp);
 
 #endif

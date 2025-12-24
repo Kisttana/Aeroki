@@ -17,24 +17,30 @@ extern "C"{
 #include <stdio.h>
 #include <ctype.h>
 
-#include "tokennizer.h"
+#include "tokenizer.h"
 
 /**
  * @struct Ark_lexer
  * @brief Define Ark_lexer as struct for handling lexeme's infomation.
  *
- * @var Ark_tokentype type Type of lexeme.
+ * @var ArkTokenType type Type of lexeme.
  * @var uint32_t line  Holding which is in the line for error handling.
  * @var ag_string lexeme => value string of lexeme.
  */
+
+
 typedef struct _lexeme {
-     Ark_tokentype  type;
-     uint32_t       line;  
-     ag_string      name;
-}Arklexeme;
+     ArkTokenType  type;
+     uint32_t      line;   
+     char      	   *lexeme;
+     char punct[4];
+}ArkToken;
 
 typedef struct _lexer {
-     vector *Lexeme_list; /// dynamic array of Arklexeme
+     char *buffer;
+     char *begin;
+     char *cursor;
+     vector *token_list; /// dynamic array of Arklexeme
      FILE   *file; /// file to scan lexemes
 }ArkLexer;
 
@@ -46,7 +52,7 @@ typedef struct _lexer {
  * Note : type vector is a implementation of dynamic array from 
  * Aegis-Template-Library
  */
-ArkLexer *_Ark_scan_lexemes(const char *file_to_scan);
+ArkLexer *_Ark_ScanTokens(const char *file_to_scan);
 
 #ifdef __cplusplus
 }
