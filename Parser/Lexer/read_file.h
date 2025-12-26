@@ -1,5 +1,5 @@
-#ifndef __HANDLE_FILE__
-#define __HANDLE_FILE__
+#ifndef READ_FILE_H
+#define READ_FILE_H
 
 #include <stdio.h>
 #include <string.h>
@@ -13,6 +13,6 @@
  * @param fp file to read
  * @return string of provieded file contents.
 */
-char *read_file(FILE *fp);
+char *read_file(const char *file_path);
 
-#endif
+#endif //READ_FILE_H

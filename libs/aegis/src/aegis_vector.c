@@ -1,6 +1,6 @@
-#include "aegis/aegis_utils.h"
-#include "aegis/aegis_common.h"
-#include "aegis/aegis_vector.h"
+#include "../include/aegis/aegis_utils.h"
+#include "../include/aegis/aegis_common.h"
+#include "../include/aegis/aegis_vector.h"
 
 
 

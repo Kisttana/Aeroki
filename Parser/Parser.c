@@ -246,7 +246,7 @@ static AST *parseNumberInternal(void) {
      return n;
 }
 
-/* parse identifier or function call */
+/* parse identifier or function call */vscode-webview://1ehmjndorq33i3td04gj94476qptmcjfs727nbgvdvoicrq87ah4/index.html?id=6dd60720-37cb-43fb-ae08-3996be1fa6d4&parentId=1&origin=4772bbd8-b129-406c-a22e-38e82fa49752&swVersion=4&extensionId=eamodio.gitlens&platform=electron&vscode-resource-base-authority=vscode-resource.vscode-cdn.net&parentOrigin=vscode-file%3A%2F%2Fvscode-app&purpose=webviewView#
 AST *ParseIdentifier(void) {
      /* current token must be an identifier */
      const char *name = curTokenVal();

@@ -1,17 +1,27 @@
+/*
+     author: Piyaphat Jaiboon
+     contact: 
+            email: fiw.contact.work@gmail.com
+            github: https://github.com/Piyaph4t 
+     date: June 10, 2024
+     description: Implementation of the Lexer for tokenizing source code.
+*/
+
 #include "read_file.h"
 
-char *read_file(FILE *fp){
-
+char *read_file(const char *file_path){
+     
+     FILE *fp = fopen(file_path,"r");
      if(fp == NULL) { // check if the file can't be opened up
           // printing error expect : No such file or directory.
-          fprintf(stderr, "[error] : %s " ,strerror(errno));
+          perror("ark : can't open file ");
           exit(EXIT_FAILURE);
      }
      
      fseek(fp,0, SEEK_END); // Set file indicator to the end of file (EOF)
 
-     /* Set var len to the curren t position of file indicator 
-      * (Set The length of file) 
+     /* Set len to the current position of file indicator
+      * (In this case, it's the size of file in bytes) 
       */
      size_t len = ftell(fp);      
      
@@ -19,8 +29,9 @@ char *read_file(FILE *fp){
 
      char *buffer = (char*)malloc(len + 1); // +1 for null terminator
 
+
      // check if Memory Acllocation is not success.
-     if (buffer != NULL) {
+     if (buffer == NULL) {
           perror("malloc\n");
           exit(EXIT_FAILURE);
      }

@@ -14,6 +14,12 @@ typedef struct __VECTOR__{
 } vector;
 
 
+#define VEC_DEFLUAT_CAPACITY 8
+#define VEC_NEW_CAPACITY(CURR_SIZE) ((size_t)(CURR_SIZE * 1.5))
+#define VEC_MUST_INCREASE_CAPACITY(__ptrvec__) \
+        if((__ptrvec__)->size == (__ptrvec__)->capacity) \
+               __vec_set_capacity(__ptrvec__ , VEC_NEW_CAPACITY((__ptrvec__)->capacity))
+
 
 // User API .
 

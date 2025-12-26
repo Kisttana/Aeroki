@@ -1,5 +1,4 @@
 #include "../include/aegis/aegis_string.h"
-#include <string.h>
 
 ag_string 
 new_string(const char *cstr){
@@ -11,20 +10,22 @@ new_string(const char *cstr){
 void string_append(ag_string  str,const char *cstr){
      size_t nsize = str->size + strlen(cstr);
      if( nsize >= str->capacity) 
-          __vec_set_capacity(str, (size_t)(nsize * 1.5 )) ;
+          VEC_NEW_CAPACITY(nsize);
+
      char *tail = ((char*)str->data) + str->size ;
      strcpy(tail, cstr);
 
      str->size = nsize;
      vec_at(str, char, nsize) = '\n';
 }
+
 ag_string 
 sub_string(const ag_string str, size_t pos, size_t len){
      if (pos >= str->size) return NULL;
 
      if(pos + len > str->size) len = str->size - len;
      
-     char substring[len+1] = {'\n'};
+     char substring[len+1];
 
      strncpy(substring,((char *)str->data) + pos,  len);
 

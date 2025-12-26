@@ -1,4 +1,6 @@
+
 #ifndef ARK_TOKENIZER_H
+
 #define ARK_TOKENIZER_H
 
 #ifdef __cplusplus
@@ -8,11 +10,31 @@ extern "C" {
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
-#define new(type) ((type*)malloc(sizeof(type)))
-#define MAX_TOKEN_LEN 128
-#define SPACE ' '
+#include <stdlib.h>
 
 typedef int ArkTokenType;
+#define MAX_TOKEN_LEN 256
+#define isParentoken(c) (strchr("<>(){}[]",c) != NULL)
+
+/**
+ * @struct Ark_lexer
+ * @brief Define Ark_lexer as struct for handling lexeme's infomation.
+ *
+ * @var ArkTokenType type           Type of lexeme.
+ * @var uint32_t     line           Holding which is in the line for error handling.
+ * @var char[]       lexeme         A pointer to the lexeme
+ * @var char         string_literal A pointer for pointing address of string
+ *                                    which Its length is more than MAX_TOKEN_LEN(256)
+ *                                  
+ */
+typedef struct _lexeme {
+     ArkTokenType       type;
+     size_t             line;   
+     char               lexeme[MAX_TOKEN_LEN+1]; 
+     char               *string_literal;
+}ArkToken;
+
+
 #define ENDMARKER       0
 #define NAME            1
 #define NUMBER          2
@@ -81,8 +103,20 @@ typedef int ArkTokenType;
 #define COMMENT         65
 #define NL              66
 #define ERRORTOKEN      67
+#define UNKNOWN_TOKEN   68
+/** 
+ *  Add token types here
+*/
 
-/* Token names */
+
+#define EOF_TOKEN       69
+
+
+
+#define ARK_TOKEN_COUNT 70
+
+#define ark_token_name(type) \
+    (( (type) < 0 || (type) >= (int)ARK_TOKEN_COUNT) ? "INVALID_TOKEN" : ARK_TOKEN_NAMES[type])
 
 
 /* 
@@ -95,39 +129,61 @@ int _ArkToken_TwoChars(int c1,int c2);
 int _ArkToken_ThreeChars(int c1,int c2, int c3);
 
 
-/* Function : isIdenifier
+/* Function : _Ark_isIden
  * @brief check the charater is "alphabet , 0-9 , '_'(under score)".
  * 
  * @param int c A character to check .
  * @return 1 if it's alphanumeric and '_' (under score).
  *         0 if it's not.
  */
-static inline int _Ark_isIden(int c) {
-     return (isalnum(c) || c == '_');
-}
+int _Ark_isIden(int c);
+/* Function : _Ark_isNumber
+ * @brief Check the charater is digit or number generetor.
+ *        For example : 12,100, 100.0, 10e-10, 10.0e20
+ * 
+ * @param int c A digit to check .
+ * @return 1 if it's number
+ *         0 if it's not.
+ */
+
+int _Ark_isNumber(int c);
+
 /* Function : _Ark_read_string
  * @brief Handle reading string when encouter (" quote ) 
  * For example -> "This is string"
+ * 
+ * @param[in, out] **cursor 
+ *  A double pointer which point to pointer of source string,
+ *    And it's also used to update current position point of source string 
  *
- * @param char *dest Destination to put string into
- * @param char *src Source string to read 
- * @param size_t *cursor A pointer to src cursor
-*/
-void _Ark_ReadString(char *dest, char *src, size_t *cursor);
-
+ * @param[in] ArkToken token The token to be assigned
+ *
+ * @param[out] ArkTokenType *status 
+ *  A pointer which point to didecated variable to keep status of function performing 
+ *  It will be assigned to token type => <STRING>, Otherwise => <ERRORTOKEN>
+ */
+void _Ark_ReadString(char **cursor, ArkToken *token, ArkTokenType *status);
 
 /* Function : _Ark_ReadToken
  * @brief Handle reading Token with condition.
  * 
  * @param char *dest Destination to put string into.
- * @param char *src Starting pointer of raw string. 
- * @param size_t *cursor A pointer to src cursor. 
+ * @param char **cursor A pointer to pointer of source string 
+ *                       for updating current position
  * @param int (*func)(int) A callback function returning of condition status 
  *            which use for reading the token 
 */
- void _Ark_ReadToken( char *dest, const char *src, size_t *len ,int (*func)(int) );
+void _Ark_ReadToken( char *dest, char **cursor ,int (*func)(int) );
 
-
+/* Function : _Ark_ReadPunct
+ * @brief Handle reading Punctuation Token.
+ * 
+ * @param char **cursor A pointer to pointer of source string 
+ *                       for updating current position
+ * @param ArkToken *token The token to be assigned
+ * @param ArkTokenType *type A pointer which point to didecated variable to keep type of token
+*/
+void _Ark_ReadPunct(char **cursor, ArkToken *token, ArkTokenType *type);
 
 #ifdef __cplusplus
 }
