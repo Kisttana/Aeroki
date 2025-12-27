@@ -16,8 +16,6 @@
 ArkLexer *_Ark_ScanTokens(const char *file_to_scan)
 {
           
-     
-
      //< Initialization section >
      ArkLexer *NewLexer;                              //< Pointer to new ArkLexer instance.   
      ArkToken token = {0};                            //< Temporary token for storing each lexeme's information.
@@ -116,4 +114,27 @@ ArkLexer *_Ark_ScanTokens(const char *file_to_scan)
 
 
      return NewLexer;
+}
+
+void
+_Ark_DestroyLexer(ArkLexer *lexer)
+{
+     if(lexer == NULL) return;
+
+     if(lexer->buffer) free(lexer->buffer);
+     
+     lexer->begin = NULL;
+     lexer->cursor = NULL;
+     
+     size_t size = lexer->token_list->size;
+     vector *tokens = lexer->token_list;
+     ArkToken *token;
+     for(size_t idx = 0;idx < size ;idx++){
+          token = vec_at_ptr(tokens, ArkToken, idx);
+          if(token->string_literal) 
+               free(token->string_literal);
+          
+     }
+     vec_clean(tokens);
+     free(lexer);
 }

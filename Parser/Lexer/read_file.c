@@ -14,6 +14,7 @@ char *read_file(const char *file_path){
      FILE *fp = fopen(file_path,"r");
      if(fp == NULL) { // check if the file can't be opened up
           // printing error expect : No such file or directory.
+          
           perror("ark : can't open file ");
           exit(EXIT_FAILURE);
      }

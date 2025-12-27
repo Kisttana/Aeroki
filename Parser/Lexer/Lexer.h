@@ -1,16 +1,12 @@
-/*
-     author: Piyaphat Jaiboon
-     contact: 
-            email: fiw.contact.work@gmail.com
-            github: https://github.com/Piyaph4t 
-     date: June 10, 2024
-     description: Implementation of the Lexer for tokenizing source code.
-*/
-
-#ifndef ARK_LEXER_H
-#define ARK_LEXER_H
-
 /**
+ * @file Lexer.h
+ * @author Piyaphat Jaiboon(fiw.contact.work@gmail.com)
+ * @version 0.1
+ * @date 2025-12-28
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ *
  * @file Lexer.h
  * @brief Public API for the Ark lexer — tokenize Ark source files.
  *
@@ -45,24 +41,15 @@
  * --------------
  * @code
  * ArkLexer *lexer = _Ark_ScanTokens("script.ark");
- * if (lexer) {
- *     // iterate tokens
- *     for (size_t i = 0; i < lexer->token_list->size; ++i) {
- *         ArkToken t = vec_at(lexer->token_list, ArkToken, i);
- *         // handle token
- *         if (t.type == STRING && t.string_literal) free(t.string_literal);
- *     }
- *     vec_clean(lexer->token_list);
- *     free(lexer->token_list);
- *     free(lexer->buffer);
- *     free(lexer->file);
- *     free(lexer);
- * }
  * @endcode
  *
- * @author Piyaphat Jaiboon
- * @date   June 10, 2024
  */
+
+
+
+#ifndef ARK_LEXER_H
+#define ARK_LEXER_H
+
 
 #ifdef __cplusplus 
 extern "C"{
@@ -98,7 +85,7 @@ extern "C"{
  * Ownership/usage
  * - The caller must free the ArkLexer and its internals as described in the
  *   file-level documentation. Consider providing a helper like
- *   `_Ark_FreeLexer(ArkLexer *lexer)` to centralize cleanup.
+ *   `_Ark_DestoryLexer(ArkLexer *lexer)` to centralize cleanup.
  */
 typedef struct _lexer {
      char *buffer; //< Buffer for storing the raw string of file (owned).
@@ -111,9 +98,9 @@ typedef struct _lexer {
 /**
  * @brief Scan the given file and produce a populated ArkLexer.
  *
- * This function reads the file located at @p file_to_scan into an internal
- * buffer, tokenizes the contents, and appends tokens into the returned
- * ArkLexer->token_list vector. The vector elements are copies of ArkToken.
+ * @details This function reads the file located at @p file_to_scan into an internal
+ *          buffer, tokenizes the contents, and appends tokens into the returned
+ *          ArkLexer->token_list vector. The vector elements are copies of ArkToken.
  *
  * @param[in] file_to_scan Path to the source file to tokenize. The function
  *                         will call strdup() on this string to store it in
@@ -123,6 +110,13 @@ typedef struct _lexer {
  *         for freeing the returned object and its internals (see file docs).
  */
 ArkLexer *_Ark_ScanTokens(const char *file_to_scan);
+
+/** 
+ * @brief Release Allocated Memory, Prevente Memory Leak
+ * 
+ * @param[in] ArkLexer *lexer The Lexer to Destroy
+*/
+void _Ark_DestroyLexer(ArkLexer *lexer);
 
 #ifdef __cplusplus
 }
